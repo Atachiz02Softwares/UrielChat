@@ -20,7 +20,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   String _selectedTopic = Strings.userDefined,
       _selectedTone = Strings.userDefined,
       _selectedMode = Strings.userDefined,
-      _appBarTitle = 'New Chat';
+      _appBarTitle = Strings.newChat;
 
   final TextEditingController _controller = TextEditingController();
   bool _isLoading = false;

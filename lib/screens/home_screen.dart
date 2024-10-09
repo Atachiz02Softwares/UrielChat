@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uriel_chat/utils/utils.dart';
 
@@ -12,7 +13,9 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final iconSize = MediaQuery.of(context).size.width * 0.2;
     final user = ref.read(userProvider);
+    final chatService = ref.read(chatServiceProvider);
 
     return Scaffold(
       endDrawer: const SideNavigationDrawer(),
@@ -140,15 +143,69 @@ class HomeScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  ListView(
-                    physics: const BouncingScrollPhysics(),
-                    shrinkWrap: true,
-                    children: [
-                      buildChatCard('This is my favourite gaming device...'),
-                      buildChatCard(
-                          "Check out what Uber Air's Skyport looks like..."),
-                      buildChatCard('UI Colour in hex format...'),
-                    ],
+                  FutureBuilder<List<String>>(
+                    future: chatService.getRecentChats(user?.uid ?? ''),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: const CustomProgressBar());
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                Strings.history,
+                                colorFilter: const ColorFilter.mode(
+                                  Colors.blueGrey,
+                                  BlendMode.srcIn,
+                                ),
+                                width: iconSize,
+                                height: iconSize,
+                              ),
+                              const CustomText(
+                                text: 'Error loading chats...',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Center(
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                Strings.history,
+                                colorFilter: const ColorFilter.mode(
+                                  Colors.blueGrey,
+                                  BlendMode.srcIn,
+                                ),
+                                width: iconSize,
+                                height: iconSize,
+                              ),
+                              const CustomText(
+                                text: 'No recent chats yet...',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            final chatId = snapshot.data![index];
+                            return buildChatCard(context, chatId);
+                          },
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
@@ -159,18 +216,20 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget buildChatCard(String text) {
+  Widget buildChatCard(BuildContext context, String chatId) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.pushNamed(context, '/chat', arguments: chatId);
+        },
         child: GlassContainer(
           width: double.infinity,
           borderRadius: 20,
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: CustomText(
-              text: text,
+              text: 'Chat ID: $chatId',
               style: const TextStyle(fontSize: 24, color: Colors.white),
             ),
           ),

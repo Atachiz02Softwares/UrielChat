@@ -63,6 +63,7 @@ class Strings {
   static const String history = 'assets/icons/history.svg';
   static const String options = 'assets/icons/options.svg';
   static const String newChatIcon = 'assets/icons/new_chat.svg';
+  static const String error = 'assets/icons/error.svg';
 
   static const String chill = 'Chill, this feature is on its way...';
 

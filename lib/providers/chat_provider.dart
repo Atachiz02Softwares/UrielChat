@@ -5,19 +5,29 @@ import '../models/chat_message.dart';
 import '../services/chat_service.dart';
 import 'typing_animation_provider.dart';
 
+final chatServiceProvider = Provider<ChatService>((ref) {
+  return ChatService();
+});
+
+final chatProvider = StateNotifierProvider<ChatProvider, List<ChatMessage>>(
+  (ref) {
+    final userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+    final chatId = generateChatId();
+    return ChatProvider(chatId, ref.read(chatServiceProvider), ref);
+  },
+);
+
 class ChatProvider extends StateNotifier<List<ChatMessage>> {
   final ChatService _chatService;
-  final String _userId;
   final String _chatId;
   final StateNotifierProviderRef<ChatProvider, List<ChatMessage>> _ref;
 
-  ChatProvider(this._userId, this._chatId, this._chatService, this._ref)
-      : super([]) {
+  ChatProvider(this._chatId, this._chatService, this._ref) : super([]) {
     _init();
   }
 
   void _init() {
-    _chatService.getMessages(_userId, _chatId).listen((messages) {
+    _chatService.getMessages(_chatId).listen((messages) {
       state = messages;
     });
   }
@@ -34,18 +44,10 @@ class ChatProvider extends StateNotifier<List<ChatMessage>> {
   }
 
   Future<void> loadChat(String userId) async {
-    final messages = await _chatService.getMessages(userId, _chatId).first;
+    final messages = await _chatService.getMessages(_chatId).first;
     state = messages;
   }
 }
-
-final chatProvider = StateNotifierProvider<ChatProvider, List<ChatMessage>>(
-  (ref) {
-    final userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-    final chatId = generateChatId();
-    return ChatProvider(userId, chatId, ChatService(), ref);
-  },
-);
 
 String generateChatId() {
   return DateTime.now().millisecondsSinceEpoch.toString();
