@@ -1,0 +1,48 @@
+name: uriel_chat
+description: "A Generative AI chat app..."
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  cupertino_icons: ^1.0.8
+  smooth_page_indicator: ^1.2.0+3
+  flutter_svg: ^2.0.10+1
+  flutter_dotenv: ^5.1.0
+  flutter_gradient_colors: ^2.1.1
+  google_generative_ai: ^0.4.6
+  google_fonts: ^6.2.1
+  flutter_markdown: ^0.7.3+2
+  intl: ^0.19.0
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.1
+  cloud_firestore: ^5.4.4
+  firebase_database: ^11.1.4
+  firebase_storage: ^12.3.2
+  google_sign_in: ^6.2.1
+  flutter_facebook_auth: ^7.1.1
+  flutter_riverpod: ^2.5.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - .env
