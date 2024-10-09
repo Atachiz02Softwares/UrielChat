@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../utils/utils.dart';
@@ -9,6 +11,7 @@ import '../custom.dart';
 
 class ChatBody extends ConsumerWidget {
   final List<Map<String, String>> messages;
+  final bool _hasShownTypingAnimation = false;
 
   const ChatBody({
     super.key,
@@ -31,6 +34,7 @@ class ChatBody extends ConsumerWidget {
           text,
           time,
           isUser: isUser,
+          isLastMessage: index == messages.length - 1,
         );
       },
     );
@@ -46,6 +50,7 @@ class ChatBody extends ConsumerWidget {
     String text,
     String time, {
     bool isUser = false,
+    bool isLastMessage = false,
   }) {
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -65,10 +70,19 @@ class ChatBody extends ConsumerWidget {
                       style: const TextStyle(color: Colors.white, fontSize: 16),
                       align: TextAlign.right,
                     )
-                  : TypingText(
-                      key: GlobalKey<TypingTextState>(),
-                      text: text,
-                    ),
+                  : (isLastMessage && !_hasShownTypingAnimation
+                      ? TypingText(
+                          key: GlobalKey<TypingTextState>(),
+                          text: text,
+                        )
+                      : MarkdownBody(
+                          data: text,
+                          styleSheet: MarkdownStyleSheet(
+                            p: GoogleFonts.poppins(
+                                color: Colors.white, fontSize: 16),
+                            textAlign: WrapAlignment.start,
+                          ),
+                        )),
               const SizedBox(height: 5),
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -90,7 +104,8 @@ class ChatBody extends ConsumerWidget {
                     ),
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: text));
-                      CustomSnackBar.showSnackBar(context, 'Copied to clipboard');
+                      CustomSnackBar.showSnackBar(
+                          context, 'Copied to clipboard');
                     },
                   ),
                 ],
