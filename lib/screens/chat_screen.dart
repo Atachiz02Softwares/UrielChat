@@ -102,7 +102,7 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
       });
     } catch (e) {
       setState(() {
-        _appBarTitle = 'New Chat';
+        _appBarTitle = Strings.newChat;
       });
     }
   }
@@ -153,17 +153,17 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
   }
 
   void _deleteCurrentChat() {
-    ref.read(chatProvider.notifier).deleteCurrentChat();
+    ref.read(chatProvider.notifier).clearMessages();
   }
 
   void _newChat() {
     ref.read(chatProvider.notifier).clearMessages();
     setState(() {
-      _appBarTitle = 'New Chat';
+      _appBarTitle = Strings.newChat;
       _aiResponseCount = 0;
-      _selectedTopic = 'User Defined';
-      _selectedTone = 'User Defined';
-      _selectedMode = 'User Defined';
+      _selectedTopic = Strings.userDefined;
+      _selectedTone = Strings.userDefined;
+      _selectedMode = Strings.userDefined;
     });
   }
 

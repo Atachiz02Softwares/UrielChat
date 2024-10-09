@@ -35,7 +35,7 @@ class Strings {
       tones = ['Formal', 'Friendly', 'Humorous', 'Professional', userDefined],
       modes = ['General', 'Casual', 'Technical', 'Spiritual', userDefined];
 
-  static const String userDefined = 'User Defined';
+  static const String userDefined = 'User Defined', newChat = 'New Chat';
 
   static const String avatar = 'assets/images/avatar.png';
   static const String appIcon = 'assets/images/ic_launcher.png';
@@ -62,7 +62,7 @@ class Strings {
   static const String delete = 'assets/icons/delete.svg';
   static const String history = 'assets/icons/history.svg';
   static const String options = 'assets/icons/options.svg';
-  static const String newChat = 'assets/icons/new_chat.svg';
+  static const String newChatIcon = 'assets/icons/new_chat.svg';
 
   static String? nameValidator(String? value) {
     if (value == null || value.isEmpty) {

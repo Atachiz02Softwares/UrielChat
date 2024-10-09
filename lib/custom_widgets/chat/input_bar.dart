@@ -67,7 +67,7 @@ class InputBar extends StatelessWidget {
               ),
             ),
             isLoading
-                ? const CustomProgressBar()
+                ? const TypingIndicator()
                 : IconButton(
                     icon: SvgPicture.asset(
                       Strings.send,
@@ -78,7 +78,10 @@ class InputBar extends StatelessWidget {
                       width: iconSize,
                       height: iconSize,
                     ),
-                    onPressed: onSendMessage,
+                    onPressed: () {
+                      onSendMessage();
+                      controller.clear();
+                    },
                   ),
           ],
         ),

@@ -22,9 +22,9 @@ class ChatBody extends ConsumerWidget {
       itemCount: messages.length,
       itemBuilder: (context, index) {
         final message = messages[index];
-        final isUser = message.containsKey('user');
-        final text = message['user'] ?? message['ai'] ?? 'Unknown';
-        final time = message['time'] ?? '';
+        final isUser = message['sender'] == 'user';
+        final text = message['content'] ?? 'Unknown';
+        final time = message['timestamp'] ?? '';
 
         return _buildChatBubble(
           context,
@@ -36,10 +36,9 @@ class ChatBody extends ConsumerWidget {
     );
   }
 
-  // formatDateTime function
   String formatDateTime(String time) {
     final dateTime = DateTime.parse(time);
-    return DateFormat('hh:mm').format(dateTime);
+    return DateFormat('hh:mm a').format(dateTime);
   }
 
   Widget _buildChatBubble(
@@ -52,6 +51,7 @@ class ChatBody extends ConsumerWidget {
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: GlassContainer(
         borderRadius: 30,
+        borderType: isUser ? BorderType.user : BorderType.ai,
         margin: const EdgeInsets.symmetric(vertical: 8),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -59,11 +59,16 @@ class ChatBody extends ConsumerWidget {
             crossAxisAlignment:
                 isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              CustomText(
-                text: text,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
-                align: isUser ? TextAlign.right : TextAlign.left,
-              ),
+              isUser
+                  ? CustomText(
+                      text: text,
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                      align: TextAlign.right,
+                    )
+                  : TypingText(
+                      key: GlobalKey<TypingTextState>(),
+                      text: text,
+                    ),
               const SizedBox(height: 5),
               Row(
                 mainAxisSize: MainAxisSize.min,

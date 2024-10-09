@@ -15,13 +15,11 @@ class ChatService {
     await chatRef.collection(chatId).add(message.toMap());
   }
 
-  Stream<List<ChatMessage>> getMessages(String chatId) {
-    final chatRef = _firestore.collection('chats').doc(chatId);
-    return chatRef
-        .collection('messages')
-        .orderBy('timestamp', descending: false)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
+  Stream<List<ChatMessage>> getMessages(String userId, String chatId) {
+    final chatRef =
+        _firestore.collection('chats').doc(userId).collection(chatId);
+    return chatRef.orderBy('timestamp', descending: false).snapshots().map(
+        (snapshot) => snapshot.docs
             .map((doc) => ChatMessage.fromMap(doc.data()))
             .toList());
   }

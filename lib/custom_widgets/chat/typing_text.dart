@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 class TypingText extends StatefulWidget {
   final String text;
   final Duration duration;
+  @override
   final GlobalKey<TypingTextState> key;
 
   const TypingText({

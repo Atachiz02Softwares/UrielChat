@@ -31,9 +31,9 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          tooltip: 'New Chat',
+          tooltip: Strings.newChat,
           icon: SvgPicture.asset(
-            Strings.newChat,
+            Strings.newChatIcon,
             colorFilter: const ColorFilter.mode(
               Colors.blueGrey,
               BlendMode.srcIn,
