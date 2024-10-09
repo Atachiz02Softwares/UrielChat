@@ -64,6 +64,8 @@ class Strings {
   static const String options = 'assets/icons/options.svg';
   static const String newChatIcon = 'assets/icons/new_chat.svg';
 
+  static const String chill = 'Chill, this feature is on its way...';
+
   static String? nameValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your name';

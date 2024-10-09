@@ -36,7 +36,9 @@ class InputBar extends StatelessWidget {
                 width: iconSize,
                 height: iconSize,
               ),
-              onPressed: () {},
+              onPressed: () {
+                CustomSnackBar.showSnackBar(context, Strings.chill);
+              },
             ),
             IconButton(
               icon: SvgPicture.asset(
@@ -48,7 +50,9 @@ class InputBar extends StatelessWidget {
                 width: iconSize,
                 height: iconSize,
               ),
-              onPressed: () {},
+              onPressed: () {
+                CustomSnackBar.showSnackBar(context, Strings.chill);
+              },
             ),
             const SizedBox(width: 12),
             Expanded(

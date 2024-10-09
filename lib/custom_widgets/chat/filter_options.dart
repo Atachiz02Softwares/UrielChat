@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../providers/filter_options_provider.dart';
 import '../../utils/utils.dart';
 import '../custom.dart';
 
@@ -55,7 +56,14 @@ class FilterOptions extends ConsumerWidget {
             icon: Strings.settings,
             label: 'Apply Filters',
             color: Colors.blueGrey.shade900,
-            onPressed: Navigator.of(context).pop,
+            onPressed: () {
+              Navigator.of(context).pop();
+              ref.read(filterOptionsProvider.notifier).update(
+                    selectedTopic,
+                    selectedTone,
+                    selectedMode,
+                  );
+            },
           ),
         ],
       ),

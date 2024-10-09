@@ -35,19 +35,18 @@ class CRUD {
     }
   }
 
-  Future<void> deleteCurrentChat(Ref ref, String? dateTime) async {
+  Future<void> deleteCurrentChat(Ref ref, String chatId) async {
     final user = ref.read(userProvider);
-    if (user != null && dateTime != null) {
-      final messages = await _firestore
-          .collection('chats')
-          .doc(user.uid)
-          .collection(dateTime)
-          .get();
+    if (user != null) {
+      final chatRef =
+          _firestore.collection('chats').doc(user.uid).collection(chatId);
+      final messages = await chatRef.get();
       final batch = _firestore.batch();
       for (var doc in messages.docs) {
         batch.delete(doc.reference);
       }
       await batch.commit();
+      await chatRef.doc().delete();
     }
   }
 

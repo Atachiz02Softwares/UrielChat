@@ -109,7 +109,10 @@ class HomeScreen extends ConsumerWidget {
                               color: Colors.grey,
                               size: 30,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              CustomSnackBar.showSnackBar(
+                                  context, Strings.chill);
+                            },
                           ),
                           const SizedBox(width: 10),
                           IconButton(
@@ -118,7 +121,10 @@ class HomeScreen extends ConsumerWidget {
                               color: Colors.grey,
                               size: 30,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              CustomSnackBar.showSnackBar(
+                                  context, Strings.chill);
+                            },
                           ),
                         ],
                       ),

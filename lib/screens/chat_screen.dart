@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 import '../custom_widgets/custom.dart';
+import '../firebase/firebase.dart';
 import '../models/models.dart';
 import '../providers/providers.dart';
 import '../services/services.dart';
@@ -152,8 +153,13 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
     );
   }
 
-  void _deleteCurrentChat() {
-    ref.read(chatProvider.notifier).clearMessages();
+  void _deleteCurrentChat() async {
+    final user = ref.read(userProvider);
+    if (user != null) {
+      final chatId = generateChatId();
+      await ref.read(chatProvider.notifier).clearMessages();
+      await CRUD().deleteCurrentChat(ref as Ref<Object?>, chatId);
+    }
   }
 
   void _newChat() {
@@ -182,10 +188,11 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
         borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
       ),
       builder: (BuildContext context) {
+        final filterOptions = ref.watch(filterOptionsProvider);
         return FilterOptions(
-          selectedTopic: _selectedTopic,
-          selectedTone: _selectedTone,
-          selectedMode: _selectedMode,
+          selectedTopic: filterOptions['topic']!,
+          selectedTone: filterOptions['tone']!,
+          selectedMode: filterOptions['mode']!,
           onTopicChanged: (String? newValue) {
             setState(() {
               _selectedTopic = newValue!;
