@@ -7,12 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 class TypingText extends StatefulWidget {
   final String text;
   final Duration duration;
+  final VoidCallback onComplete;
   @override
   final GlobalKey<TypingTextState> key;
 
   const TypingText({
     required this.text,
     required this.key,
+    required this.onComplete,
     this.duration = const Duration(milliseconds: 50),
   }) : super(key: key);
 
@@ -42,6 +44,7 @@ class TypingTextState extends State<TypingText> {
         });
       } else {
         _timer.cancel();
+        widget.onComplete();
       }
     });
   }

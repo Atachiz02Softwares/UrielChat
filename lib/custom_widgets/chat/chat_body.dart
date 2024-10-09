@@ -6,12 +6,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
+import '../../providers/providers.dart';
 import '../../utils/utils.dart';
 import '../custom.dart';
 
-class ChatBody extends ConsumerWidget {
+class ChatBody extends ConsumerStatefulWidget {
   final List<Map<String, String>> messages;
-  final bool _hasShownTypingAnimation = false;
 
   const ChatBody({
     super.key,
@@ -19,12 +19,44 @@ class ChatBody extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ChatBody> createState() => _ChatBodyState();
+}
+
+class _ChatBodyState extends ConsumerState<ChatBody> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+  }
+
+  @override
+  void didUpdateWidget(ChatBody oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hasShownTypingAnimation = ref.watch(typingAnimationProvider);
+
     return ListView.builder(
+      controller: _scrollController,
       padding: const EdgeInsets.all(16),
-      itemCount: messages.length,
+      itemCount: widget.messages.length,
       itemBuilder: (context, index) {
-        final message = messages[index];
+        final message = widget.messages[index];
         final isUser = message['sender'] == 'user';
         final text = message['content'] ?? 'Unknown';
         final time = message['timestamp'] ?? '';
@@ -34,7 +66,9 @@ class ChatBody extends ConsumerWidget {
           text,
           time,
           isUser: isUser,
-          isLastMessage: index == messages.length - 1,
+          isLastMessage: index == widget.messages.length - 1,
+          hasShownTypingAnimation: hasShownTypingAnimation,
+          ref: ref,
         );
       },
     );
@@ -51,6 +85,8 @@ class ChatBody extends ConsumerWidget {
     String time, {
     bool isUser = false,
     bool isLastMessage = false,
+    required bool hasShownTypingAnimation,
+    required WidgetRef ref,
   }) {
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -70,10 +106,16 @@ class ChatBody extends ConsumerWidget {
                       style: const TextStyle(color: Colors.white, fontSize: 16),
                       align: TextAlign.right,
                     )
-                  : (isLastMessage && !_hasShownTypingAnimation
+                  : (isLastMessage && !hasShownTypingAnimation
                       ? TypingText(
                           key: GlobalKey<TypingTextState>(),
                           text: text,
+                          onComplete: () {
+                            ref
+                                .read(typingAnimationProvider.notifier)
+                                .showAnimation();
+                            _scrollToBottom();
+                          },
                         )
                       : MarkdownBody(
                           data: text,
