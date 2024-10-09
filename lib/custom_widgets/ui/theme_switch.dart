@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'custom_text.dart';
+import '../ui/custom_text.dart';
 
 class ThemeSwitch extends StatefulWidget {
   const ThemeSwitch({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'custom.dart';
+import '../custom.dart';
 
 class CustomButton extends StatelessWidget {
   final String icon, label;
