@@ -95,7 +95,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       const SizedBox(height: 50),
                       Center(
                         child: Image.asset(
-                          Strings.robot,
+                          Strings.appIcon,
                           height: 200,
                         ),
                       ),

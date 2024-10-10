@@ -4,8 +4,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/providers.dart';
-import '../utils/strings.dart';
-import 'firebase/crud.dart';
 import 'firebase_options.dart';
 import 'screens/screens.dart';
 
@@ -15,11 +13,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  final systemInstructions = await CRUD().getSystemInstructions();
-  if (systemInstructions != null) {
-    Strings.systemInstructions = systemInstructions;
-  }
 
   runApp(const ProviderScope(child: UrielChat()));
 }
@@ -55,7 +48,7 @@ class AuthWrapper extends ConsumerWidget {
     if (user != null) {
       return const MainScreen();
     } else {
-      return const AuthScreen();
+      return const OnboardingScreen();
     }
   }
 }

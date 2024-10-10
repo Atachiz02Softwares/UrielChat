@@ -39,7 +39,6 @@ class Strings {
 
   static const String avatar = 'assets/images/avatar.png';
   static const String appIcon = 'assets/images/ic_launcher.png';
-  static const String robot = 'assets/images/robot.png';
 
   static const String home = 'assets/icons/home.svg';
   static const String chat = 'assets/icons/chat.svg';
@@ -64,6 +63,9 @@ class Strings {
   static const String options = 'assets/icons/options.svg';
   static const String newChatIcon = 'assets/icons/new_chat.svg';
   static const String error = 'assets/icons/error.svg';
+  static const String one = 'assets/images/one.jpeg';
+  static const String two = 'assets/images/two.jpeg';
+  static const String three = 'assets/images/three.jpeg';
 
   static const String chill = 'Chill, this feature is on its way...';
 
