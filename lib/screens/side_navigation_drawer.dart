@@ -54,28 +54,6 @@ class SideNavigationDrawer extends ConsumerWidget {
                 const SizedBox(height: 20),
                 ListTile(
                   trailing: SvgPicture.asset(
-                    Strings.settings,
-                    colorFilter: const ColorFilter.mode(
-                      Colors.blueGrey,
-                      BlendMode.srcIn,
-                    ),
-                    width: 40,
-                    height: 40,
-                  ),
-                  title: const CustomText(
-                    text: 'Settings',
-                    style: TextStyle(
-                      color: Colors.blueGrey,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/settings');
-                  },
-                ),
-                ListTile(
-                  trailing: SvgPicture.asset(
                     Strings.feedback,
                     colorFilter: const ColorFilter.mode(
                       Colors.blueGrey,

@@ -17,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   static final List<Widget> _pages = <Widget>[
     const HomeScreen(),
     const ChatScreen(),
-    const BookmarkScreen(),
+    const SettingScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -63,7 +63,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
-              Strings.bookmark,
+              Strings.settings,
               colorFilter: const ColorFilter.mode(
                 Colors.blueGrey,
                 BlendMode.srcIn,

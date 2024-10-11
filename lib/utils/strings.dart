@@ -42,7 +42,6 @@ class Strings {
 
   static const String home = 'assets/icons/home.svg';
   static const String chat = 'assets/icons/chat.svg';
-  static const String bookmark = 'assets/icons/bookmark.svg';
   static const String settings = 'assets/icons/settings.svg';
   static const String apple = 'assets/icons/apple.svg';
   static const String comments = 'assets/icons/comments.svg';

@@ -19,6 +19,10 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       endDrawer: const SideNavigationDrawer(),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        elevation: 0,
+      ),
       body: Stack(
         children: [
           const BackgroundContainer(),
@@ -29,25 +33,6 @@ class HomeScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Builder(
-                        builder: (context) {
-                          return IconButton(
-                            icon: const Icon(
-                              Icons.menu_rounded,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                            onPressed: () {
-                              Scaffold.of(context).openEndDrawer();
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
                   Center(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
