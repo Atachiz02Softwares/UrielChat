@@ -57,12 +57,16 @@ class FilterOptions extends ConsumerWidget {
             label: 'Apply Filters',
             color: Colors.blueGrey.shade900,
             onPressed: () {
+              ref
+                  .read(filterOptionsProvider.notifier)
+                  .update(topic: selectedTopic);
+              ref
+                  .read(filterOptionsProvider.notifier)
+                  .update(tone: selectedTone);
+              ref
+                  .read(filterOptionsProvider.notifier)
+                  .update(mode: selectedMode);
               Navigator.of(context).pop();
-              ref.read(filterOptionsProvider.notifier).update(
-                    selectedTopic,
-                    selectedTone,
-                    selectedMode,
-                  );
             },
           ),
         ],

@@ -11,4 +11,5 @@ export 'ui/custom_progress_bar.dart';
 export 'ui/custom_snackbar.dart';
 export 'ui/custom_text.dart';
 export 'ui/glass_container.dart';
+export 'ui/recent_chat.dart';
 export 'ui/theme_switch.dart';

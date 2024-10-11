@@ -143,7 +143,7 @@ class HomeScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  FutureBuilder<List<String>>(
+                  FutureBuilder<List<Map<String, String>>>(
                     future: chatService.getRecentChats(user?.uid ?? ''),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -200,8 +200,13 @@ class HomeScreen extends ConsumerWidget {
                           shrinkWrap: true,
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
-                            final chatId = snapshot.data![index];
-                            return buildChatCard(context, chatId);
+                            final chat = snapshot.data![index];
+                            final chatId = chat['chatId']!;
+                            final firstMessage = chat['firstMessage']!;
+                            return RecentChat(
+                              chatId: chatId,
+                              firstMessage: firstMessage,
+                            );
                           },
                         );
                       }
@@ -212,28 +217,6 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget buildChatCard(BuildContext context, String chatId) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: InkWell(
-        onTap: () {
-          Navigator.pushNamed(context, '/chat', arguments: chatId);
-        },
-        child: GlassContainer(
-          width: double.infinity,
-          borderRadius: 20,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: CustomText(
-              text: 'Chat ID: $chatId',
-              style: const TextStyle(fontSize: 24, color: Colors.white),
-            ),
-          ),
-        ),
       ),
     );
   }

@@ -8,12 +8,17 @@ final chatServiceProvider = Provider<ChatService>((ref) {
   return ChatService();
 });
 
-final chatProvider = StateNotifierProvider.family<ChatProvider, List<ChatMessage>, String>((ref, chatId) {
+final chatProvider =
+    StateNotifierProvider.family<ChatProvider, List<ChatMessage>, String>(
+        (ref, chatId) {
   final chatService = ref.read(chatServiceProvider);
   return ChatProvider(chatId, chatService, ref);
 });
 
 final currentChatIdProvider = StateProvider<String?>((ref) => null);
+
+final aiResponseCountProvider =
+    StateProvider<int>((ref) => 0); // Added provider
 
 class ChatProvider extends StateNotifier<List<ChatMessage>> {
   final ChatService _chatService;
@@ -53,6 +58,4 @@ class ChatProvider extends StateNotifier<List<ChatMessage>> {
   }
 }
 
-String generateChatId() {
-  return DateTime.now().millisecondsSinceEpoch.toString();
-}
+String generateChatId() => DateTime.now().millisecondsSinceEpoch.toString();

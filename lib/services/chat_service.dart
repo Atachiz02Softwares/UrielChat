@@ -33,13 +33,22 @@ class ChatService {
     });
   }
 
-  Future<List<String>> getRecentChats(String userId) async {
+  Future<List<Map<String, String>>> getRecentChats(String userId) async {
     final querySnapshot = await _firestore
         .collection('chats')
         .where('userId', isEqualTo: userId)
         .orderBy('timestamp', descending: true)
         .get();
 
-    return querySnapshot.docs.map((doc) => doc.id).toList();
+    return querySnapshot.docs.map((doc) {
+      final messages = doc['messages'] as List<dynamic>? ?? [];
+      final firstMessage = messages.isNotEmpty
+          ? ChatMessage.fromMap(messages.first).content
+          : 'No messages yet';
+      return {
+        'chatId': doc.id,
+        'firstMessage': firstMessage,
+      };
+    }).toList();
   }
 }

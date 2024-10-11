@@ -15,11 +15,13 @@ class FilterOptionsNotifier extends StateNotifier<Map<String, String>> {
           'mode': Strings.userDefined,
         });
 
-  void update(String topic, String tone, String mode) {
+  /// Updates the filter options, allowing flexibility in updating
+  /// individual filters without requiring all fields to be updated.
+  void update({String? topic, String? tone, String? mode}) {
     state = {
-      'topic': topic,
-      'tone': tone,
-      'mode': mode,
+      'topic': topic ?? state['topic']!,
+      'tone': tone ?? state['tone']!,
+      'mode': mode ?? state['mode']!,
     };
   }
 }

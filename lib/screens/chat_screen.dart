@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:uriel_chat/utils/utilities.dart';
 
 import '../custom_widgets/custom.dart';
 import '../firebase/firebase.dart';
 import '../models/models.dart';
 import '../providers/providers.dart';
-import '../services/services.dart';
 import '../utils/strings.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
@@ -25,7 +24,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   final TextEditingController _controller = TextEditingController();
   bool _isLoading = false;
-  int _aiResponseCount = 0;
 
   @override
   void initState() {
@@ -43,87 +41,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           _chatId; // Persist chatId
     }
     await _loadChat();
-    await _loadChat();
 
     final systemInstructions = await CRUD().getSystemInstructions();
     if (systemInstructions != null) {
       Strings.systemInstructions = systemInstructions;
-    }
-  }
-
-  Future<void> _sendMessage() async {
-    if (_controller.text.isEmpty) return;
-
-    final message = ChatMessage(
-      sender: 'user',
-      content: _controller.text,
-      timestamp: DateTime.now(),
-    );
-    await ref.read(chatProvider(_chatId).notifier).addMessage(message);
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    final chatHistory = ref.read(chatProvider(_chatId)).map((message) {
-      return message
-          .toMap()
-          .map((key, value) => MapEntry(key, value.toString()));
-    }).toList();
-
-    final chatHistoryString = chatHistory.map((e) => e.toString()).join('\n');
-
-    final prompt = '''
-Based on the following chat history, limit responses to the topic of $_selectedTopic.
-Respond with a $_selectedTone tone and focus on a $_selectedMode mode of conversation.
-###Do not mention "User Defined" in your response, just ask the user to choose
-what they'd like to talk about.### Chat History:\n$chatHistoryString
-''';
-
-    try {
-      final response = await AI.model.generateContent([Content.text(prompt)]);
-      final aiMessage = ChatMessage(
-        sender: 'AI',
-        content: response.text!,
-        timestamp: DateTime.now(),
-      );
-      await ref.read(chatProvider(_chatId).notifier).addMessage(aiMessage);
-
-      _aiResponseCount++;
-
-      if (_aiResponseCount >= 3) {
-        _updateAppBarTitle(chatHistoryString);
-      }
-    } catch (e) {
-      final errorMessage = ChatMessage(
-        sender: 'system',
-        content: 'Error: $e',
-        timestamp: DateTime.now(),
-      );
-      await ref.read(chatProvider(_chatId).notifier).addMessage(errorMessage);
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  void _updateAppBarTitle(String chatHistory) async {
-    final prompt = '''
-  Based on the following chat history, generate a suitable title for the AppBar.
-  Chat History:\n$chatHistory
-  The title should be concise and relevant to the conversation, not more than 5 words.
-  ''';
-
-    try {
-      final response = await AI.model.generateContent([Content.text(prompt)]);
-      setState(() {
-        _appBarTitle = response.text!;
-      });
-    } catch (e) {
-      setState(() {
-        _appBarTitle = Strings.newChat;
-      });
     }
   }
 
@@ -225,7 +146,6 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
     setState(() {
       _controller.clear();
       _isLoading = false;
-      _aiResponseCount = 0;
       _appBarTitle = Strings.newChat;
       _selectedTopic = Strings.userDefined;
       _selectedTone = Strings.userDefined;
@@ -233,7 +153,8 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
       _chatId = generateChatId();
     });
 
-    ref.read(currentChatIdProvider.notifier).state = _chatId; // Store new chatId
+    ref.read(currentChatIdProvider.notifier).state =
+        _chatId; // Store new chatId
 
     final user = ref.read(userProvider);
     if (user != null) {
@@ -241,5 +162,35 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
       ref.read(chatProvider(_chatId).notifier).chatId = _chatId;
       await ref.read(chatProvider(_chatId).notifier).loadChat(user.uid);
     }
+  }
+
+  Future<void> _sendMessage() async {
+    await Utilities.sendMessage(
+      chatId: _chatId,
+      controller: _controller,
+      ref: ref,
+      setLoading: (bool isLoading) {
+        setState(() {
+          _isLoading = isLoading;
+        });
+      },
+      incrementResponseCount: (int count) {
+        setState(() {
+        });
+      },
+      updateAppBarTitle: (String chatHistory) {
+        Utilities.updateAppBarTitle(
+          chatHistory: chatHistory,
+          setAppBarTitle: (String title) {
+            setState(() {
+              _appBarTitle = title;
+            });
+          },
+        );
+      },
+      selectedTopic: _selectedTopic,
+      selectedTone: _selectedTone,
+      selectedMode: _selectedMode,
+    );
   }
 }
