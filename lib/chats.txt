@@ -1,32 +1,16 @@
 /chats
-	/VlBWZk8toPR843gmPELhErQeIXw2 (userId)
-		/1728436387926 (chatId: timestamp)
-			/3PsCuN4pNlbZtRp5PGcS (user message id)
-				/{
-				content: "user's message here"
-				sender: "user"
-				timestamp: "2024-10-09T02:13:20.261895"
-				}
-			/tLVP124ssctXMb77YAUX (ai message id)
-				/{
-				content: "ai's message here"
-				sender: "AI"
-				timestamp: "2024-10-09T02:13:23.062262"
-				}
-			/...
-		/1728436382346 (chatId: timestamp)
-			/3PsCuN4pNlbZtRpasdcS (user message id)
-				/{
-				content: "user's message here"
-				sender: "user"
-				timestamp: "2024-10-09T02:13:20.261895"
-				}
-			/tLVP124ssctXyuo3YAUX (ai message id)
-				/{
-				content: "ai's message here"
-				sender: "AI"
-				timestamp: "2024-10-09T02:13:23.062262"
-				}
-			/...
-		/...
-	/...
+  /<chatId>
+    userId: <userId>
+    timestamp: <timestamp>
+    messages: [
+      {
+        content: "user's message here",
+        sender: "user",
+        timestamp: "2024-10-09T02:13:20.261895"
+      },
+      {
+        content: "ai's message here",
+        sender: "AI",
+        timestamp: "2024-10-09T02:13:23.062262"
+      }
+    ]

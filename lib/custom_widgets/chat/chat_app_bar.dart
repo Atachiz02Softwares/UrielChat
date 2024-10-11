@@ -8,7 +8,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback onNewChat;
   final VoidCallback onFilterOptions;
-  final VoidCallback onClearChat;
+  final VoidCallback onDeleteChat;
   final double iconSize;
 
   const ChatAppBar({
@@ -16,7 +16,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.title,
     required this.onNewChat,
     required this.onFilterOptions,
-    required this.onClearChat,
+    required this.onDeleteChat,
     required this.iconSize,
   });
 
@@ -64,7 +64,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
             width: iconSize,
           ),
           tooltip: 'Clear Chat',
-          onPressed: onClearChat,
+          onPressed: onDeleteChat,
         ),
       ],
     );

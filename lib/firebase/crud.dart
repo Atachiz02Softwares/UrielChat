@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/providers.dart';
 import '../utils/strings.dart';
 
 class CRUD {
@@ -35,35 +33,7 @@ class CRUD {
     }
   }
 
-  Future<void> deleteCurrentChat(Ref ref, String chatId) async {
-    final user = ref.read(userProvider);
-    if (user != null) {
-      final chatRef =
-          _firestore.collection('chats').doc(user.uid).collection(chatId);
-      final messages = await chatRef.get();
-      final batch = _firestore.batch();
-      for (var doc in messages.docs) {
-        batch.delete(doc.reference);
-      }
-      await batch.commit();
-      await chatRef.doc().delete();
-    }
-  }
-
-  Future<void> updateSubject(
-      Ref ref, String? oldSubject, String newSubject) async {
-    final user = ref.read(userProvider);
-    if (user != null && oldSubject != null) {
-      final messages = await _firestore
-          .collection('chats')
-          .doc(user.uid)
-          .collection(oldSubject)
-          .get();
-      final batch = _firestore.batch();
-      for (var doc in messages.docs) {
-        batch.update(doc.reference, {'subject': newSubject});
-      }
-      await batch.commit();
-    }
+  Future<void> deleteChat(String chatId) async {
+    await _firestore.collection('chats').doc(chatId).delete();
   }
 }

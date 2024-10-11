@@ -20,7 +20,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   String _selectedTopic = Strings.userDefined,
       _selectedTone = Strings.userDefined,
       _selectedMode = Strings.userDefined,
-      _appBarTitle = Strings.newChat;
+      _appBarTitle = Strings.newChat,
+      _chatId = generateChatId();
 
   final TextEditingController _controller = TextEditingController();
   bool _isLoading = false;
@@ -29,7 +30,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    _loadChat();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    await _loadChat();
+
+    final systemInstructions = await CRUD().getSystemInstructions();
+    if (systemInstructions != null) {
+      Strings.systemInstructions = systemInstructions;
+    }
   }
 
   Future<void> _sendMessage() async {
@@ -40,13 +50,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       content: _controller.text,
       timestamp: DateTime.now(),
     );
-    await ref.read(chatProvider.notifier).addMessage(message);
+    await ref.read(chatProvider(_chatId).notifier).addMessage(message);
 
     setState(() {
       _isLoading = true;
     });
 
-    final chatHistory = ref.read(chatProvider).map((message) {
+    final chatHistory = ref.read(chatProvider(_chatId)).map((message) {
       return message
           .toMap()
           .map((key, value) => MapEntry(key, value.toString()));
@@ -68,7 +78,7 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
         content: response.text!,
         timestamp: DateTime.now(),
       );
-      await ref.read(chatProvider.notifier).addMessage(aiMessage);
+      await ref.read(chatProvider(_chatId).notifier).addMessage(aiMessage);
 
       _aiResponseCount++;
 
@@ -81,7 +91,7 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
         content: 'Error: $e',
         timestamp: DateTime.now(),
       );
-      await ref.read(chatProvider.notifier).addMessage(errorMessage);
+      await ref.read(chatProvider(_chatId).notifier).addMessage(errorMessage);
     } finally {
       setState(() {
         _isLoading = false;
@@ -111,7 +121,7 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
   @override
   Widget build(BuildContext context) {
     final iconSize = MediaQuery.of(context).size.width * 0.07;
-    final List<ChatMessage> messages = ref.watch(chatProvider);
+    final List<ChatMessage> messages = ref.watch(chatProvider(_chatId));
 
     // Convert List<ChatMessage> to List<Map<String, String>>
     final List<Map<String, String>> messageMaps = messages.map((message) {
@@ -123,9 +133,9 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
     return Scaffold(
       appBar: ChatAppBar(
         title: _appBarTitle,
-        onNewChat: _newChat,
+        onNewChat: newChat,
         onFilterOptions: () => _showFilterOptions(context),
-        onClearChat: _deleteCurrentChat,
+        onDeleteChat: deleteChat,
         iconSize: iconSize,
       ),
       body: Stack(
@@ -153,30 +163,10 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
     );
   }
 
-  void _deleteCurrentChat() async {
-    final user = ref.read(userProvider);
-    if (user != null) {
-      final chatId = generateChatId();
-      await ref.read(chatProvider.notifier).clearMessages();
-      await CRUD().deleteCurrentChat(ref as Ref<Object?>, chatId);
-    }
-  }
-
-  void _newChat() {
-    ref.read(chatProvider.notifier).clearMessages();
-    setState(() {
-      _appBarTitle = Strings.newChat;
-      _aiResponseCount = 0;
-      _selectedTopic = Strings.userDefined;
-      _selectedTone = Strings.userDefined;
-      _selectedMode = Strings.userDefined;
-    });
-  }
-
   Future<void> _loadChat() async {
     final user = ref.read(userProvider);
     if (user != null) {
-      await ref.read(chatProvider.notifier).loadChat(user.uid);
+      await ref.read(chatProvider(_chatId).notifier).loadChat(user.uid);
     }
   }
 
@@ -211,5 +201,34 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
         );
       },
     );
+  }
+
+  Future<void> deleteChat() async {
+    final user = ref.read(userProvider);
+    if (user != null) {
+      final chatId = ref.read(chatProvider(_chatId).notifier).chatId;
+      await CRUD().deleteChat(chatId);
+      await newChat();
+    }
+  }
+
+  Future<void> newChat() async {
+    setState(() {
+      _controller.clear();
+      _isLoading = false;
+      _aiResponseCount = 0;
+      _appBarTitle = Strings.newChat;
+      _selectedTopic = Strings.userDefined;
+      _selectedTone = Strings.userDefined;
+      _selectedMode = Strings.userDefined;
+      _chatId = generateChatId();
+    });
+
+    final user = ref.read(userProvider);
+    if (user != null) {
+      ref.read(chatProvider(_chatId).notifier).clearMessages();
+      ref.read(chatProvider(_chatId).notifier).chatId = _chatId;
+      await ref.read(chatProvider(_chatId).notifier).loadChat(user.uid);
+    }
   }
 }

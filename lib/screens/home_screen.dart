@@ -147,7 +147,7 @@ class HomeScreen extends ConsumerWidget {
                     future: chatService.getRecentChats(user?.uid ?? ''),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: const CustomProgressBar());
+                        return const Center(child: CustomProgressBar());
                       } else if (snapshot.hasError) {
                         return Center(
                           child: Column(
