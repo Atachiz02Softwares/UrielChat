@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../providers/chat_provider.dart';
 import '../utils/utils.dart';
 import 'screens.dart';
 
@@ -16,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
 
   static final List<Widget> _pages = <Widget>[
     const HomeScreen(),
-    const ChatScreen(),
+    ChatScreen(chatId: generateChatId()), // Use generateChatId method
     const SettingScreen(),
   ];
 

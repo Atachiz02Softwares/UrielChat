@@ -74,8 +74,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   controller: _controller,
                   count: 3,
                   effect: SwapEffect(
-                    dotColor: Colors.blueGrey,
-                    activeDotColor: Colors.blueGrey.shade900,
+                    dotColor: Colors.blueGrey.shade900,
+                    activeDotColor: Colors.blueGrey,
                   ),
                 ),
               ],

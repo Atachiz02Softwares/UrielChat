@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../custom.dart';
 
 class RecentChat extends StatelessWidget {
-
   final String chatId, firstMessage;
 
-  const RecentChat({super.key, required this.chatId, required this.firstMessage});
+  const RecentChat(
+      {super.key, required this.chatId, required this.firstMessage});
 
   @override
   Widget build(BuildContext context) {

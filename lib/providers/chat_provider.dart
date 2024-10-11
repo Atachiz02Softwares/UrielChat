@@ -17,9 +17,6 @@ final chatProvider =
 
 final currentChatIdProvider = StateProvider<String?>((ref) => null);
 
-final aiResponseCountProvider =
-    StateProvider<int>((ref) => 0); // Added provider
-
 class ChatProvider extends StateNotifier<List<ChatMessage>> {
   final ChatService _chatService;
   String _chatId;

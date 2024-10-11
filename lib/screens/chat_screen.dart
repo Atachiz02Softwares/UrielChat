@@ -6,19 +6,22 @@ import '../custom_widgets/custom.dart';
 import '../firebase/firebase.dart';
 import '../models/models.dart';
 import '../providers/providers.dart';
+import '../services/ai.dart';
 import '../utils/strings.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
-  const ChatScreen({super.key});
+  final String chatId;
+
+  const ChatScreen({super.key, required this.chatId});
 
   @override
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
-  String _selectedTopic = Strings.userDefined,
-      _selectedTone = Strings.userDefined,
-      _selectedMode = Strings.userDefined,
+  String _selectedTopic = Strings.general,
+      _selectedTone = Strings.general,
+      _selectedMode = Strings.general,
       _appBarTitle = Strings.newChat,
       _chatId = generateChatId();
 
@@ -32,20 +35,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   Future<void> _initialize() async {
-    final existingChatId = ref.read(currentChatIdProvider);
-    if (existingChatId != null) {
-      _chatId = existingChatId;
-    } else {
-      _chatId = generateChatId();
-      ref.read(currentChatIdProvider.notifier).state =
-          _chatId; // Persist chatId
-    }
+    _chatId = widget.chatId;
+    ref.read(currentChatIdProvider.notifier).state = _chatId; // Persist chatId
     await _loadChat();
-
-    final systemInstructions = await CRUD().getSystemInstructions();
-    if (systemInstructions != null) {
-      Strings.systemInstructions = systemInstructions;
-    }
   }
 
   @override
@@ -147,9 +139,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       _controller.clear();
       _isLoading = false;
       _appBarTitle = Strings.newChat;
-      _selectedTopic = Strings.userDefined;
-      _selectedTone = Strings.userDefined;
-      _selectedMode = Strings.userDefined;
+      _selectedTopic = Strings.general;
+      _selectedTone = Strings.general;
+      _selectedMode = Strings.general;
       _chatId = generateChatId();
     });
 
@@ -175,18 +167,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         });
       },
       incrementResponseCount: (int count) {
-        setState(() {
-        });
-      },
-      updateAppBarTitle: (String chatHistory) {
-        Utilities.updateAppBarTitle(
-          chatHistory: chatHistory,
-          setAppBarTitle: (String title) {
-            setState(() {
-              _appBarTitle = title;
-            });
-          },
-        );
+        setState(() {});
       },
       selectedTopic: _selectedTopic,
       selectedTone: _selectedTone,

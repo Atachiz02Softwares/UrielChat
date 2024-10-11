@@ -6,15 +6,6 @@ import '../utils/strings.dart';
 class CRUD {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<String?> getSystemInstructions() async {
-    final doc =
-        await _firestore.collection('aiConfigs').doc(Strings.instId).get();
-    if (doc.exists) {
-      return doc.data()?['systemInstructions'] as String?;
-    }
-    return null;
-  }
-
   Future<void> initializeUser(User user) async {
     final snapshot = await _firestore.collection('users').doc(user.uid).get();
     if (snapshot.exists) {

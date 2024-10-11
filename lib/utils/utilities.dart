@@ -5,7 +5,6 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 import '../models/models.dart';
 import '../providers/providers.dart'; // Ensure this import is present
 import '../services/services.dart';
-import 'strings.dart';
 
 class Utilities {
   static Future<void> sendMessage({
@@ -14,7 +13,6 @@ class Utilities {
     required WidgetRef ref,
     required Function(bool) setLoading,
     required Function(int) incrementResponseCount,
-    required Function(String) updateAppBarTitle,
     required String selectedTopic,
     required String selectedTone,
     required String selectedMode,
@@ -50,12 +48,6 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
         timestamp: DateTime.now(),
       );
       await ref.read(chatProvider(chatId).notifier).addMessage(aiMessage);
-
-      incrementResponseCount(ref.read(aiResponseCountProvider));
-
-      if (ref.read(aiResponseCountProvider) >= 3) {
-        updateAppBarTitle(chatHistoryString);
-      }
     } catch (e) {
       debugPrint('AI Error: $e');
       final errorMessage = ChatMessage(
@@ -67,24 +59,6 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
       await ref.read(chatProvider(chatId).notifier).addMessage(errorMessage);
     } finally {
       setLoading(false);
-    }
-  }
-
-  static Future<void> updateAppBarTitle({
-    required String chatHistory,
-    required Function(String) setAppBarTitle,
-  }) async {
-    final prompt = '''
-  Based on the following chat history, generate a suitable title for the AppBar.
-  Chat History:\n$chatHistory
-  The title should be concise and relevant to the conversation, not more than 5 words.
-  ''';
-
-    try {
-      final response = await AI.model.generateContent([Content.text(prompt)]);
-      setAppBarTitle(response.text!);
-    } catch (e) {
-      setAppBarTitle(Strings.newChat);
     }
   }
 }

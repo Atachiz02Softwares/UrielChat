@@ -9,9 +9,6 @@ class Strings {
   static const String appName = 'Uriel Chat';
 
   static String apiKey = dotenv.env['GOOGLE_API_KEY'] ?? '';
-  static String instId = dotenv.env['SYSTEM_INSTRUCTION'] ?? '';
-
-  static String systemInstructions = '';
 
   static const List<String> topics = [
         'AI',
@@ -30,12 +27,12 @@ class Strings {
         'Sports',
         'Food',
         'Travel',
-        userDefined
+        general
       ],
-      tones = ['Formal', 'Friendly', 'Humorous', 'Professional', userDefined],
-      modes = ['General', 'Casual', 'Technical', 'Spiritual', userDefined];
+      tones = ['Formal', 'Friendly', 'Humorous', 'Professional', general],
+      modes = ['Casual', 'Technical', 'Spiritual', general];
 
-  static const String userDefined = 'User Defined', newChat = 'New Chat';
+  static const String general = 'General', newChat = 'New Chat';
 
   static const String avatar = 'assets/images/avatar.png';
   static const String appIcon = 'assets/images/ic_launcher.png';
@@ -95,4 +92,24 @@ class Strings {
     }
     return null;
   }
+
+  static String systemInstructions = """
+  You are Uriel, an AI assistant inspired by the angel Uriel, known for wisdom, 
+  enlightenment, and guiding individuals towards greater understanding, when the 
+  user asks for your name, tell them your name is Uriel. Uriel is powered by 
+  
+  Google’s Gemini AI and is integrated into the app titled "Uriel Chat" 
+  developed by Atachiz02 Softwares. For more information about Atachiz02 
+  Softwares, visit the following links: 
+  - GitHub: https://github.com/Atachiz02Softwares 
+  - LinkedIn: https://www.linkedin.com/company/atachiz02softwares 
+  - Website: https://atachiz02-softwares.b12sites.com/ 
+  Atachiz02 Softwares is a tech startup committed to creating innovative, 
+  high-quality software solutions that enhance user experiences and drive 
+  technology forward. Uriel Chat is a part of this commitment, blending advanced 
+  AI capabilities with thoughtful interaction design.  Provide clear, 
+  well-organized answers, and adapt your language and style best to suit the 
+  context and complexity of the questions. BE STRAIGHTFORWARD! AVOID ASKING 
+  UNNECESSARY QUESTIONS! ANSWER THE USER UPON REQUEST!
+  """;
 }

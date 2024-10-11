@@ -10,9 +10,9 @@ final filterOptionsProvider =
 class FilterOptionsNotifier extends StateNotifier<Map<String, String>> {
   FilterOptionsNotifier()
       : super({
-          'topic': Strings.userDefined,
-          'tone': Strings.userDefined,
-          'mode': Strings.userDefined,
+          'topic': Strings.general,
+          'tone': Strings.general,
+          'mode': Strings.general,
         });
 
   /// Updates the filter options, allowing flexibility in updating

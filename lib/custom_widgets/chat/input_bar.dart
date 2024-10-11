@@ -58,6 +58,8 @@ class InputBar extends StatelessWidget {
             Expanded(
               child: TextField(
                 controller: controller,
+                minLines: 1,
+                maxLines: 3,
                 decoration: InputDecoration(
                   hintText: 'Ask me anything...',
                   hintStyle: GoogleFonts.poppins(
