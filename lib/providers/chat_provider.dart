@@ -13,6 +13,8 @@ final chatProvider = StateNotifierProvider.family<ChatProvider, List<ChatMessage
   return ChatProvider(chatId, chatService, ref);
 });
 
+final currentChatIdProvider = StateProvider<String?>((ref) => null);
+
 class ChatProvider extends StateNotifier<List<ChatMessage>> {
   final ChatService _chatService;
   String _chatId;

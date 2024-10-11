@@ -34,6 +34,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   Future<void> _initialize() async {
+    final existingChatId = ref.read(currentChatIdProvider);
+    if (existingChatId != null) {
+      _chatId = existingChatId;
+    } else {
+      _chatId = generateChatId();
+      ref.read(currentChatIdProvider.notifier).state =
+          _chatId; // Persist chatId
+    }
+    await _loadChat();
     await _loadChat();
 
     final systemInstructions = await CRUD().getSystemInstructions();
@@ -223,6 +232,8 @@ what they'd like to talk about.### Chat History:\n$chatHistoryString
       _selectedMode = Strings.userDefined;
       _chatId = generateChatId();
     });
+
+    ref.read(currentChatIdProvider.notifier).state = _chatId; // Store new chatId
 
     final user = ref.read(userProvider);
     if (user != null) {
