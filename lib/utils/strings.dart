@@ -40,9 +40,7 @@ class Strings {
   static const String home = 'assets/icons/home.svg';
   static const String chat = 'assets/icons/chat.svg';
   static const String settings = 'assets/icons/settings.svg';
-  static const String apple = 'assets/icons/apple.svg';
   static const String comments = 'assets/icons/comments.svg';
-  static const String facebook = 'assets/icons/facebook.svg';
   static const String feedback = 'assets/icons/feedback.svg';
   static const String google = 'assets/icons/google.svg';
   static const String mail = 'assets/icons/mail.svg';
@@ -51,12 +49,10 @@ class Strings {
   static const String mic = 'assets/icons/mic.svg';
   static const String send = 'assets/icons/send.svg';
   static const String camera = 'assets/icons/camera.svg';
-  static const String folder = 'assets/icons/folder.svg';
   static const String copy = 'assets/icons/copy.svg';
   static const String sweep = 'assets/icons/sweep.svg';
   static const String delete = 'assets/icons/delete.svg';
   static const String history = 'assets/icons/history.svg';
-  static const String options = 'assets/icons/options.svg';
   static const String newChatIcon = 'assets/icons/new_chat.svg';
   static const String error = 'assets/icons/error.svg';
   static const String uriel = 'assets/icons/uriel.svg';
