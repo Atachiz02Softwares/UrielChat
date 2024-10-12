@@ -14,7 +14,10 @@ class RecentChat extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, '/chat', arguments: chatId);
+          Navigator.pushNamed(context, '/chat', arguments: <String, String>{
+            'chatId': chatId,
+            'searchQuery': '',
+          });
         },
         child: GlassContainer(
           width: double.infinity,

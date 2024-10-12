@@ -10,8 +10,9 @@ import '../utils/utilities.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   final String chatId;
+  final String? searchQuery;
 
-  const ChatScreen({super.key, required this.chatId});
+  const ChatScreen({super.key, required this.chatId, this.searchQuery});
 
   @override
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
@@ -30,8 +31,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   Future<void> _initialize() async {
     _chatId = widget.chatId;
-    ref.read(currentChatIdProvider.notifier).state = _chatId;
+    Future.delayed(Duration.zero, () {
+      ref.read(currentChatIdProvider.notifier).state = _chatId;
+    });
     await _loadChat();
+
+    if (widget.searchQuery != null && widget.searchQuery!.isNotEmpty) {
+      _controller.text = widget.searchQuery!;
+      await _sendMessage();
+    }
   }
 
   @override
@@ -120,9 +128,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         setState(() {
           _isLoading = isLoading;
         });
-      },
-      incrementResponseCount: (int count) {
-        setState(() {});
       },
     );
   }

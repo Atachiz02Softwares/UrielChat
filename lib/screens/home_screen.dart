@@ -8,11 +8,24 @@ import '../custom_widgets/custom.dart';
 import '../providers/providers.dart';
 import 'screens.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final iconSize = MediaQuery.of(context).size.width * 0.2;
     final user = ref.read(userProvider);
     final chatService = ref.read(chatServiceProvider);
@@ -73,15 +86,24 @@ class HomeScreen extends ConsumerWidget {
                               color: Colors.grey,
                               size: 30,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              final searchQuery = _searchController.text;
+                              if (searchQuery.isNotEmpty) {
+                                Navigator.pushNamed(context, '/chat',
+                                    arguments: <String, String>{
+                                      'chatId': generateChatId(),
+                                      'searchQuery': searchQuery,
+                                    });
+                              }
+                            },
                           ),
                           const SizedBox(width: 10),
                           Expanded(
                             child: TextField(
+                              controller: _searchController,
                               style: GoogleFonts.poppins(
                                 color: Colors.white,
-                                fontSize: 20,
-                                fontStyle: FontStyle.italic,
+                                fontSize: 18,
                               ),
                               decoration: InputDecoration(
                                 hintText: 'Ask me anything...',

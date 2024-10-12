@@ -35,9 +35,14 @@ class UrielChat extends StatelessWidget {
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/chat') {
-          final chatId = settings.arguments as String;
+          final args = settings.arguments as Map<String, String>;
+          final chatId = args['chatId']!;
+          final searchQuery = args['searchQuery']!;
           return MaterialPageRoute(
-            builder: (context) => ChatScreen(chatId: chatId),
+            builder: (context) => ChatScreen(
+              chatId: chatId,
+              searchQuery: searchQuery,
+            ),
           );
         }
         return null;

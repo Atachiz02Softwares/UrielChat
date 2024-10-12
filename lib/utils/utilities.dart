@@ -11,7 +11,6 @@ class Utilities {
     required TextEditingController controller,
     required WidgetRef ref,
     required Function(bool) setLoading,
-    required Function(int) incrementResponseCount,
   }) async {
     if (controller.text.isEmpty) return;
 
@@ -50,6 +49,7 @@ class Utilities {
       await ref.read(chatProvider(chatId).notifier).addMessage(errorMessage);
     } finally {
       setLoading(false);
+      controller.clear();
     }
   }
 }
