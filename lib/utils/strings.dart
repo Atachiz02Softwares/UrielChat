@@ -11,28 +11,34 @@ class Strings {
   static String apiKey = dotenv.env['GOOGLE_API_KEY'] ?? '';
 
   static const List<String> topics = [
-        'AI',
-        'Science & Technology',
-        'Engineering',
-        'Nature',
-        'Mathematics',
-        'Programming',
-        'Current Affairs & Politics',
-        'Philosophy',
-        'Psychology',
-        'History',
-        'Literature',
-        'Music',
-        'Movies',
-        'Sports',
-        'Food',
-        'Travel',
+        '🤖 AI',
+        '🔬 Science & Technology',
+        '🛠️ Engineering',
+        '🌿 Nature',
+        '🔢 Mathematics',
+        '💻 Programming',
+        '📰 Current Affairs & Politics',
+        '💭 Philosophy',
+        '🧠 Psychology',
+        '📜 History',
+        '📚 Literature',
+        '🎵 Music',
+        '🎬 Movies',
+        '🏅 Sports',
+        '🍔 Food',
+        '✈️ Travel',
         general
       ],
-      tones = ['Formal', 'Friendly', 'Humorous', 'Professional', general],
-      modes = ['Casual', 'Technical', 'Spiritual', general];
+      tones = [
+        '📜 Formal',
+        '😊 Friendly',
+        '😂 Humorous',
+        '👔 Professional',
+        general
+      ],
+      modes = ['😎 Casual', '🔧 Technical', '🕊️ Spiritual', general];
 
-  static const String general = 'General', newChat = 'New Chat';
+  static const String general = '😐 General', newChat = 'New Chat';
 
   static const String avatar = 'assets/images/avatar.png';
   static const String appIcon = 'assets/images/ic_launcher.png';
@@ -53,6 +59,7 @@ class Strings {
   static const String sweep = 'assets/icons/sweep.svg';
   static const String delete = 'assets/icons/delete.svg';
   static const String history = 'assets/icons/history.svg';
+  static const String filter = 'assets/icons/filter.svg';
   static const String newChatIcon = 'assets/icons/new_chat.svg';
   static const String error = 'assets/icons/error.svg';
   static const String uriel = 'assets/icons/uriel.svg';

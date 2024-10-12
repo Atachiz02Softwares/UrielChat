@@ -37,23 +37,23 @@ class FilterOptions extends ConsumerWidget {
             Strings.topics,
             onTopicChanged,
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 20),
           _buildFilterDropdown(
             'Select Tone',
             selectedTone,
             Strings.tones,
             onToneChanged,
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 20),
           _buildFilterDropdown(
             'Select Mode',
             selectedMode,
             Strings.modes,
             onModeChanged,
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 50),
           CustomButton(
-            icon: Strings.settings,
+            icon: Strings.filter,
             label: 'Apply Filters',
             color: Colors.blueGrey.shade900,
             onPressed: () {
@@ -80,34 +80,72 @@ class FilterOptions extends ConsumerWidget {
     List<String> options,
     ValueChanged<String?> onChanged,
   ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(color: Colors.white, fontSize: 18),
-        ),
-        DropdownButton<String>(
-          value: selectedValue,
-          icon: const Icon(
-            Icons.keyboard_arrow_down,
-            color: Colors.white,
-            size: 30,
-          ),
-          dropdownColor: Colors.black,
-          isExpanded: true,
-          items: options.map((String option) {
-            return DropdownMenuItem<String>(
-              value: option,
-              child: CustomText(
-                text: option,
-                style: const TextStyle(color: Colors.white),
+    return StatefulBuilder(
+      builder: (context, setState) {
+        bool isExpanded = false;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomText(
+              text: label,
+              style: const TextStyle(color: Colors.white, fontSize: 18),
+            ),
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  isExpanded = !isExpanded;
+                });
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: isExpanded ? 300 : 56,
+                // Adjust height for expanded view
+                curve: Curves.easeInOut,
+                decoration: BoxDecoration(
+                  color: Colors.blueGrey.shade800,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: DropdownButtonFormField<String>(
+                  value: selectedValue,
+                  icon: const Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  dropdownColor: Colors.black,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                  ),
+                  isExpanded: true,
+                  items: options.map((String option) {
+                    return DropdownMenuItem<String>(
+                      value: option,
+                      child: CustomText(
+                        text: option,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                        overflow: TextOverflow.visible,
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    onChanged(value);
+                    setState(() {
+                      isExpanded = false; // Close dropdown after selection
+                    });
+                  },
+                ),
               ),
-            );
-          }).toList(),
-          onChanged: onChanged,
-        ),
-      ],
+            ),
+          ],
+        );
+      },
     );
   }
 }

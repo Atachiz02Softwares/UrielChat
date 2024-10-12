@@ -18,10 +18,10 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconSize = MediaQuery.of(context).size.width * 0.1;
+    final iconSize = MediaQuery.of(context).size.width * 0.09;
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 15),
+        padding: const EdgeInsets.symmetric(vertical: 5),
         backgroundColor: color,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50),
