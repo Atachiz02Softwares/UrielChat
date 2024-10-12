@@ -31,6 +31,7 @@ class UrielChat extends StatelessWidget {
         '/main': (context) => const MainScreen(),
         '/home': (context) => const HomeScreen(),
         '/settings': (context) => const SettingScreen(),
+        '/ai_settings': (context) => const AISettingScreen(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/chat') {

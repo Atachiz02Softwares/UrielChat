@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 
 import '../models/models.dart';
-import '../providers/providers.dart'; // Ensure this import is present
+import '../providers/providers.dart';
 import '../services/services.dart';
 
 class Utilities {
@@ -13,38 +12,30 @@ class Utilities {
     required WidgetRef ref,
     required Function(bool) setLoading,
     required Function(int) incrementResponseCount,
-    required String selectedTopic,
-    required String selectedTone,
-    required String selectedMode,
   }) async {
     if (controller.text.isEmpty) return;
 
+    String prompt = controller.text;
+
     final message = ChatMessage(
       sender: 'user',
-      content: controller.text,
+      content: prompt,
       timestamp: DateTime.now(),
     );
     await ref.read(chatProvider(chatId).notifier).addMessage(message);
 
     setLoading(true);
 
-    final chatHistoryString = ref
+    final chatHistory = ref
         .read(chatProvider(chatId))
         .map((message) => '${message.sender}: ${message.content}')
         .join('\n');
 
-    final prompt = '''
-Based on the following chat history, limit responses to the topic of $selectedTopic.
-Respond with a $selectedTone tone and focus on a $selectedMode mode of conversation.
-###Do not mention "User Defined" in your response, just ask the user to choose
-what they'd like to talk about.### Chat History:\n$chatHistoryString
-''';
-
     try {
-      final response = await AI.model.generateContent([Content.text(prompt)]);
+      final response = await AI.generateResponse(prompt, chatHistory, ref);
       final aiMessage = ChatMessage(
         sender: 'AI',
-        content: response.text!,
+        content: response,
         timestamp: DateTime.now(),
       );
       await ref.read(chatProvider(chatId).notifier).addMessage(aiMessage);

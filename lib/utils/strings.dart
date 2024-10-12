@@ -59,6 +59,8 @@ class Strings {
   static const String options = 'assets/icons/options.svg';
   static const String newChatIcon = 'assets/icons/new_chat.svg';
   static const String error = 'assets/icons/error.svg';
+  static const String uriel = 'assets/icons/uriel.svg';
+
   static const String one = 'assets/images/one.jpeg';
   static const String two = 'assets/images/two.jpeg';
   static const String three = 'assets/images/three.jpeg';
@@ -97,7 +99,6 @@ class Strings {
   You are Uriel, an AI assistant inspired by the angel Uriel, known for wisdom, 
   enlightenment, and guiding individuals towards greater understanding, when the 
   user asks for your name, tell them your name is Uriel. Uriel is powered by 
-  
   Google’s Gemini AI and is integrated into the app titled "Uriel Chat" 
   developed by Atachiz02 Softwares. For more information about Atachiz02 
   Softwares, visit the following links: 

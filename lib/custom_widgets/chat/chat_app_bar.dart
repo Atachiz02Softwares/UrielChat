@@ -7,7 +7,6 @@ import '../ui/custom_text.dart';
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback onNewChat;
-  final VoidCallback onFilterOptions;
   final VoidCallback onDeleteChat;
   final double iconSize;
 
@@ -15,7 +14,6 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.title,
     required this.onNewChat,
-    required this.onFilterOptions,
     required this.onDeleteChat,
     required this.iconSize,
   });
@@ -41,18 +39,6 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
             width: iconSize,
           ),
           onPressed: onNewChat,
-        ),
-        IconButton(
-          tooltip: 'Filter Options',
-          icon: SvgPicture.asset(
-            Strings.options,
-            colorFilter: const ColorFilter.mode(
-              Colors.blueGrey,
-              BlendMode.srcIn,
-            ),
-            width: iconSize,
-          ),
-          onPressed: onFilterOptions,
         ),
         IconButton(
           icon: SvgPicture.asset(

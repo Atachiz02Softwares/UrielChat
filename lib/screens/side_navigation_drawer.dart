@@ -115,9 +115,27 @@ class SideNavigationDrawer extends ConsumerWidget {
               ],
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: ThemeSwitch(),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            // child: ThemeSwitch(),
+            child: ListTile(
+              trailing: SvgPicture.asset(
+                Strings.uriel,
+                width: 40,
+                height: 40,
+              ),
+              title: const CustomText(
+                text: 'AI Settings',
+                style: TextStyle(
+                  color: Colors.blueGrey,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onTap: () {
+                Navigator.pushNamed(context, '/ai_settings');
+              },
+            ),
           ),
         ],
       ),

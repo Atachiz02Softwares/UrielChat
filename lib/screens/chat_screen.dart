@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uriel_chat/utils/utilities.dart';
 
 import '../custom_widgets/custom.dart';
 import '../firebase/firebase.dart';
 import '../models/models.dart';
 import '../providers/providers.dart';
-import '../services/ai.dart';
 import '../utils/strings.dart';
+import '../utils/utilities.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   final String chatId;
@@ -19,12 +18,7 @@ class ChatScreen extends ConsumerStatefulWidget {
 }
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
-  String _selectedTopic = Strings.general,
-      _selectedTone = Strings.general,
-      _selectedMode = Strings.general,
-      _appBarTitle = Strings.newChat,
-      _chatId = generateChatId();
-
+  String _appBarTitle = Strings.newChat, _chatId = generateChatId();
   final TextEditingController _controller = TextEditingController();
   bool _isLoading = false;
 
@@ -36,7 +30,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   Future<void> _initialize() async {
     _chatId = widget.chatId;
-    ref.read(currentChatIdProvider.notifier).state = _chatId; // Persist chatId
+    ref.read(currentChatIdProvider.notifier).state = _chatId;
     await _loadChat();
   }
 
@@ -45,7 +39,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final iconSize = MediaQuery.of(context).size.width * 0.07;
     final List<ChatMessage> messages = ref.watch(chatProvider(_chatId));
 
-    // Convert List<ChatMessage> to List<Map<String, String>>
     final List<Map<String, String>> messageMaps = messages.map((message) {
       return message
           .toMap()
@@ -56,7 +49,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       appBar: ChatAppBar(
         title: _appBarTitle,
         onNewChat: newChat,
-        onFilterOptions: () => _showFilterOptions(context),
         onDeleteChat: deleteChat,
         iconSize: iconSize,
       ),
@@ -92,39 +84,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     }
   }
 
-  void _showFilterOptions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.black.withOpacity(0.9),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-      ),
-      builder: (BuildContext context) {
-        final filterOptions = ref.watch(filterOptionsProvider);
-        return FilterOptions(
-          selectedTopic: filterOptions['topic']!,
-          selectedTone: filterOptions['tone']!,
-          selectedMode: filterOptions['mode']!,
-          onTopicChanged: (String? newValue) {
-            setState(() {
-              _selectedTopic = newValue!;
-            });
-          },
-          onToneChanged: (String? newValue) {
-            setState(() {
-              _selectedTone = newValue!;
-            });
-          },
-          onModeChanged: (String? newValue) {
-            setState(() {
-              _selectedMode = newValue!;
-            });
-          },
-        );
-      },
-    );
-  }
-
   Future<void> deleteChat() async {
     final user = ref.read(userProvider);
     if (user != null) {
@@ -139,14 +98,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       _controller.clear();
       _isLoading = false;
       _appBarTitle = Strings.newChat;
-      _selectedTopic = Strings.general;
-      _selectedTone = Strings.general;
-      _selectedMode = Strings.general;
       _chatId = generateChatId();
     });
 
-    ref.read(currentChatIdProvider.notifier).state =
-        _chatId; // Store new chatId
+    ref.read(currentChatIdProvider.notifier).state = _chatId;
 
     final user = ref.read(userProvider);
     if (user != null) {
@@ -169,9 +124,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       incrementResponseCount: (int count) {
         setState(() {});
       },
-      selectedTopic: _selectedTopic,
-      selectedTone: _selectedTone,
-      selectedMode: _selectedMode,
     );
   }
 }
