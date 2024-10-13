@@ -102,7 +102,7 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
             children: [
               isUser
                   ? CustomText(
-                      text: text,
+                      text: text.trim(),
                       style: const TextStyle(color: Colors.white, fontSize: 16),
                       align: TextAlign.right,
                     )

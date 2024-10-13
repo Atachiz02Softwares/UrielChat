@@ -8,10 +8,16 @@ class ChatService {
 
   Future<void> saveMessage(String chatId, ChatMessage message) async {
     final user = FirebaseAuth.instance.currentUser;
-    final chatRef = _firestore.collection('chats').doc(chatId);
+    if (user == null) return;
+
+    final chatRef = _firestore
+        .collection('chats')
+        .doc(user.uid)
+        .collection('userChats')
+        .doc(chatId);
 
     await chatRef.set({
-      'userId': user?.uid,
+      'userId': user.uid,
       'timestamp': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
 
@@ -21,7 +27,15 @@ class ChatService {
   }
 
   Stream<List<ChatMessage>> getMessages(String chatId) {
-    final chatRef = _firestore.collection('chats').doc(chatId);
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return Stream.value([]);
+
+    final chatRef = _firestore
+        .collection('chats')
+        .doc(user.uid)
+        .collection('userChats')
+        .doc(chatId);
+
     return chatRef.snapshots().map((snapshot) {
       final data = snapshot.data();
       if (data != null && data['messages'] != null) {
@@ -36,7 +50,8 @@ class ChatService {
   Future<List<Map<String, String>>> getRecentChats(String userId) async {
     final querySnapshot = await _firestore
         .collection('chats')
-        .where('userId', isEqualTo: userId)
+        .doc(userId)
+        .collection('userChats')
         .orderBy('timestamp', descending: true)
         .get();
 
