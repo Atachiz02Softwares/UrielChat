@@ -23,7 +23,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   bool _isSignUp = false,
       _isPasswordVisible = false,
       _isEmailLoading = false,
-      _isGoogleLoading = false;
+      _isGoogleLoading = false,
+      _isPrivacyPolicyAccepted = false;
   final Auth _auth = Auth();
 
   void _toggleSignUp() {
@@ -39,7 +40,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   Future<void> _authenticate() async {
-    if (!_formKey.currentState!.validate()) {
+    if (!_formKey.currentState!.validate() || !_isPrivacyPolicyAccepted) {
+      if (!_isPrivacyPolicyAccepted) {
+        CustomSnackBar.showSnackBar(
+          context,
+          'Please accept the privacy policy to proceed...',
+        );
+      }
       return;
     }
 
@@ -92,14 +99,14 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const SizedBox(height: 50),
+                      const SizedBox(height: 30),
                       Center(
                         child: Image.asset(
                           Strings.appIcon,
-                          height: 200,
+                          height: 150,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       const CustomText(
                         text: "Sign in",
                         style: TextStyle(
@@ -116,7 +123,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           fontSize: 16,
                         ),
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 20),
                       if (_isSignUp)
                         TextFormField(
                           controller: _nameController,
@@ -142,7 +149,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           ),
                           validator: Strings.nameValidator,
                         ),
-                      if (_isSignUp) const SizedBox(height: 20),
+                      if (_isSignUp) const SizedBox(height: 10),
                       TextFormField(
                         controller: _emailController,
                         decoration: InputDecoration(
@@ -167,7 +174,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         ),
                         validator: Strings.emailValidator,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       TextFormField(
                         controller: _passwordController,
                         obscureText: !_isPasswordVisible,
@@ -203,7 +210,36 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         ),
                         validator: Strings.passwordValidator,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
+                      CheckboxListTile(
+                        title: GestureDetector(
+                          onTap: () {
+                            Utilities.showInfo(
+                              context,
+                              '**Privacy Policy**',
+                              Strings.privacyPolicy,
+                            );
+                          },
+                          child: const CustomText(
+                            text: 'I accept the Privacy Policy',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                        value: _isPrivacyPolicyAccepted,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _isPrivacyPolicyAccepted = value ?? false;
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                        activeColor: Colors.blueGrey.shade900,
+                        checkColor: Colors.white,
+                      ),
+                      const SizedBox(height: 10),
                       _isEmailLoading
                           ? const Center(child: CustomProgressBar())
                           : CustomButton(
@@ -212,7 +248,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                               color: Colors.blueGrey.shade900,
                               onPressed: _authenticate,
                             ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Center(
                         child: TextButton(
                           onPressed: _toggleSignUp,
@@ -232,7 +268,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           style: TextStyle(color: Colors.grey, fontSize: 16),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       _isGoogleLoading
                           ? const Center(child: CustomProgressBar())
                           : CustomButton(
@@ -240,6 +276,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                               label: 'Google',
                               color: Colors.green.shade900,
                               onPressed: () {
+                                if (!_isPrivacyPolicyAccepted) {
+                                  CustomSnackBar.showSnackBar(
+                                    context,
+                                    'Please accept the privacy policy to proceed...',
+                                  );
+                                  return;
+                                }
                                 setState(() {
                                   _isGoogleLoading = true;
                                 });
