@@ -1,6 +1,6 @@
 # Uriel Chat
 
-Uriel Chat is a Generative AI mobile application that allows users to interact with an AI model to ask questions and receive responses.
+Uriel Chat is an open source Generative AI mobile application that allows users to interact with an AI model to ask questions and receive responses.
 The app is powered by Google's Gemini AI and developed by Atachiz02 Softwares.
 
 ## Features
