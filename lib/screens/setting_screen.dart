@@ -86,7 +86,11 @@ class SettingScreen extends ConsumerWidget {
                     ),
                   ),
                   onTap: () {
-                    // Navigate to Privacy and Security Screen
+                    Utilities.showInfo(
+                      context,
+                      '**Privacy Policy**',
+                      Strings.privacyPolicy,
+                    );
                   },
                 ),
                 ListTile(
@@ -104,7 +108,11 @@ class SettingScreen extends ConsumerWidget {
                     ),
                   ),
                   onTap: () {
-                    // Navigate to App Information Screen
+                    Utilities.showInfo(
+                      context,
+                      '**App Information**',
+                      Strings.appInfo,
+                    );
                   },
                 ),
                 ListTile(
