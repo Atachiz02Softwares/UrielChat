@@ -13,7 +13,10 @@ class AISettingScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const CustomText(text: 'Customize AI Behavior'),
+        title: const CustomText(
+          text: 'Customize AI Behavior',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.black,
       ),
       body: BackgroundContainer(
@@ -34,10 +37,14 @@ class AISettingScreen extends ConsumerWidget {
                         .update(topic: newValue);
                   },
                   onToneChanged: (String? newValue) {
-                    ref.read(filterOptionsProvider.notifier).update(tone: newValue);
+                    ref
+                        .read(filterOptionsProvider.notifier)
+                        .update(tone: newValue);
                   },
                   onModeChanged: (String? newValue) {
-                    ref.read(filterOptionsProvider.notifier).update(mode: newValue);
+                    ref
+                        .read(filterOptionsProvider.notifier)
+                        .update(mode: newValue);
                   },
                 ),
               ],

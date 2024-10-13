@@ -26,6 +26,9 @@ class Auth {
           'name': name,
           'email': email,
           'photoURL': user.photoURL,
+          'tier': 'free',
+          'daily_limit': 50,
+          'minute_limit': 5,
         });
       }
 
@@ -73,6 +76,9 @@ class Auth {
             'name': user.displayName,
             'email': user.email,
             'photoURL': user.photoURL,
+            'tier': 'free',
+            'daily_limit': 50,
+            'minute_limit': 5,
           });
         }
       }
