@@ -23,7 +23,7 @@ class CustomText extends StatelessWidget {
       text,
       style: GoogleFonts.poppins().merge(style),
       textAlign: align,
-      overflow: overflow ?? TextOverflow.fade,
+      overflow: overflow,
       maxLines: maxLines,
     );
   }

@@ -26,8 +26,8 @@ class RecentChat extends StatelessWidget {
             padding: const EdgeInsets.all(15),
             child: CustomText(
               text: firstMessage,
-              style: const TextStyle(fontSize: 24, color: Colors.white),
-              overflow: TextOverflow.fade,
+              style: const TextStyle(fontSize: 18, color: Colors.white),
+              overflow: TextOverflow.ellipsis,
               maxLines: 1,
             ),
           ),

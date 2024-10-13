@@ -6,4 +6,3 @@ export 'main_screen.dart';
 export 'onboarding/onboarding_page.dart';
 export 'onboarding/onboarding_screen.dart';
 export 'setting_screen.dart';
-export 'side_navigation_drawer.dart';

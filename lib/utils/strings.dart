@@ -47,7 +47,6 @@ class Strings {
   static const String chat = 'assets/icons/chat.svg';
   static const String settings = 'assets/icons/settings.svg';
   static const String comments = 'assets/icons/comments.svg';
-  static const String feedback = 'assets/icons/feedback.svg';
   static const String google = 'assets/icons/google.svg';
   static const String mail = 'assets/icons/mail.svg';
   static const String help = 'assets/icons/help.svg';
@@ -57,6 +56,7 @@ class Strings {
   static const String camera = 'assets/icons/camera.svg';
   static const String copy = 'assets/icons/copy.svg';
   static const String sweep = 'assets/icons/sweep.svg';
+  static const String search = 'assets/icons/search.svg';
   static const String delete = 'assets/icons/delete.svg';
   static const String history = 'assets/icons/history.svg';
   static const String filter = 'assets/icons/filter.svg';

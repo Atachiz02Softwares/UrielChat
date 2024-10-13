@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../providers/user_provider.dart';
-import '../../utils/utils.dart';
 import '../custom.dart';
 
 class ChatHeader extends ConsumerWidget {
@@ -19,13 +18,7 @@ class ChatHeader extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CircleAvatar(
-            backgroundColor: Colors.transparent,
-            backgroundImage: user?.photoURL != null
-                ? NetworkImage(user!.photoURL!)
-                : const AssetImage(Strings.avatar) as ImageProvider,
-            radius: 40,
-          ),
+          ProfilePicture(radius: 40),
           const SizedBox(height: 20),
           CustomText(
             text: 'Hello $name, ask me anything...',

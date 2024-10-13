@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../custom_widgets/custom.dart';
@@ -24,22 +25,124 @@ class SettingScreen extends ConsumerWidget {
         child: BackgroundContainer(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+            child: ListView(
+              physics: const BouncingScrollPhysics(),
               children: [
                 if (user != null) ...[
-                  CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: user.photoURL != null
-                        ? NetworkImage(user.photoURL!)
-                        : const AssetImage(Strings.avatar) as ImageProvider,
-                    radius: 80,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ProfilePicture(),
+                      const SizedBox(height: 20),
+                      CustomText(
+                        text: '${user.displayName}',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      CustomText(
+                        text: '${user.email}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
                   ),
-                  const SizedBox(height: 20),
-                  CustomText(text: 'Name: ${user.displayName}'),
-                  CustomText(text: 'Email: ${user.email}'),
                 ],
+                ListTile(
+                  leading: const Icon(
+                    Icons.settings_rounded,
+                    color: Colors.blueGrey,
+                    size: 30,
+                  ),
+                  title: const CustomText(
+                    text: 'AI Settings',
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/ai_settings');
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.privacy_tip_rounded,
+                    color: Colors.blueGrey,
+                    size: 30,
+                  ),
+                  title: const CustomText(
+                    text: 'Privacy Policy',
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onTap: () {
+                    // Navigate to Privacy and Security Screen
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.info,
+                    color: Colors.blueGrey,
+                    size: 30,
+                  ),
+                  title: const CustomText(
+                    text: 'App Information',
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onTap: () {
+                    // Navigate to App Information Screen
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.feedback_rounded,
+                    color: Colors.blueGrey,
+                    size: 30,
+                  ),
+                  title: const CustomText(
+                    text: 'Feedback',
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onTap: () {
+                    Utilities.showFeedbackBottomSheet(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.exit_to_app_rounded,
+                    color: Colors.blueGrey,
+                    size: 30,
+                  ),
+                  title: const CustomText(
+                    text: 'Exit',
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onTap: () {
+                    SystemNavigator.pop();
+                  },
+                ),
                 const SizedBox(height: 20),
                 CustomButton(
                   icon: Strings.signout,

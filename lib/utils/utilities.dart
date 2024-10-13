@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../custom_widgets/ui/feedback_bottomsheet.dart';
 import '../models/models.dart';
 import '../providers/providers.dart';
 import '../services/services.dart';
@@ -51,5 +52,16 @@ class Utilities {
       setLoading(false);
       controller.clear();
     }
+  }
+
+  static void showFeedbackBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      showDragHandle: true,
+      backgroundColor: Colors.black,
+      context: context,
+      builder: (context) {
+        return FeedbackBottomSheet();
+      },
+    );
   }
 }

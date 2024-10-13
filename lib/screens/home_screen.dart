@@ -6,7 +6,6 @@ import 'package:uriel_chat/utils/utils.dart';
 
 import '../custom_widgets/custom.dart';
 import '../providers/providers.dart';
-import 'screens.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -31,7 +30,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final chatService = ref.read(chatServiceProvider);
 
     return Scaffold(
-      endDrawer: const SideNavigationDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
@@ -50,14 +48,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          backgroundImage: user?.photoURL != null
-                              ? NetworkImage(user!.photoURL!)
-                              : const AssetImage(Strings.avatar)
-                                  as ImageProvider,
-                          radius: 80,
-                        ),
+                        const ProfilePicture(),
                         const SizedBox(width: 20),
                         CustomText(
                           text:
@@ -77,14 +68,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     width: double.infinity,
                     borderRadius: 50,
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(8),
                       child: Row(
                         children: [
                           IconButton(
-                            icon: const Icon(
-                              Icons.search_rounded,
-                              color: Colors.grey,
-                              size: 30,
+                            icon: SvgPicture.asset(
+                              Strings.search,
+                              colorFilter: const ColorFilter.mode(
+                                Colors.blueGrey,
+                                BlendMode.srcIn,
+                              ),
+                              width: 30,
+                              height: 30,
                             ),
                             onPressed: () {
                               final searchQuery = _searchController.text;
@@ -114,10 +109,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(
-                              Icons.mic_rounded,
-                              color: Colors.grey,
-                              size: 30,
+                            icon: SvgPicture.asset(
+                              Strings.mic,
+                              colorFilter: const ColorFilter.mode(
+                                Colors.blueGrey,
+                                BlendMode.srcIn,
+                              ),
+                              width: 30,
+                              height: 30,
                             ),
                             onPressed: () {
                               CustomSnackBar.showSnackBar(
@@ -126,10 +125,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                           const SizedBox(width: 10),
                           IconButton(
-                            icon: const Icon(
-                              Icons.photo_camera_rounded,
-                              color: Colors.grey,
-                              size: 30,
+                            icon: SvgPicture.asset(
+                              Strings.camera,
+                              colorFilter: const ColorFilter.mode(
+                                Colors.blueGrey,
+                                BlendMode.srcIn,
+                              ),
+                              width: 30,
+                              height: 30,
                             ),
                             onPressed: () {
                               CustomSnackBar.showSnackBar(
