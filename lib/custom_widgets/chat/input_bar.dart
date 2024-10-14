@@ -86,7 +86,7 @@ class InputBar extends StatelessWidget {
                     ),
                     onPressed: () {
                       onSendMessage();
-                      controller.clear();
+                      controller;
                     },
                   ),
           ],

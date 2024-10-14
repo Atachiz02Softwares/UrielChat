@@ -7,11 +7,13 @@ import '../custom.dart';
 class InfoBottomSheet extends StatelessWidget {
   final String title;
   final String content;
+  final Widget? button;
 
   const InfoBottomSheet({
     super.key,
     required this.title,
     required this.content,
+    this.button,
   });
 
   @override
@@ -45,6 +47,8 @@ class InfoBottomSheet extends StatelessWidget {
                   textAlign: WrapAlignment.start,
                 ),
               ),
+              const SizedBox(height: 20),
+              button ?? const SizedBox.shrink(),
             ],
           ),
         ),

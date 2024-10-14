@@ -155,7 +155,7 @@ class SettingScreen extends ConsumerWidget {
                 CustomButton(
                   icon: Strings.signout,
                   label: 'Sign Out',
-                  color: Colors.red.shade900,
+                  buttonColor: Colors.red.shade900,
                   onPressed: () async {
                     final authNotifier = ref.read(authProvider.notifier);
                     await authNotifier.signOut();

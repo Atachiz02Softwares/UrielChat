@@ -62,6 +62,7 @@ class Strings {
   static const String filter = 'assets/icons/filter.svg';
   static const String newChatIcon = 'assets/icons/new_chat.svg';
   static const String error = 'assets/icons/error.svg';
+  static const String dollar = 'assets/icons/dollar.svg';
   static const String uriel = 'assets/icons/uriel.svg';
 
   static const String one = 'assets/images/one.jpeg';
@@ -191,5 +192,30 @@ class Strings {
   - **App Name:** Uriel Chat
   - **Version:** 1.0.0
   - **Developer:** Atachiz02 Softwares
+  """;
+
+  static const String upgradePrompt = """
+  You have reached your daily chat limit. Upgrade to continue chatting.
+
+  ## Upgrade Options
+  
+  ### Free Tier
+  - **Daily Limit:** 30 messages
+  - **Features:** Basic chat functionality
+  
+  ### Regular Tier
+  - **Daily Limit:** 80 messages
+  - **Features:** 
+    - Enhanced chat functionality
+    - Priority support
+  
+  ### Premium Tier
+  - **Daily Limit:** 100 messages
+  - **Features:** 
+    - All Regular Tier features
+    - Access to exclusive content
+    - Personalized AI responses
+  
+  **Note:** Upgrading to a higher tier will reset your daily message count immediately.
   """;
 }

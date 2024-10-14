@@ -69,7 +69,7 @@ class _FeedbackBottomSheetState extends ConsumerState<FeedbackBottomSheet> {
                     : CustomButton(
                         icon: Strings.send,
                         label: 'Send Feedback',
-                        color: Colors.blueGrey.shade900,
+                        buttonColor: Colors.blueGrey.shade900,
                         onPressed: () {
                           _sendFeedback(context);
                           CustomSnackBar.showSnackBar(

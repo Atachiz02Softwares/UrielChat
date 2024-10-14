@@ -245,7 +245,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           : CustomButton(
                               icon: Strings.mail,
                               label: _isSignUp ? 'Sign Up' : 'Sign In',
-                              color: Colors.blueGrey.shade900,
+                              buttonColor: Colors.blueGrey.shade900,
                               onPressed: _authenticate,
                             ),
                       const SizedBox(height: 10),
@@ -274,7 +274,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           : CustomButton(
                               icon: Strings.google,
                               label: 'Google',
-                              color: Colors.green.shade900,
+                              buttonColor: Colors.green.shade900,
                               onPressed: () {
                                 if (!_isPrivacyPolicyAccepted) {
                                   CustomSnackBar.showSnackBar(

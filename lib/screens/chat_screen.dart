@@ -126,6 +126,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       setLoading: (bool isLoading) {
         setState(() {
           _isLoading = isLoading;
+          _controller.clear();
         });
       },
     );

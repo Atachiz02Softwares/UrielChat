@@ -55,7 +55,7 @@ class FilterOptions extends ConsumerWidget {
           CustomButton(
             icon: Strings.filter,
             label: 'Apply Filters',
-            color: Colors.blueGrey.shade900,
+            buttonColor: Colors.blueGrey.shade900,
             onPressed: () {
               ref
                   .read(filterOptionsProvider.notifier)
