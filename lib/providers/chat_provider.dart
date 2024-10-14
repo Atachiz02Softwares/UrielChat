@@ -43,6 +43,11 @@ class ChatProvider extends StateNotifier<List<ChatMessage>> {
     state = [];
   }
 
+  // delete chat
+  Future<void> deleteChat() async {
+    await _chatService.deleteChat(_chatId);
+  }
+
   Future<void> loadChat(String userId) async {
     final messages = await _chatService.getMessages(_chatId).first;
     state = messages;

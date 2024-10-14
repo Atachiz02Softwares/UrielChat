@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../custom_widgets/custom.dart';
-import '../firebase/firebase.dart';
 import '../models/models.dart';
 import '../providers/providers.dart';
 import '../utils/strings.dart';
@@ -96,7 +95,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final user = ref.read(userProvider);
     if (user != null) {
       final chatId = ref.read(chatProvider(_chatId).notifier).chatId;
-      await CRUD().deleteChat(chatId);
+      await ref.read(chatProvider(chatId).notifier).deleteChat();
       await newChat();
     }
   }

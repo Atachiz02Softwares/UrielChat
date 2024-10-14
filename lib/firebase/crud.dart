@@ -22,10 +22,6 @@ class CRUD {
     }
   }
 
-  Future<void> deleteChat(String chatId) async {
-    await _firestore.collection('chats').doc(chatId).delete();
-  }
-
   Future<void> sendFeedback({
     required String userId,
     required String topic,

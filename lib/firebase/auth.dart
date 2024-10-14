@@ -27,8 +27,9 @@ class Auth {
           'email': email,
           'photoURL': user.photoURL,
           'tier': 'free',
-          'daily_limit': 50,
-          'minute_limit': 5,
+          'dailyCount': 0,
+          'dailyLimit': 100,
+          'lastChatTime': Timestamp.now(),
         });
       }
 
@@ -77,8 +78,9 @@ class Auth {
             'email': user.email,
             'photoURL': user.photoURL,
             'tier': 'free',
-            'daily_limit': 50,
-            'minute_limit': 5,
+            'dailyCount': 0,
+            'dailyLimit': 100,
+            'lastChatTime': Timestamp.now(),
           });
         }
       }

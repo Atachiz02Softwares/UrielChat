@@ -66,4 +66,15 @@ class ChatService {
       };
     }).toList();
   }
+
+  // deleteChat method
+  Future<void> deleteChat(String chatId) async {
+    final user = FirebaseAuth.instance.currentUser;
+    await _firestore
+        .collection('chats')
+        .doc(user!.uid)
+        .collection('userChats')
+        .doc(chatId)
+        .delete();
+  }
 }
