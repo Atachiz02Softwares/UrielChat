@@ -18,27 +18,31 @@ class Utilities {
   }) async {
     if (controller.text.isEmpty) return;
 
-    // Fetch the current user
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    // Fetch user data from Firestore
     final userDoc =
         FirebaseFirestore.instance.collection('users').doc(user.uid);
     final userSnapshot = await userDoc.get();
 
-    // Check if the user data exists
     if (!userSnapshot.exists) return;
 
-    // Get the daily limit and count
     final userData = userSnapshot.data();
     String tier = userData?['tier'] ?? 'free';
     int dailyCount = userData?['dailyCount'] ?? 0;
     int dailyLimit = userData?['dailyLimit'] ?? (tier == 'free' ? 30 : 50);
+    Timestamp lastChatTime = userData?['lastChatTime'] ?? Timestamp.now();
 
-    // Check if the user has reached their daily message limit
+    DateTime now = DateTime.now();
+    DateTime lastResetDate = lastChatTime.toDate();
+
+    // Check if a new day has started
+    if (now.difference(lastResetDate).inHours >= 24) {
+      await userDoc.update({'dailyCount': 0});
+      dailyCount = 0;
+    }
+
     if (dailyCount >= dailyLimit && ref.context.mounted) {
-      // Show upgrade prompt
       promptUpgrade(ref.context);
       return;
     }
@@ -61,10 +65,11 @@ class Utilities {
         .join('\n');
 
     try {
-      // Increment the daily count in Firestore
-      await userDoc.update({'dailyCount': FieldValue.increment(1)});
+      await userDoc.update({
+        'dailyCount': FieldValue.increment(1),
+        'lastChatTime': Timestamp.now()
+      });
 
-      // Generate AI response
       final response = await AI.generateResponse(prompt, chatHistory, ref);
       final aiMessage = ChatMessage(
         sender: 'AI',
@@ -83,7 +88,7 @@ class Utilities {
       await ref.read(chatProvider(chatId).notifier).addMessage(errorMessage);
     } finally {
       setLoading(false);
-      controller.clear(); // Clear the controller after saving the message
+      controller.clear();
     }
   }
 
