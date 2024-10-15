@@ -5,4 +5,5 @@ export 'home_screen.dart';
 export 'main_screen.dart';
 export 'onboarding/onboarding_page.dart';
 export 'onboarding/onboarding_screen.dart';
+export 'onboarding/rooted_device_screen.dart';
 export 'setting_screen.dart';

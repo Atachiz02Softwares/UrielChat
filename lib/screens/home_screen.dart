@@ -163,7 +163,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           child: Column(
                             children: [
                               SvgPicture.asset(
-                                Strings.history,
+                                Strings.error,
                                 colorFilter: const ColorFilter.mode(
                                   Colors.blueGrey,
                                   BlendMode.srcIn,

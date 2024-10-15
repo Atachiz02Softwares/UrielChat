@@ -47,13 +47,13 @@ android {
 
             // TODO: Uncomment the lines below before releasing to production.
             // signingConfig signingConfigs.release
-            // minifyEnabled true
-            // shrinkResources true
-            // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            // ndk {
-            // debugSymbolLevel 'SYMBOL_TABLE'
-            // }
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
         }
     }
 }

@@ -46,10 +46,8 @@ class Strings {
   static const String home = 'assets/icons/home.svg';
   static const String chat = 'assets/icons/chat.svg';
   static const String settings = 'assets/icons/settings.svg';
-  static const String comments = 'assets/icons/comments.svg';
   static const String google = 'assets/icons/google.svg';
   static const String mail = 'assets/icons/mail.svg';
-  static const String help = 'assets/icons/help.svg';
   static const String signout = 'assets/icons/signout.svg';
   static const String mic = 'assets/icons/mic.svg';
   static const String send = 'assets/icons/send.svg';
@@ -57,17 +55,18 @@ class Strings {
   static const String copy = 'assets/icons/copy.svg';
   static const String sweep = 'assets/icons/sweep.svg';
   static const String search = 'assets/icons/search.svg';
-  static const String delete = 'assets/icons/delete.svg';
   static const String history = 'assets/icons/history.svg';
   static const String filter = 'assets/icons/filter.svg';
   static const String newChatIcon = 'assets/icons/new_chat.svg';
   static const String error = 'assets/icons/error.svg';
   static const String dollar = 'assets/icons/dollar.svg';
-  static const String uriel = 'assets/icons/uriel.svg';
+  static const String shield = 'assets/icons/shield.svg';
 
   static const String one = 'assets/images/one.jpeg';
   static const String two = 'assets/images/two.jpeg';
   static const String three = 'assets/images/three.jpeg';
+
+  static const String email = 'morpheusoftwares@gmail.com';
 
   static const String chill = 'Chill, this feature is on its way...';
 
@@ -98,6 +97,14 @@ class Strings {
     }
     return null;
   }
+
+  static const String rootedDeviceMessage = """
+  **For security reasons, you cannot use $appName on a rooted or jailbroken device. Please use a non-rooted device or a device with an unmodified operating system to access the app.**
+  
+  **If you believe this is an error, please contact support for assistance, but first, check if your device is not an emulator/simulator, not in developer mode, or has not been tampered with.**
+  
+  **For support, contact us at [$email](mailto:$email).**
+  """;
 
   static const String systemInstructions = """
   You are Uriel, an AI assistant inspired by the angel Uriel, known for wisdom, 
@@ -166,7 +173,7 @@ class Strings {
   ## **Contact Information**
   
   For support or inquiries, please contact us at:
-  - Email: [morpheusoftwares@gmail.com](mailto:morpheusoftwares@gmail.com).
+  - Email: [$email](mailto:$email).
   - Website: [https://atachiz02-softwares.b12sites.com/](https://atachiz02-softwares.b12sites.com/).
   - LinkedIn: [Atachiz02 Softwares](https://www.linkedin.com/company/atachiz02softwares).
     
@@ -199,17 +206,17 @@ class Strings {
 
   ## Upgrade Options
   
-  ### Free Tier
+  ### Free Tier (NGN 0.00)
   - **Daily Limit:** 30 messages
   - **Features:** Basic chat functionality
   
-  ### Regular Tier
+  ### Regular Tier (NGN 200.00)
   - **Daily Limit:** 80 messages
   - **Features:** 
     - Enhanced chat functionality
     - Priority support
-  
-  ### Premium Tier
+    
+  ### Premium Tier (NGN 500.00)
   - **Daily Limit:** 100 messages
   - **Features:** 
     - All Regular Tier features

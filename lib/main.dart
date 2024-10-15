@@ -6,15 +6,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/providers.dart';
 import 'firebase_options.dart';
 import 'screens/screens.dart';
+import 'utils/utils.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const ProviderScope(child: UrielChat()));
+  final isRooted = await isDeviceRooted();
+  if (isRooted) {
+    runApp(const RootedDeviceScreen());
+  } else {
+    runApp(const ProviderScope(child: UrielChat()));
+  }
 }
 
 class UrielChat extends StatelessWidget {
@@ -23,7 +30,7 @@ class UrielChat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Uriel Chat',
+      title: Strings.appName,
       theme: ThemeData.dark(),
       home: const AuthWrapper(),
       routes: {
