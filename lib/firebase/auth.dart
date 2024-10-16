@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../utils/strings.dart';
+
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -28,7 +30,7 @@ class Auth {
           'photoURL': user.photoURL,
           'tier': 'free',
           'dailyCount': 0,
-          'dailyLimit': 100,
+          'dailyLimit': Strings.free,
           'lastChatTime': Timestamp.now(),
         });
       }
@@ -79,7 +81,7 @@ class Auth {
             'photoURL': user.photoURL,
             'tier': 'free',
             'dailyCount': 0,
-            'dailyLimit': 100,
+            'dailyLimit': Strings.free,
             'lastChatTime': Timestamp.now(),
           });
         }

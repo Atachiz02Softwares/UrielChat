@@ -35,7 +35,7 @@ class SettingScreen extends ConsumerWidget {
                       ProfilePicture(),
                       const SizedBox(height: 20),
                       CustomText(
-                        text: '${user.displayName}',
+                        text: user.displayName ?? 'User',
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,

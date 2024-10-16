@@ -2,14 +2,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uriel_chat/utils/strings.dart';
 
 import '../custom_widgets/custom.dart';
 import '../models/models.dart';
 import '../providers/providers.dart';
 import '../services/services.dart';
+import '../utils/strings.dart';
 
 class Utilities {
+  static Future<void> initializeRemoteConfig(WidgetRef ref) async {
+    final remoteConfigService = ref.read(remoteConfigProvider);
+    Strings.freeModel = remoteConfigService.freeModel;
+    Strings.paidModel = remoteConfigService.paidModel;
+    Strings.freeAPIKey = remoteConfigService.freeAPIKey;
+    Strings.paidAPIKey = remoteConfigService.paidAPIKey;
+    Strings.free = remoteConfigService.free;
+    Strings.regular = remoteConfigService.regular;
+    Strings.regularMoney = remoteConfigService.regularMoney;
+    Strings.premium = remoteConfigService.premium;
+    Strings.premiumMoney = remoteConfigService.premiumMoney;
+  }
+
   static Future<void> sendMessage({
     required String chatId,
     required TextEditingController controller,

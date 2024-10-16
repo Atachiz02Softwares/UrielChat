@@ -3,6 +3,7 @@ export 'auth_screen.dart';
 export 'chat_screen.dart';
 export 'home_screen.dart';
 export 'main_screen.dart';
+export 'onboarding/auth_wrapper.dart';
 export 'onboarding/onboarding_page.dart';
 export 'onboarding/onboarding_screen.dart';
 export 'onboarding/rooted_device_screen.dart';

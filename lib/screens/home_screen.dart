@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uriel_chat/utils/utils.dart';
 
 import '../custom_widgets/custom.dart';
 import '../providers/providers.dart';
+import '../utils/utils.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -28,6 +28,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final iconSize = MediaQuery.of(context).size.width * 0.2;
     final user = ref.read(userProvider);
     final chatService = ref.read(chatServiceProvider);
+
+    // Initialize Remote Configs on Home Screen the second time to avoid conflicts
+    Utilities.initializeRemoteConfig(ref);
 
     return Scaffold(
       appBar: AppBar(

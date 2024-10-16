@@ -17,9 +17,9 @@ Future<bool> isDeviceRooted() async {
 }
 
 Future<bool> _isAndroidRooted(AndroidDeviceInfo androidInfo) async {
-  if (!androidInfo.isPhysicalDevice) return true;
-  if (androidInfo.tags.contains('test-keys')) return true;
-  if (androidInfo.systemFeatures.contains('android.software.device_admin')) return true;
+  // if (!androidInfo.isPhysicalDevice) return true;
+  // if (androidInfo.tags.contains('test-keys')) return true;
+  // if (androidInfo.systemFeatures.contains('android.software.device_admin')) return true;
 
   // Asynchronous root indicators check
   final rootIndicators = [

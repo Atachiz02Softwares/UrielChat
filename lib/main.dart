@@ -1,19 +1,22 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/providers.dart';
 import 'firebase_options.dart';
 import 'screens/screens.dart';
 import 'utils/utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Activate Firebase App Check
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: AndroidProvider.debug, // TODO: DELETE THIS LINE LATER
   );
 
   final isRooted = await isDeviceRooted();
@@ -24,11 +27,13 @@ void main() async {
   }
 }
 
-class UrielChat extends StatelessWidget {
+class UrielChat extends ConsumerWidget {
   const UrielChat({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    Utilities.initializeRemoteConfig(ref); // Initialize Remote Configs
+
     return MaterialApp(
       title: Strings.appName,
       theme: ThemeData.dark(),
@@ -55,20 +60,5 @@ class UrielChat extends StatelessWidget {
         return null;
       },
     );
-  }
-}
-
-class AuthWrapper extends ConsumerWidget {
-  const AuthWrapper({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(authProvider);
-
-    if (user != null) {
-      return const MainScreen();
-    } else {
-      return const OnboardingScreen();
-    }
   }
 }

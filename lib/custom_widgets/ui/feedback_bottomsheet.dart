@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uriel_chat/custom_widgets/custom.dart';
-import 'package:uriel_chat/utils/utils.dart';
 
 import '../../firebase/crud.dart';
 import '../../providers/user_provider.dart';
+import '../../utils/strings.dart';
+import '../custom.dart';
 
 class FeedbackBottomSheet extends ConsumerStatefulWidget {
   const FeedbackBottomSheet({super.key});
@@ -36,7 +36,12 @@ class _FeedbackBottomSheetState extends ConsumerState<FeedbackBottomSheet> {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: 16,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,

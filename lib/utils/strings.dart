@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Strings {
   Strings._();
@@ -8,7 +7,9 @@ class Strings {
 
   static const String appName = 'Uriel Chat';
 
-  static String apiKey = dotenv.env['GOOGLE_API_KEY'] ?? '';
+  static String freeAPIKey = '', paidAPIKey = '';
+
+  static String freeModel = '', paidModel = '';
 
   static const List<String> topics = [
         '🤖 AI',
@@ -125,104 +126,107 @@ class Strings {
   UNNECESSARY QUESTIONS! ANSWER THE USER UPON REQUEST!
   """;
 
-  static const String privacyPolicy = """
-  # **Privacy Policy**
-  
-  ## 1. **Information We Collect**
-  
-  We collect the following information for analytics purposes and to provide
-  better services to our users:
-  - **User Data:** We collect information you provide when you sign up for an
-  account, including your name, email address, and profile picture if any.
-  - **User Chats:** We collect information about your chats, including messages
-  you send and receive and the time and date these messages were sent/received.
-  These messages are securely stored to provide you with a seamless chatting
-  experience, and it is our intention to integrate end-to-end chat encryption soon.
-  
-  ## 2. **How We Use Information**
-  
-  We use the information we collect to provide, maintain, and improve our app and
-  general services.
-  
-  ## 3. **Information Sharing**
-  
-  We do not share personal information with companies, organizations, or individuals
-  outside of our company except in the following cases:
-  
-  - **With Your Consent:** We may share your information with third parties if you
-  give us explicit consent.
-  - **For Legal Reasons:** We may share your information if required by law or to
-  protect the rights and safety of our users and others.
-  
-  ## 4. **Data Security**
-  
-  We implement appropriate security measures to protect your information from
-  unauthorized access, alteration, disclosure, or destruction.
-  
-  ## 5. **Your Rights**
-    
-  You have the right to access, update, or delete your personal information.
-  You can do this by contacting us via any of the contact information provided below.
-  
-  ## 6. **Changes to This Privacy Policy**
-  
-  We may update this Privacy Policy from time to time. We will notify you of any
-  changes by posting the new Privacy Policy on this page. You are advised to review
-  this Privacy Policy periodically for any changes.
-        
-  ## **Contact Information**
-  
-  For support or inquiries, please contact us at:
-  - Email: [$email](mailto:$email).
-  - Website: [https://atachiz02-softwares.b12sites.com/](https://atachiz02-softwares.b12sites.com/).
-  - LinkedIn: [Atachiz02 Softwares](https://www.linkedin.com/company/atachiz02softwares).
-    
-  ## **Last Updated**
-  - 13th October, 2024.
-  """;
+  static String privacyPolicy = """
+# **Privacy Policy**
 
-  static const String appInfo = """
-  # **Uriel Chat**
+## 1. **Information We Collect**
 
-  Uriel Chat is an innovative open source chat application that leverages
-  Google's Gemini Generative AI model to enhance your messaging experience.
-    
-  ## **Features**
-  
-  - **Engage in Real-Time Conversations:** Get prompt AI response in real-time.
-  - **AI-Powered Responses:** Get intelligent responses from Uriel to keep the conversation going.
-  - **Customizable Settings:** Personalize your chat experience with various settings and preferences.
-  - **Secure and Private:** Your data is secure with us, and we prioritize your privacy.
-  
-  ## **App Info**
-  
-  - **App Name:** Uriel Chat
-  - **Version:** 1.0.0
-  - **Developer:** Atachiz02 Softwares
-  """;
+We collect the following information for analytics purposes and to provide
+better services to our users:
+- **User Data:** We collect information you provide when you sign up for an
+account, including your name, email address, and profile picture if any.
+- **User Chats:** We collect information about your chats, including messages
+you send and receive and the time and date these messages were sent/received.
+These messages are securely stored to provide you with a seamless chatting
+experience, and it is our intention to integrate end-to-end chat encryption soon.
 
-  static const String upgradePrompt = """
-  You have reached your daily chat limit. Upgrade to continue chatting.
+## 2. **How We Use Information**
 
-  ## Upgrade Options
-  
-  ### Free Tier (NGN 0.00)
-  - **Daily Limit:** 30 messages
-  - **Features:** Basic chat functionality
-  
-  ### Regular Tier (NGN 200.00)
-  - **Daily Limit:** 80 messages
-  - **Features:** 
-    - Enhanced chat functionality
-    - Priority support
-    
-  ### Premium Tier (NGN 500.00)
-  - **Daily Limit:** 100 messages
-  - **Features:** 
-    - All Regular Tier features
-    - Access to exclusive content
-    - Personalized AI responses
-  
-  **Note:** Upgrading to a higher tier will reset your daily message count immediately.
-  """;
+We use the information we collect to provide, maintain, and improve our app and
+general services.
+
+## 3. **Information Sharing**
+
+We do not share personal information with companies, organizations, or individuals
+outside of our company except in the following cases:
+
+- **With Your Consent:** We may share your information with third parties if you
+give us explicit consent.
+- **For Legal Reasons:** We may share your information if required by law or to
+protect the rights and safety of our users and others.
+
+## 4. **Data Security**
+
+We implement appropriate security measures to protect your information from
+unauthorized access, alteration, disclosure, or destruction.
+
+## 5. **Your Rights**
+
+You have the right to access, update, or delete your personal information.
+You can do this by contacting us via any of the contact information provided below.
+
+## 6. **Changes to This Privacy Policy**
+
+We may update this Privacy Policy from time to time. We will notify you of any
+changes by posting the new Privacy Policy on this page. You are advised to review
+this Privacy Policy periodically for any changes.
+
+## **Contact Information**
+
+For support or inquiries, please contact us at:
+- Email: [$email](mailto:$email).
+- Website: [https://atachiz02-softwares.b12sites.com/](https://atachiz02-softwares.b12sites.com/).
+- LinkedIn: [Atachiz02 Softwares](https://www.linkedin.com/company/atachiz02softwares).
+
+## **Last Updated**
+- 13th October, 2024.
+""";
+
+  static String appInfo = """
+# **Uriel Chat**
+
+Uriel Chat is an innovative open source chat application that leverages
+Google's Gemini Generative AI model to enhance your messaging experience.
+
+## **Features**
+
+- **Engage in Real-Time Conversations:** Get prompt AI response in real-time.
+- **AI-Powered Responses:** Get intelligent responses from Uriel to keep the conversation going.
+- **Customizable Settings:** Personalize your chat experience with various settings and preferences.
+- **Secure and Private:** Your data is secure with us, and we prioritize your privacy.
+
+## **App Info**
+
+- **App Name:** Uriel Chat
+- **Version:** 1.0.0
+- **Developer:** Atachiz02 Softwares
+""";
+
+  static int free = 0, regular = 0, premium = 0;
+  static double regularMoney = 0, premiumMoney = 0;
+
+  static String upgradePrompt = """
+You have reached your daily chat limit. Upgrade to continue chatting.
+
+## Upgrade Options
+
+### Free Tier (NGN 0.00)
+- **Daily Limit:** $free messages
+- **Features:** Basic chat functionality
+
+### Regular Tier (NGN $regularMoney)
+- **Daily Limit:** $regular messages
+- **Features:**
+  - Enhanced chat functionality
+  - Priority support
+
+### Premium Tier (NGN $premiumMoney)
+- **Daily Limit:** $premium messages
+- **Features:**
+  - All Regular Tier features
+  - Access to exclusive content
+  - Personalized AI responses
+
+**Note:** Upgrading to a higher tier will reset your daily message count immediately.
+""";
 }
