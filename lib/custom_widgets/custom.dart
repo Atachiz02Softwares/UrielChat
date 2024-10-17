@@ -16,4 +16,3 @@ export 'ui/info_bottomsheet.dart';
 export 'ui/plan_card.dart';
 export 'ui/profile_picture.dart';
 export 'ui/recent_chat.dart';
-export 'ui/theme_switch.dart';
