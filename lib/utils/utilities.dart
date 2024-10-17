@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../custom_widgets/custom.dart';
+import '../firebase/crud.dart';
 import '../models/models.dart';
 import '../providers/providers.dart';
 import '../services/services.dart';
@@ -16,11 +17,15 @@ class Utilities {
     Strings.paidModel = remoteConfigService.paidModel;
     Strings.freeAPIKey = remoteConfigService.freeAPIKey;
     Strings.paidAPIKey = remoteConfigService.paidAPIKey;
+    Strings.payStackPublicKey = remoteConfigService.payStackPublicKey;
+    Strings.payStackSecretKey = remoteConfigService.payStackSecretKey;
     Strings.free = remoteConfigService.free;
     Strings.regular = remoteConfigService.regular;
     Strings.regularMoney = remoteConfigService.regularMoney;
     Strings.premium = remoteConfigService.premium;
     Strings.premiumMoney = remoteConfigService.premiumMoney;
+    Strings.platinum = remoteConfigService.platinum;
+    Strings.platinumMoney = remoteConfigService.platinumMoney;
   }
 
   static Future<void> sendMessage({
@@ -127,9 +132,7 @@ class Utilities {
     );
   }
 
-  static void promptUpgrade(
-    BuildContext context,
-  ) {
+  static void promptUpgrade(BuildContext context) {
     showModalBottomSheet(
       showDragHandle: true,
       backgroundColor: Colors.black,
@@ -144,16 +147,19 @@ class Utilities {
             buttonColor: Colors.green.shade900,
             iconColor: false,
             onPressed: () {
-              // TODO: Perform upgrade action
-              Navigator.of(context).pop();
-              CustomSnackBar.showSnackBar(
-                context,
-                'Upgrade action not implemented yet...',
-              );
+              Navigator.of(context).pushReplacementNamed('/paystack');
             },
           ),
         );
       },
     );
+  }
+
+  static Future<String> fetchCurrentPlan(WidgetRef ref) async {
+    final user = ref.read(userProvider);
+    if (user != null) {
+      return await CRUD().fetchCurrentPlan(user.uid);
+    }
+    return 'free';
   }
 }

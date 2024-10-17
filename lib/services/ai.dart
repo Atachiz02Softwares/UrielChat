@@ -29,8 +29,8 @@ class AI {
     String model;
     String apiKey;
 
-    model = tier == 'paid' ? Strings.paidModel : Strings.freeModel;
-    apiKey = tier == 'paid' ? Strings.paidAPIKey : Strings.freeAPIKey;
+    model = tier == 'free' ? Strings.freeModel : Strings.paidModel;
+    apiKey = tier == 'free' ? Strings.freeAPIKey : Strings.paidAPIKey;
 
     return GenerativeModel(
       model: model,

@@ -5,6 +5,10 @@ class RemoteConfigService {
 
   RemoteConfigService(this._remoteConfig);
 
+  String get payStackPublicKey => _remoteConfig.getString('payStackPublicKey');
+
+  String get payStackSecretKey => _remoteConfig.getString('payStackSecretKey');
+
   String get freeModel => _remoteConfig.getString('freeModel');
 
   String get paidModel => _remoteConfig.getString('paidModel');
@@ -17,9 +21,13 @@ class RemoteConfigService {
 
   int get regular => _remoteConfig.getInt('regular');
 
-  int get premium => _remoteConfig.getInt('premium');
-
   double get regularMoney => _remoteConfig.getDouble('regularMoney');
 
+  int get premium => _remoteConfig.getInt('premium');
+
   double get premiumMoney => _remoteConfig.getDouble('premiumMoney');
+
+  int get platinum => _remoteConfig.getInt('platinum');
+
+  double get platinumMoney => _remoteConfig.getDouble('platinumMoney');
 }

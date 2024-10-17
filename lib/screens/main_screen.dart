@@ -33,9 +33,7 @@ class _MainScreenState extends State<MainScreen> {
     final iconSize = width * 0.08;
 
     return Scaffold(
-      body: SafeArea(
-        child: _pages.elementAt(_selectedIndex),
-      ),
+      body: _pages.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(

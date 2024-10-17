@@ -38,4 +38,14 @@ class CRUD {
       'feedbacks': FieldValue.arrayUnion([feedbackData]),
     }, SetOptions(merge: true));
   }
+
+  Future<String> fetchCurrentPlan(String userId) async {
+    final userDoc = _firestore.collection('users').doc(userId);
+    final userSnapshot = await userDoc.get();
+    if (userSnapshot.exists) {
+      final userData = userSnapshot.data() as Map<String, dynamic>;
+      return userData['tier'] ?? 'free';
+    }
+    return 'free';
+  }
 }

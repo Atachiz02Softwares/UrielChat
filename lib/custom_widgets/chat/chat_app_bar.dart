@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../providers/plan_provider.dart';
 import '../../utils/strings.dart';
 import '../ui/custom_text.dart';
 
-class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
+class ChatAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback onNewChat;
   final VoidCallback onDeleteChat;
@@ -19,8 +21,11 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentPlan = ref.watch(planProvider);
+
     return AppBar(
+      iconTheme: const IconThemeData(color: Colors.white, size: 30),
       backgroundColor: Colors.black,
       title: CustomText(
         text: title,
@@ -28,6 +33,14 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
         maxLines: 1,
       ),
       actions: [
+        CustomText(
+          text: '${currentPlan.toUpperCase()} PLAN',
+          style: const TextStyle(
+            color: Colors.green,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(width: 10),
         IconButton(
           tooltip: Strings.newChat,
           icon: SvgPicture.asset(

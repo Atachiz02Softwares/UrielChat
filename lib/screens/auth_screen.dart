@@ -85,82 +85,58 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height * 0.1;
+
     return Scaffold(
-      body: SafeArea(
-        child: BackgroundContainer(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Center(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: 30),
-                      Center(
-                        child: Image.asset(
-                          Strings.appIcon,
-                          height: 150,
-                        ),
+      body: BackgroundContainer(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Center(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(height: height),
+                    Center(
+                      child: Image.asset(
+                        Strings.appIcon,
+                        height: 150,
                       ),
-                      const SizedBox(height: 10),
-                      const CustomText(
-                        text: "Sign in",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    const SizedBox(height: 10),
+                    const CustomText(
+                      text: "Sign in",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const SizedBox(height: 5),
-                      const CustomText(
-                        text: "to access to your account",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16,
-                        ),
+                    ),
+                    const SizedBox(height: 5),
+                    const CustomText(
+                      text: "to access to your account",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
                       ),
-                      const SizedBox(height: 20),
-                      if (_isSignUp)
-                        TextFormField(
-                          controller: _nameController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.black26,
-                            prefixIcon: const Icon(
-                              Icons.person,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                            hintText: 'Name',
-                            hintStyle: GoogleFonts.poppins(color: Colors.grey),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          validator: Strings.nameValidator,
-                        ),
-                      if (_isSignUp) const SizedBox(height: 10),
+                    ),
+                    const SizedBox(height: 20),
+                    if (_isSignUp)
                       TextFormField(
-                        controller: _emailController,
+                        controller: _nameController,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.black26,
                           prefixIcon: const Icon(
-                            Icons.email,
+                            Icons.person,
                             color: Colors.white,
                             size: 30,
                           ),
-                          hintText: 'Email',
+                          hintText: 'Name',
                           hintStyle: GoogleFonts.poppins(color: Colors.grey),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
@@ -172,145 +148,167 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                        validator: Strings.emailValidator,
+                        validator: Strings.nameValidator,
                       ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: !_isPasswordVisible,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.black26,
-                          prefixIcon: const Icon(
-                            Icons.lock,
+                    if (_isSignUp) const SizedBox(height: 10),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.black26,
+                        prefixIcon: const Icon(
+                          Icons.email,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        hintText: 'Email',
+                        hintStyle: GoogleFonts.poppins(color: Colors.grey),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      validator: Strings.emailValidator,
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: !_isPasswordVisible,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.black26,
+                        prefixIcon: const Icon(
+                          Icons.lock,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility_rounded
+                                : Icons.visibility_off_rounded,
                             color: Colors.white,
                             size: 30,
                           ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _isPasswordVisible
-                                  ? Icons.visibility_rounded
-                                  : Icons.visibility_off_rounded,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                            onPressed: _togglePasswordVisibility,
-                          ),
-                          hintText: 'Password',
-                          hintStyle: GoogleFonts.poppins(color: Colors.grey),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: BorderSide.none,
-                          ),
+                          onPressed: _togglePasswordVisibility,
                         ),
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                        hintText: 'Password',
+                        hintStyle: GoogleFonts.poppins(color: Colors.grey),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide.none,
                         ),
-                        validator: Strings.passwordValidator,
                       ),
-                      const SizedBox(height: 10),
-                      CheckboxListTile(
-                        title: GestureDetector(
-                          onTap: () {
-                            Utilities.showInfo(
-                              context,
-                              '**Privacy Policy**',
-                              Strings.privacyPolicy,
-                            );
-                          },
-                          child: const CustomText(
-                            text: 'I accept the Privacy Policy',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 16,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                        value: _isPrivacyPolicyAccepted,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _isPrivacyPolicyAccepted = value ?? false;
-                          });
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      validator: Strings.passwordValidator,
+                    ),
+                    const SizedBox(height: 10),
+                    CheckboxListTile(
+                      title: GestureDetector(
+                        onTap: () {
+                          Utilities.showInfo(
+                            context,
+                            '**Privacy Policy**',
+                            Strings.privacyPolicy,
+                          );
                         },
-                        controlAffinity: ListTileControlAffinity.leading,
-                        activeColor: Colors.blueGrey.shade900,
-                        checkColor: Colors.white,
-                      ),
-                      const SizedBox(height: 10),
-                      _isEmailLoading
-                          ? const Center(child: CustomProgressBar())
-                          : CustomButton(
-                              icon: Strings.mail,
-                              label: _isSignUp ? 'Sign Up' : 'Sign In',
-                              buttonColor: Colors.blueGrey.shade900,
-                              onPressed: _authenticate,
-                            ),
-                      const SizedBox(height: 10),
-                      Center(
-                        child: TextButton(
-                          onPressed: _toggleSignUp,
-                          child: CustomText(
-                            text: _isSignUp
-                                ? "Already have an account? Sign In"
-                                : "Don't have an account? Sign Up",
-                            style: const TextStyle(
-                                color: Colors.grey, fontSize: 16),
+                        child: const CustomText(
+                          text: 'I accept the Privacy Policy',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 16,
+                            decoration: TextDecoration.underline,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      const Center(
+                      value: _isPrivacyPolicyAccepted,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _isPrivacyPolicyAccepted = value ?? false;
+                        });
+                      },
+                      controlAffinity: ListTileControlAffinity.leading,
+                      activeColor: Colors.blueGrey.shade900,
+                      checkColor: Colors.white,
+                    ),
+                    const SizedBox(height: 10),
+                    _isEmailLoading
+                        ? const Center(child: CustomProgressBar())
+                        : CustomButton(
+                            icon: Strings.mail,
+                            label: _isSignUp ? 'Sign Up' : 'Sign In',
+                            buttonColor: Colors.blueGrey.shade900,
+                            onPressed: _authenticate,
+                          ),
+                    const SizedBox(height: 10),
+                    Center(
+                      child: TextButton(
+                        onPressed: _toggleSignUp,
                         child: CustomText(
-                          text: "Or Sign In With",
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                          text: _isSignUp
+                              ? "Already have an account? Sign In"
+                              : "Don't have an account? Sign Up",
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 16),
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      _isGoogleLoading
-                          ? const Center(child: CustomProgressBar())
-                          : CustomButton(
-                              icon: Strings.google,
-                              label: 'Google',
-                              buttonColor: Colors.green.shade900,
-                              onPressed: () {
-                                if (!_isPrivacyPolicyAccepted) {
-                                  CustomSnackBar.showSnackBar(
-                                    context,
-                                    'Please accept the privacy policy to proceed...',
-                                  );
-                                  return;
+                    ),
+                    const SizedBox(height: 20),
+                    const Center(
+                      child: CustomText(
+                        text: "Or Sign In With",
+                        style: TextStyle(color: Colors.grey, fontSize: 16),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    _isGoogleLoading
+                        ? const Center(child: CustomProgressBar())
+                        : CustomButton(
+                            icon: Strings.google,
+                            label: 'Google',
+                            buttonColor: Colors.green.shade900,
+                            onPressed: () {
+                              if (!_isPrivacyPolicyAccepted) {
+                                CustomSnackBar.showSnackBar(
+                                  context,
+                                  'Please accept the privacy policy to proceed...',
+                                );
+                                return;
+                              }
+                              setState(() {
+                                _isGoogleLoading = true;
+                              });
+                              Auth().signInWithGoogle().then((userCredential) {
+                                ref
+                                    .read(authProvider.notifier)
+                                    .setUser(userCredential?.user);
+                                if (context.mounted) {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/main');
                                 }
+                              }).catchError((e) {
+                                if (context.mounted) {
+                                  CustomSnackBar.showSnackBar(
+                                      context, e.toString());
+                                }
+                              }).whenComplete(() {
                                 setState(() {
-                                  _isGoogleLoading = true;
+                                  _isGoogleLoading = false;
                                 });
-                                Auth()
-                                    .signInWithGoogle()
-                                    .then((userCredential) {
-                                  ref
-                                      .read(authProvider.notifier)
-                                      .setUser(userCredential?.user);
-                                  if (context.mounted) {
-                                    Navigator.pushReplacementNamed(
-                                        context, '/main');
-                                  }
-                                }).catchError((e) {
-                                  if (context.mounted) {
-                                    CustomSnackBar.showSnackBar(
-                                        context, e.toString());
-                                  }
-                                }).whenComplete(() {
-                                  setState(() {
-                                    _isGoogleLoading = false;
-                                  });
-                                });
-                              },
-                            ),
-                      const SizedBox(height: 20),
-                    ],
-                  ),
+                              });
+                            },
+                          ),
+                    const SizedBox(height: 20),
+                  ],
                 ),
               ),
             ),

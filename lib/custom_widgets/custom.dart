@@ -13,6 +13,7 @@ export 'ui/custom_text.dart';
 export 'ui/feedback_bottomsheet.dart';
 export 'ui/glass_container.dart';
 export 'ui/info_bottomsheet.dart';
+export 'ui/plan_card.dart';
 export 'ui/profile_picture.dart';
 export 'ui/recent_chat.dart';
 export 'ui/theme_switch.dart';

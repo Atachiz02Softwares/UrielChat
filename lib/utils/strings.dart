@@ -7,6 +7,8 @@ class Strings {
 
   static const String appName = 'Uriel Chat';
 
+  static String payStackSecretKey = '', payStackPublicKey = '';
+
   static String freeAPIKey = '', paidAPIKey = '';
 
   static String freeModel = '', paidModel = '';
@@ -100,12 +102,12 @@ class Strings {
   }
 
   static const String rootedDeviceMessage = """
-  **For security reasons, you cannot use $appName on a rooted or jailbroken device. Please use a non-rooted device or a device with an unmodified operating system to access the app.**
+**For security reasons, you cannot use $appName on a rooted or jailbroken device. Please use a non-rooted device or a device with an unmodified operating system to access the app.**
   
-  **If you believe this is an error, please contact support for assistance, but first, check if your device is not an emulator/simulator, not in developer mode, or has not been tampered with.**
+**If you believe this is an error, please contact support for assistance, but first, check if your device is not an emulator/simulator, not in developer mode, or has not been tampered with.**
   
-  **For support, contact us at [$email](mailto:$email).**
-  """;
+**For support, contact us at [$email](mailto:$email).**
+""";
 
   static const String systemInstructions = """
   You are Uriel, an AI assistant inspired by the angel Uriel, known for wisdom, 
@@ -160,12 +162,19 @@ protect the rights and safety of our users and others.
 We implement appropriate security measures to protect your information from
 unauthorized access, alteration, disclosure, or destruction.
 
-## 5. **Your Rights**
+## 5. Plan Upgrade
+- Upgrading to a higher tier will reset your daily message count immediately.
+- We will not refund any payments made for the upgrade nor will we refund any double
+payments made for the same upgrade.
+- We reserve the right to change the pricing of the upgrade at any time without prior notice.
+- Please, feel free to contact us if you have any questions or concerns about your upgrade plans.
+
+## 6. **Your Rights**
 
 You have the right to access, update, or delete your personal information.
 You can do this by contacting us via any of the contact information provided below.
 
-## 6. **Changes to This Privacy Policy**
+## 7. **Changes to This Privacy Policy**
 
 We may update this Privacy Policy from time to time. We will notify you of any
 changes by posting the new Privacy Policy on this page. You are advised to review
@@ -202,30 +211,39 @@ Google's Gemini Generative AI model to enhance your messaging experience.
 - **Developer:** Atachiz02 Softwares
 """;
 
-  static int free = 0, regular = 0, premium = 0;
-  static double regularMoney = 0, premiumMoney = 0;
+  static int free = 0, regular = 0, premium = 0, platinum = 0;
+  static double regularMoney = 0, premiumMoney = 0, platinumMoney = 0;
 
   static String upgradePrompt = """
 You have reached your daily chat limit. Upgrade to continue chatting.
 
-## Upgrade Options
+# **Upgrade Options**
 
-### Free Tier (NGN 0.00)
+## **Free Plan (NGN 0.00)**
 - **Daily Limit:** $free messages
-- **Features:** Basic chat functionality
+- **Features:**
+  - Basic chat functionality
+  - Fewer daily message limits
 
-### Regular Tier (NGN $regularMoney)
+## **Regular Plan (NGN $regularMoney)**
 - **Daily Limit:** $regular messages
 - **Features:**
   - Enhanced chat functionality
   - Priority support
+  - Increased daily message limit
 
-### Premium Tier (NGN $premiumMoney)
+## **Premium Plan (NGN $premiumMoney)**
 - **Daily Limit:** $premium messages
 - **Features:**
   - All Regular Tier features
+  - Increased daily message limit
+
+## **Platinum Plan (NGN $platinumMoney)**
+- **Daily Limit:** $platinum messages
+- **Features:**
+  - All Premium Tier features
   - Access to exclusive content
-  - Personalized AI responses
+  - Media chat support
 
 **Note:** Upgrading to a higher tier will reset your daily message count immediately.
 """;

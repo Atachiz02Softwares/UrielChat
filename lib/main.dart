@@ -2,6 +2,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uriel_chat/services/payments/paystack/paystack.dart';
 
 import 'firebase_options.dart';
 import 'screens/screens.dart';
@@ -44,6 +45,7 @@ class UrielChat extends ConsumerWidget {
         '/home': (context) => const HomeScreen(),
         '/settings': (context) => const SettingScreen(),
         '/ai_settings': (context) => const AISettingScreen(),
+        '/paystack': (context) => const PayStack(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/chat') {

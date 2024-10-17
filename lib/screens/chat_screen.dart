@@ -26,6 +26,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   void initState() {
     super.initState();
     _initialize();
+    ref.read(planProvider.notifier).fetchCurrentPlan(ref);
   }
 
   Future<void> _initialize() async {

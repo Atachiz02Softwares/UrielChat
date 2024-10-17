@@ -18,6 +18,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    ref.read(planProvider.notifier).fetchCurrentPlan(ref);
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
@@ -26,8 +32,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final iconSize = MediaQuery.of(context).size.width * 0.2;
+
     final user = ref.read(userProvider);
     final chatService = ref.read(chatServiceProvider);
+    final currentPlan = ref.watch(planProvider);
 
     // Initialize Remote Configs on Home Screen the second time to avoid conflicts
     Utilities.initializeRemoteConfig(ref);
@@ -36,6 +44,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: CustomText(
+              text: '${currentPlan.toUpperCase()} PLAN',
+              style: const TextStyle(
+                color: Colors.green,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ),
       body: Stack(
         children: [
