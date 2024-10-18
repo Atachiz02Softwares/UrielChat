@@ -24,7 +24,6 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
-    final currentPlan = ref.watch(planProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -33,18 +32,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
           text: 'Settings',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: CustomText(
-              text: '${currentPlan.toUpperCase()} PLAN',
-              style: const TextStyle(
-                color: Colors.green,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
+        actions: [CurrentPlan()],
       ),
       body: BackgroundContainer(
         child: Padding(

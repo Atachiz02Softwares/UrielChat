@@ -6,6 +6,7 @@ export 'chat/input_bar.dart';
 export 'chat/typing_indicator.dart';
 export 'chat/typing_text.dart';
 export 'ui/background_container.dart';
+export 'ui/current_plan.dart';
 export 'ui/custom_button.dart';
 export 'ui/custom_progress_bar.dart';
 export 'ui/custom_snackbar.dart';

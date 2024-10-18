@@ -17,8 +17,10 @@ class UserNotifier extends StateNotifier<User?> {
       if (user != null) {
         await CRUD().initializeUser(user);
         await CRUD().initializeChat(user.uid);
+        state = user;
+      } else {
+        state = null;
       }
-      state = user;
     });
   }
 

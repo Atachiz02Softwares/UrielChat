@@ -35,24 +35,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final user = ref.watch(userProvider);
     final chatService = ref.watch(chatServiceProvider);
-    final currentPlan = ref.watch(planProvider);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: CustomText(
-              text: '${currentPlan.toUpperCase()} PLAN',
-              style: const TextStyle(
-                color: Colors.green,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
+        actions: [CurrentPlan()],
       ),
       body: Stack(
         children: [

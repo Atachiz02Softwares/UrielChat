@@ -10,7 +10,6 @@ class AISettingScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final filterOptions = ref.watch(filterOptionsProvider);
-    final currentPlan = ref.watch(planProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -21,21 +20,10 @@ class AISettingScreen extends ConsumerWidget {
         backgroundColor: Colors.black,
         iconTheme: const IconThemeData(color: Colors.white, size: 30),
         title: const CustomText(
-          text: 'Customize AI Behavior',
+          text: 'Customize Uriel',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: CustomText(
-              text: '${currentPlan.toUpperCase()} PLAN',
-              style: const TextStyle(
-                color: Colors.green,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
+        actions: [CurrentPlan()],
       ),
       body: BackgroundContainer(
         child: SingleChildScrollView(

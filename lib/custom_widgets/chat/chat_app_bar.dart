@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:uriel_chat/custom_widgets/custom.dart';
 
 import '../../providers/plan_provider.dart';
 import '../../utils/strings.dart';
-import '../ui/custom_text.dart';
 
 class ChatAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final String title;
@@ -22,8 +22,6 @@ class ChatAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentPlan = ref.watch(planProvider);
-
     return AppBar(
       iconTheme: const IconThemeData(color: Colors.white, size: 30),
       backgroundColor: Colors.black,
@@ -33,14 +31,7 @@ class ChatAppBar extends ConsumerWidget implements PreferredSizeWidget {
         maxLines: 1,
       ),
       actions: [
-        CustomText(
-          text: '${currentPlan.toUpperCase()} PLAN',
-          style: const TextStyle(
-            color: Colors.green,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(width: 10),
+        CurrentPlan(),
         IconButton(
           tooltip: Strings.newChat,
           icon: SvgPicture.asset(

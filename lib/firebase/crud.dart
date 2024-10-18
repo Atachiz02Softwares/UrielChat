@@ -14,6 +14,12 @@ class CRUD {
         displayName: userData['name'],
         photoURL: userData['photoURL'],
       );
+    } else {
+      // If the user document does not exist, create it with default values
+      await _firestore.collection('users').doc(user.uid).set({
+        'name': user.displayName,
+        'photoURL': user.photoURL,
+      });
     }
   }
 
