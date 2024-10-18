@@ -70,9 +70,8 @@ class Auth {
       final User? user = userCredential.user;
 
       if (user != null) {
-        final DocumentReference userRef =
-            _firestore.collection('users').doc(user.uid);
-        final DocumentSnapshot snapshot = await userRef.get();
+        final userRef = _firestore.collection('users').doc(user.uid);
+        final snapshot = await userRef.get();
 
         if (!snapshot.exists) {
           await userRef.set({

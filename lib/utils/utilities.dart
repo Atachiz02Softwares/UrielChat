@@ -83,6 +83,8 @@ class Utilities {
         .join('\n');
 
     try {
+      CRUD().resetSubIfExpired(now); // Reset user subscription if expired
+
       await userDoc.update({
         'dailyCount': FieldValue.increment(1),
         'lastChatTime': Timestamp.now()

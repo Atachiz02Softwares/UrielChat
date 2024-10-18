@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:uriel_chat/utils/utilities.dart';
 
 import '../../custom_widgets/ui/custom_text.dart';
 import 'onboarding_page.dart';
 
-class OnboardingScreen extends StatefulWidget {
+class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   final PageController _controller = PageController();
 
   @override
@@ -34,8 +36,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             child: Column(
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/auth");
+                  onPressed: () async {
+                    // Initialize Remote Config and its providers
+                    await Utilities.initializeRemoteConfig(ref);
+                    if (context.mounted) {
+                      Navigator.pushNamed(context, "/auth");
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.zero,

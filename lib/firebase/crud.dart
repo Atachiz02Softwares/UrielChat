@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../utils/strings.dart';
+
 class CRUD {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -47,5 +49,43 @@ class CRUD {
       return userData['tier'] ?? 'free';
     }
     return 'free';
+  }
+
+  Map<String, dynamic>? _cachedUserData;
+  DateTime? _lastFetchTime;
+
+  Future<void> resetSubIfExpired(DateTime now) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    // Check if cached data is available and not outdated (older than 5 minutes)
+    if (_cachedUserData == null ||
+        _lastFetchTime == null ||
+        now.difference(_lastFetchTime!).inMinutes > 5) {
+      final userDoc = _firestore.collection('users').doc(user.uid);
+      final userSnapshot = await userDoc.get();
+
+      if (!userSnapshot.exists) return;
+
+      _cachedUserData = userSnapshot.data();
+      _lastFetchTime = now;
+    }
+
+    final transactions = _cachedUserData?['transactions'] as List<dynamic>?;
+
+    if (transactions == null || transactions.isEmpty) return;
+
+    // Get the latest transaction timestamp
+    final latestTransaction = transactions.last;
+    final latestTimestamp =
+        (latestTransaction['timestamp'] as Timestamp).toDate();
+
+    // Check if the latest transaction is older than a month
+    if (now.difference(latestTimestamp).inDays > 30) {
+      await _firestore.collection('users').doc(user.uid).update({
+        'tier': 'free',
+        'dailyLimit': Strings.free,
+      });
+    }
   }
 }

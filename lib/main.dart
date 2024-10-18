@@ -1,5 +1,6 @@
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uriel_chat/services/payments/paystack/paystack.dart';
@@ -16,9 +17,9 @@ void main() async {
   );
 
   // Activate Firebase App Check
-  await FirebaseAppCheck.instance.activate(
-    androidProvider: AndroidProvider.debug, // TODO: DELETE THIS LINE LATER
-  );
+  // await FirebaseAppCheck.instance.activate(
+  //   androidProvider: AndroidProvider.debug, // TODO: DELETE THIS LINE LATER
+  // );
 
   final isRooted = await isDeviceRooted();
   if (isRooted) {

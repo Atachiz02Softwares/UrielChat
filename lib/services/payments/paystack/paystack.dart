@@ -79,7 +79,7 @@ class _PayStackState extends ConsumerState<PayStack> {
                     const SizedBox(height: 20),
                     PlanCard(
                       title: 'Platinum Plan',
-                      price: Strings.premiumMoney,
+                      price: Strings.platinumMoney,
                       buttonText: 'Upgrade to Platinum',
                       buttonColor: Colors.purple.shade800,
                       // onPressed: () => makePayment(Strings.platinumMoney),

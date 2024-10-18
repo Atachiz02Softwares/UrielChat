@@ -33,12 +33,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final iconSize = MediaQuery.of(context).size.width * 0.2;
 
-    final user = ref.read(userProvider);
-    final chatService = ref.read(chatServiceProvider);
+    final user = ref.watch(userProvider);
+    final chatService = ref.watch(chatServiceProvider);
     final currentPlan = ref.watch(planProvider);
-
-    // Initialize Remote Configs on Home Screen the second time to avoid conflicts
-    Utilities.initializeRemoteConfig(ref);
 
     return Scaffold(
       appBar: AppBar(
