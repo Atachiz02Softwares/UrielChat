@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../custom_widgets/custom.dart';
 import '../providers/providers.dart';
+import '../services/speech_service.dart';
 import '../utils/utils.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -16,6 +17,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final SpeechService _speechHelper = SpeechService();
 
   @override
   void initState() {
@@ -32,9 +34,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final iconSize = MediaQuery.of(context).size.width * 0.2;
-
     final user = ref.watch(userProvider);
     final chatService = ref.watch(chatServiceProvider);
+    final currentPlan = ref.watch(planProvider);
+
+    final userName = user?.displayName?.split(' ')[0] ?? 'User';
 
     return Scaffold(
       appBar: AppBar(
@@ -59,8 +63,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         const ProfilePicture(),
                         const SizedBox(width: 20),
                         CustomText(
-                          text:
-                              'Welcome to Uriel Chat, ${user?.displayName?.split(' ')[0] ?? 'User'}',
+                          text: 'Welcome to Uriel Chat, $userName',
                           style: const TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
@@ -126,9 +129,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               width: 30,
                               height: 30,
                             ),
-                            onPressed: () {
-                              CustomSnackBar.showSnackBar(
-                                  context, Strings.chill);
+                            onPressed: () async {
+                              if (currentPlan == 'premium' ||
+                                  currentPlan == 'platinum') {
+                                if (_speechHelper.isListening) {
+                                  _speechHelper.stop();
+                                } else {
+                                  await _speechHelper.listen((recognizedWords) {
+                                    setState(() {
+                                      _searchController.text = recognizedWords;
+                                    });
+                                  });
+                                }
+                              } else {
+                                Utilities.promptUpgrade(context);
+                              }
                             },
                           ),
                           const SizedBox(width: 10),

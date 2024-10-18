@@ -236,6 +236,7 @@ You have reached your daily chat limit. Upgrade to continue chatting.
 - **Daily Limit:** $premium messages
 - **Features:**
   - All Regular Tier features
+  - Voice input chat support
   - Increased daily message limit
 
 ## **Platinum Plan (NGN $platinumMoney)**
@@ -243,8 +244,10 @@ You have reached your daily chat limit. Upgrade to continue chatting.
 - **Features:**
   - All Premium Tier features
   - Access to exclusive content
-  - Media chat support
+  - Audio/Image chat support
 
 **Note:** Upgrading to a higher tier will reset your daily message count immediately.
 """;
+
+  static List<String> mediaPlans = [];
 }

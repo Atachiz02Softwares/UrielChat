@@ -26,6 +26,7 @@ class Utilities {
     Strings.premiumMoney = remoteConfigService.premiumMoney;
     Strings.platinum = remoteConfigService.platinum;
     Strings.platinumMoney = remoteConfigService.platinumMoney;
+    Strings.mediaPlans = remoteConfigService.mediaPlans;
   }
 
   static Future<void> sendMessage({

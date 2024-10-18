@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class RemoteConfigService {
@@ -30,4 +32,12 @@ class RemoteConfigService {
   int get platinum => _remoteConfig.getInt('platinum');
 
   double get platinumMoney => _remoteConfig.getDouble('platinumMoney');
+
+  // {"plans": ["premium", "platinum"]}
+  List<String> get mediaPlans {
+    final String jsonString = _remoteConfig.getString('mediaPlans');
+    final Map<String, dynamic> jsonMap = json.decode(jsonString);
+    final List<dynamic> plansList = jsonMap['plans'];
+    return plansList.cast<String>();
+  }
 }

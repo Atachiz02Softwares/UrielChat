@@ -45,5 +45,12 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSAppTransportSecurity</key> // Internet permission
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to your camera for better user experience.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+    <string>We need to recognize your speech for better user experience.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>We need access to your microphone for speech recognition.</string>
 </dict>
 </plist>
