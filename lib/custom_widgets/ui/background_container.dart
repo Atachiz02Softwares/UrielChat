@@ -14,7 +14,7 @@ class BackgroundContainer extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Colors.black87,
+            Colors.black,
             Colors.blueGrey.shade900,
           ],
         ),
