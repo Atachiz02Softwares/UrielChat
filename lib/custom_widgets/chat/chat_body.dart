@@ -12,10 +12,12 @@ import '../custom.dart';
 
 class ChatBody extends ConsumerStatefulWidget {
   final List<Map<String, String>> messages;
+  final String chatId;
 
   const ChatBody({
     super.key,
     required this.messages,
+    required this.chatId,
   });
 
   @override
@@ -49,7 +51,9 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
 
   @override
   Widget build(BuildContext context) {
-    final hasShownTypingAnimation = ref.watch(typingAnimationProvider);
+    final hasShownTypingAnimation = ref
+        .watch(typingAnimationProvider.notifier)
+        .hasShownAnimation(widget.chatId);
 
     return ListView.builder(
       controller: _scrollController,
@@ -113,7 +117,7 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
                           onComplete: () {
                             ref
                                 .read(typingAnimationProvider.notifier)
-                                .showAnimation();
+                                .showAnimation(widget.chatId);
                             _scrollToBottom();
                           },
                         )

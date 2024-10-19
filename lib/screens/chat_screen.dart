@@ -70,7 +70,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 Expanded(
                   child: messages.isEmpty
                       ? const ChatHeader()
-                      : ChatBody(messages: messageMaps),
+                      : ChatBody(messages: messageMaps, chatId: _chatId),
                 ),
                 InputBar(
                   controller: _controller,

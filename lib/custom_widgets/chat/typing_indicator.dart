@@ -19,9 +19,12 @@ class _TypingIndicatorState extends State<TypingIndicator>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1200),
+      duration: const Duration(milliseconds: 1000),
     )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 0, end: 1).animate(
+    _animation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.3, end: 1.0), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.3), weight: 50),
+    ]).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
@@ -35,10 +38,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
           animation: _animation,
           builder: (context, child) {
             return Opacity(
-              opacity: (_animation.value > (index - 1) / 3 &&
-                      _animation.value <= index / 3)
-                  ? 1.0
-                  : 0.3,
+              opacity: _animation.value,
               child: const CustomText(
                 text: '•',
                 style: TextStyle(fontSize: 28, color: Colors.blueGrey),

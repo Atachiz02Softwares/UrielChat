@@ -15,7 +15,7 @@ class TypingText extends StatefulWidget {
     required this.text,
     required this.key,
     required this.onComplete,
-    this.duration = const Duration(milliseconds: 50),
+    this.duration = const Duration(milliseconds: 5),
   }) : super(key: key);
 
   @override
@@ -57,11 +57,15 @@ class TypingTextState extends State<TypingText> {
 
   @override
   Widget build(BuildContext context) {
-    return MarkdownBody(
-      data: _displayedText,
-      styleSheet: MarkdownStyleSheet(
-        p: GoogleFonts.poppins(color: Colors.white, fontSize: 16),
-        textAlign: WrapAlignment.start,
+    return AnimatedOpacity(
+      opacity: _isTyping ? 1.0 : 0.0,
+      duration: const Duration(milliseconds: 500),
+      child: MarkdownBody(
+        data: _displayedText,
+        styleSheet: MarkdownStyleSheet(
+          p: GoogleFonts.poppins(color: Colors.white, fontSize: 16),
+          textAlign: WrapAlignment.start,
+        ),
       ),
     );
   }

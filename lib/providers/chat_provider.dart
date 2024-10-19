@@ -35,7 +35,7 @@ class ChatProvider extends StateNotifier<List<ChatMessage>> {
   Future<void> addMessage(ChatMessage message) async {
     await _chatService.saveMessage(_chatId, message);
     if (message.sender == 'AI') {
-      _ref.read(typingAnimationProvider.notifier).resetAnimation();
+      _ref.read(typingAnimationProvider.notifier).resetAnimation(_chatId);
     }
   }
 
@@ -43,7 +43,6 @@ class ChatProvider extends StateNotifier<List<ChatMessage>> {
     state = [];
   }
 
-  // delete chat
   Future<void> deleteChat() async {
     await _chatService.deleteChat(_chatId);
   }

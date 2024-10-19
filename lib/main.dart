@@ -16,7 +16,7 @@ void main() async {
   );
 
   // Activate Firebase App Check
-  await FirebaseAppCheck.instance.activate();
+  // await FirebaseAppCheck.instance.activate();
 
   final isRooted = await isDeviceRooted();
   if (isRooted) {
