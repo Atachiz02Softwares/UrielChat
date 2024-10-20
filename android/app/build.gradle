@@ -45,7 +45,6 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
 
-            // TODO: Uncomment the lines below before releasing to production.
             // signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true
