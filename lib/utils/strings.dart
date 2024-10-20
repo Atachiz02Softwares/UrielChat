@@ -162,7 +162,7 @@ protect the rights and safety of our users and others.
 We implement appropriate security measures to protect your information from
 unauthorized access, alteration, disclosure, or destruction.
 
-## 5. Plan Upgrade
+## 5. **Plan Upgrade**
 - Upgrading to a higher tier will reset your daily message count immediately.
 - We will not refund any payments made for the upgrade nor will we refund any double
 payments made for the same upgrade.
@@ -188,7 +188,7 @@ For support or inquiries, please contact us at:
 - LinkedIn: [Atachiz02 Softwares](https://www.linkedin.com/company/atachiz02softwares).
 
 ## **Last Updated**
-- 13th October, 2024.
+- 20th October, 2024.
 """;
 
   static String appInfo = """
@@ -214,32 +214,34 @@ Google's Gemini Generative AI model to enhance your messaging experience.
   static int free = 0, regular = 0, premium = 0, platinum = 0;
   static double regularMoney = 0, premiumMoney = 0, platinumMoney = 0;
 
+  static List<String> mediaPlans = [];
+
   static String upgradePrompt = """
 You have reached your daily chat limit. Upgrade to continue chatting.
 
 # **Upgrade Options**
 
-## **Free Plan (NGN 0.00)**
+## **Free Plan (NGN 0.00) • 30 days**
 - **Daily Limit:** $free messages
 - **Features:**
   - Basic chat functionality
   - Fewer daily message limits
 
-## **Regular Plan (NGN $regularMoney)**
+## **Regular Plan (NGN $regularMoney) • 30 days**
 - **Daily Limit:** $regular messages
 - **Features:**
   - Enhanced chat functionality
   - Priority support
   - Increased daily message limit
 
-## **Premium Plan (NGN $premiumMoney)**
+## **Premium Plan (NGN $premiumMoney) • 30 days**
 - **Daily Limit:** $premium messages
 - **Features:**
   - All Regular Tier features
   - Voice input chat support
   - Increased daily message limit
 
-## **Platinum Plan (NGN $platinumMoney)**
+## **Platinum Plan (NGN $platinumMoney) • 30 days**
 - **Daily Limit:** $platinum messages
 - **Features:**
   - All Premium Tier features
@@ -248,6 +250,4 @@ You have reached your daily chat limit. Upgrade to continue chatting.
 
 **Note:** Upgrading to a higher tier will reset your daily message count immediately.
 """;
-
-  static List<String> mediaPlans = [];
 }

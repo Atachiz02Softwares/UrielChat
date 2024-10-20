@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../custom_widgets/custom.dart';
 import '../providers/providers.dart';
-import '../services/speech_service.dart';
 import '../utils/utils.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -18,7 +17,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
-  final SpeechService _speechHelper = SpeechService();
+  // final SpeechService _speechService = SpeechService();
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final List<Map<String, String>> _recentChats = [];
 
@@ -165,7 +164,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 ),
               ),
             ),
-            _buildMicButton(currentPlan),
+            // _buildMicButton(currentPlan),
+            IconButton(
+              icon: SvgPicture.asset(
+                Strings.mic,
+                colorFilter: const ColorFilter.mode(
+                  Colors.blueGrey,
+                  BlendMode.srcIn,
+                ),
+                width: 30,
+                height: 30,
+              ),
+              onPressed: () {
+                CustomSnackBar.showSnackBar(context, Strings.chill);
+              },
+            ),
             const SizedBox(width: 10),
             IconButton(
               icon: SvgPicture.asset(
@@ -187,32 +200,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  Widget _buildMicButton(String currentPlan) {
-    return IconButton(
-      icon: SvgPicture.asset(
-        Strings.mic,
-        colorFilter: const ColorFilter.mode(
-          Colors.blueGrey,
-          BlendMode.srcIn,
-        ),
-        width: 30,
-        height: 30,
-      ),
-      onPressed: () async {
-        if (currentPlan == 'premium' || currentPlan == 'platinum') {
-          if (_speechHelper.isListening) {
-            _speechHelper.stop();
-          } else {
-            await _speechHelper.listen((recognizedWords) {
-              _searchController.text = recognizedWords;
-            });
-          }
-        } else {
-          Utilities.promptUpgrade(context);
-        }
-      },
-    );
-  }
+  // Widget _buildMicButton(String currentPlan) {
+  //   return IconButton(
+  //     icon: SvgPicture.asset(
+  //       Strings.mic,
+  //       colorFilter: const ColorFilter.mode(
+  //         Colors.blueGrey,
+  //         BlendMode.srcIn,
+  //       ),
+  //       width: 30,
+  //       height: 30,
+  //     ),
+  //     onPressed: () async {
+  //       if (currentPlan == 'premium' || currentPlan == 'platinum') {
+  //         if (_speechService.isListening) {
+  //           _speechService.stop();
+  //         } else {
+  //           await _speechService.listen(context, (recognizedWords) {
+  //             _searchController.text = recognizedWords;
+  //           });
+  //         }
+  //       } else {
+  //         Utilities.promptUpgrade(context);
+  //       }
+  //     },
+  //   );
+  // }
 
   Widget _buildRecentChats(double iconSize) {
     return FutureBuilder<List<Map<String, String>>>(

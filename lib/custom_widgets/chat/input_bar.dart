@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../utils/utils.dart';
 import '../custom.dart';
 
-class InputBar extends StatelessWidget {
+class InputBar extends ConsumerStatefulWidget {
   final TextEditingController controller;
   final bool isLoading;
   final VoidCallback onSendMessage;
@@ -18,7 +19,16 @@ class InputBar extends StatelessWidget {
   });
 
   @override
+  ConsumerState<InputBar> createState() => _InputBarState();
+}
+
+class _InputBarState extends ConsumerState<InputBar> {
+  // final SpeechService _speechService = SpeechService();
+
+  @override
   Widget build(BuildContext context) {
+    // final currentPlan = ref.watch(planProvider);
+
     final iconSize = MediaQuery.of(context).size.width * 0.07;
     return GlassContainer(
       borderRadius: iconSize,
@@ -36,8 +46,19 @@ class InputBar extends StatelessWidget {
                 width: iconSize,
                 height: iconSize,
               ),
-              onPressed: () {
+              onPressed: () async {
                 CustomSnackBar.showSnackBar(context, Strings.chill);
+                // if (currentPlan == 'premium' || currentPlan == 'platinum') {
+                //   if (_speechService.isListening) {
+                //     _speechService.stop();
+                //   } else {
+                //     await _speechService.listen(context, (recognizedWords) {
+                //       widget.controller.text = recognizedWords;
+                //     });
+                //   }
+                // } else {
+                //   Utilities.promptUpgrade(context);
+                // }
               },
             ),
             IconButton(
@@ -57,7 +78,7 @@ class InputBar extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: TextField(
-                controller: controller,
+                controller: widget.controller,
                 minLines: 1,
                 maxLines: 3,
                 decoration: InputDecoration(
@@ -72,7 +93,7 @@ class InputBar extends StatelessWidget {
                 style: GoogleFonts.poppins(color: Colors.white),
               ),
             ),
-            isLoading
+            widget.isLoading
                 ? const TypingIndicator()
                 : IconButton(
                     icon: SvgPicture.asset(
@@ -85,8 +106,8 @@ class InputBar extends StatelessWidget {
                       height: iconSize,
                     ),
                     onPressed: () {
-                      onSendMessage();
-                      controller;
+                      widget.onSendMessage();
+                      widget.controller;
                     },
                   ),
           ],

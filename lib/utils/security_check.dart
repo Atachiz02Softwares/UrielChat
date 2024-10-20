@@ -17,11 +17,8 @@ Future<bool> isDeviceRooted() async {
 }
 
 Future<bool> _isAndroidRooted(AndroidDeviceInfo androidInfo) async {
-  // if (!androidInfo.isPhysicalDevice) return true; // TODO: Uncomment before release
-  // if (androidInfo.tags.contains('test-keys')) return true;
-  // if (androidInfo.systemFeatures.contains('android.software.device_admin')) return true;
+  if (!androidInfo.isPhysicalDevice) return true;
 
-  // Asynchronous root indicators check
   final rootIndicators = [
     '/system/app/Superuser.apk',
     '/sbin/su',
@@ -31,11 +28,29 @@ Future<bool> _isAndroidRooted(AndroidDeviceInfo androidInfo) async {
     '/data/local/bin/su',
     '/system/sd/xbin/su',
     '/system/bin/failsafe/su',
-    '/data/local/su'
+    '/data/local/su',
+    '/system/xbin/daemonsu',
+    '/system/etc/init.d/99SuperSUDaemon',
+    '/system/bin/.ext/.su',
+    '/system/usr/we-need-root/su-backup',
+    '/system/xbin/mu'
   ];
 
   for (final path in rootIndicators) {
     if (await File(path).exists()) return true;
+  }
+
+  final rootManagementApps = [
+    'com.noshufou.android.su',
+    'eu.chainfire.supersu',
+    'com.koushikdutta.superuser',
+    'com.thirdparty.superuser',
+    'com.yellowes.su'
+  ];
+
+  for (final app in rootManagementApps) {
+    if (await File('/data/app/$app-1/base.apk').exists() ||
+        await File('/data/app/$app-2/base.apk').exists()) return true;
   }
 
   return false;
@@ -44,21 +59,28 @@ Future<bool> _isAndroidRooted(AndroidDeviceInfo androidInfo) async {
 Future<bool> _isIOSJailbroken(IosDeviceInfo iosInfo) async {
   if (!iosInfo.isPhysicalDevice) return true;
 
-  // Asynchronous jailbreak indicators check
   final jailbreakIndicators = [
     '/Applications/Cydia.app',
     '/Library/MobileSubstrate/MobileSubstrate.dylib',
     '/bin/bash',
     '/usr/sbin/sshd',
-    '/etc/apt'
+    '/etc/apt',
+    '/private/var/lib/apt/',
+    '/private/var/lib/cydia',
+    '/private/var/stash'
   ];
 
   for (final path in jailbreakIndicators) {
     if (await File(path).exists()) return true;
   }
 
-  // Additional indicators found within the system version
-  const jailbreakTools = ['cydia', 'substrate', 'electra', 'unc0ver'];
+  const jailbreakTools = [
+    'cydia',
+    'substrate',
+    'electra',
+    'unc0ver',
+    'checkra1n'
+  ];
   for (final tool in jailbreakTools) {
     if (iosInfo.systemVersion.toLowerCase().contains(tool)) return true;
   }

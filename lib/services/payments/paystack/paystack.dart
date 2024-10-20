@@ -45,41 +45,49 @@ class _PayStackState extends ConsumerState<PayStack> {
         child: Center(
           child: initializingPayment
               ? const CustomProgressBar()
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    PlanCard(
-                      title: 'Regular Plan',
-                      price: Strings.regularMoney,
-                      buttonText: 'Upgrade to Regular',
-                      buttonColor: Colors.blue.shade900,
-                      onPressed: () =>
-                          makePayment(Strings.regularMoney, 'regular'),
-                    ),
-                    const SizedBox(height: 20),
-                    PlanCard(
-                      title: 'Premium Plan',
-                      price: Strings.premiumMoney,
-                      buttonText: 'Upgrade to Premium',
-                      buttonColor: Colors.green.shade900,
-                      onPressed: () =>
-                          makePayment(Strings.premiumMoney, 'premium'),
-                    ),
-                    const SizedBox(height: 20),
-                    PlanCard(
-                      title: 'Platinum Plan',
-                      price: Strings.platinumMoney,
-                      buttonText: 'Upgrade to Platinum',
-                      buttonColor: Colors.purple.shade800,
-                      // onPressed: () => makePayment(Strings.platinumMoney, 'platinum'),
-                      onPressed: () {
-                        CustomSnackBar.showSnackBar(
-                          context,
-                          'Chill, Platinum plan is not available yet...',
-                        );
-                      },
-                    ),
-                  ],
+              : SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      PlanCard(
+                        title: 'Regular Plan',
+                        price: Strings.regularMoney,
+                        buttonText: 'Upgrade to Regular',
+                        buttonColor: Colors.blue.shade900,
+                        onPressed: () =>
+                            makePayment(Strings.regularMoney, 'regular'),
+                      ),
+                      const SizedBox(height: 20),
+                      PlanCard(
+                        title: 'Premium Plan',
+                        price: Strings.premiumMoney,
+                        buttonText: 'Upgrade to Premium',
+                        buttonColor: Colors.green.shade900,
+                        // onPressed: () => makePayment(Strings.premiumMoney, 'premium'),
+                        onPressed: () {
+                          CustomSnackBar.showSnackBar(
+                            context,
+                            'Chill, Premium plan is not available yet...',
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      PlanCard(
+                        title: 'Platinum Plan',
+                        price: Strings.platinumMoney,
+                        buttonText: 'Upgrade to Platinum',
+                        buttonColor: Colors.purple.shade800,
+                        // onPressed: () => makePayment(Strings.platinumMoney, 'platinum'),
+                        onPressed: () {
+                          CustomSnackBar.showSnackBar(
+                            context,
+                            'Chill, Platinum plan is not available yet...',
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
         ),
       ),
@@ -91,8 +99,7 @@ class _PayStackState extends ConsumerState<PayStack> {
     final user = ref.read(userProvider);
 
     final request = PaystackTransactionRequest(
-      reference:
-          'uriel_${plan}_${amount}_${DateTime.now().microsecondsSinceEpoch}',
+      reference: 'uriel_${plan}_${amount}_${DateTime.now().microsecondsSinceEpoch}',
       secretKey: secretKey,
       email: user?.email ?? '',
       amount: amount * 100,
@@ -110,8 +117,7 @@ class _PayStackState extends ConsumerState<PayStack> {
     );
 
     setState(() => initializingPayment = true);
-    final initializedTransaction =
-        await PaymentService.initializeTransaction(request);
+    final initializedTransaction = await PaymentService.initializeTransaction(request);
 
     if (!mounted) return;
     setState(() => initializingPayment = false);
@@ -139,40 +145,81 @@ class _PayStackState extends ConsumerState<PayStack> {
     if (kDebugMode) Logger().i(response.toMap());
 
     if (response.status) {
-      final userDoc =
-          FirebaseFirestore.instance.collection('users').doc(user?.uid);
-      final tier = amount == Strings.regularMoney
-          ? 'regular'
-          : amount == Strings.premiumMoney
-              ? 'premium'
-              : 'platinum';
-      final dailyLimit = amount == Strings.regularMoney
-          ? Strings.regular
-          : amount == Strings.premiumMoney
-              ? Strings.premium
-              : Strings.platinum;
+      final status = response.data.status;
+      switch (status) {
+        case PaystackTransactionStatus.success:
+          final userDoc =
+              FirebaseFirestore.instance.collection('users').doc(user?.uid);
+          final tier = amount == Strings.regularMoney
+              ? 'regular'
+              : amount == Strings.premiumMoney
+                  ? 'premium'
+                  : 'platinum';
+          final dailyLimit = amount == Strings.regularMoney
+              ? Strings.regular
+              : amount == Strings.premiumMoney
+                  ? Strings.premium
+                  : Strings.platinum;
 
-      await userDoc.update({
-        'tier': tier,
-        'dailyLimit': dailyLimit,
-        'transactions': FieldValue.arrayUnion([
-          {
-            ...response.toMap(),
-            'timestamp': Timestamp.now(),
+          await userDoc.update({
+            'tier': tier,
+            'dailyLimit': dailyLimit,
+            'transactions': FieldValue.arrayUnion([
+              {
+                ...response.toMap(),
+                'timestamp': Timestamp.now(),
+              }
+            ]),
+          });
+
+          if (mounted) {
+            CustomSnackBar.showSnackBar(
+              context,
+              'Payment successful! Your plan has been upgraded to ${tier.toUpperCase()}.',
+            );
           }
-        ]),
-      });
-
-      if (mounted) {
-        CustomSnackBar.showSnackBar(
-          context,
-          'Payment successful! Your plan has been upgraded to ${tier.toUpperCase()}.',
-        );
+          break;
+        case PaystackTransactionStatus.failed:
+          if (mounted) {
+            CustomSnackBar.showSnackBar(
+              context,
+              'Payment failed! Please try again...',
+              isError: true,
+            );
+          }
+          break;
+        case PaystackTransactionStatus.abandoned:
+          if (mounted) {
+            CustomSnackBar.showSnackBar(
+              context,
+              'Payment abandoned! Please try again...',
+              isError: true,
+            );
+          }
+          break;
+        case PaystackTransactionStatus.reversed:
+          if (mounted) {
+            CustomSnackBar.showSnackBar(
+              context,
+              'Payment reversed! Please try again...',
+              isError: true,
+            );
+          }
+          break;
+        default:
+          if (mounted) {
+            CustomSnackBar.showSnackBar(
+              context,
+              'Payment unsuccessful! Please try again...',
+              isError: true,
+            );
+          }
+          break;
       }
     } else if (mounted) {
       CustomSnackBar.showSnackBar(
         context,
-        'Payment verification failed. Please try again.',
+        'Payment verification failed! Please try again...',
         isError: true,
       );
     }
