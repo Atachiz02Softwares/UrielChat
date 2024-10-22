@@ -207,7 +207,7 @@ Google's Gemini Generative AI model to enhance your messaging experience.
 ## **App Info**
 
 - **App Name:** Uriel Chat
-- **Version:** 1.0.0
+- **Version:** 0.1.1-Beta
 - **Developer:** Atachiz02 Softwares
 """;
 

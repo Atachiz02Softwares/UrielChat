@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 
 import '../custom_widgets/custom.dart';
 import '../firebase/crud.dart';
@@ -99,7 +101,7 @@ class Utilities {
       );
       await ref.read(chatProvider(chatId).notifier).addMessage(aiMessage);
     } catch (e) {
-      debugPrint('AI Error: $e');
+      if (kDebugMode) Logger().e('AI Error: $e');
       final errorMessage = ChatMessage(
         sender: 'system',
         content:

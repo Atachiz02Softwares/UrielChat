@@ -17,7 +17,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
-  // final SpeechService _speechService = SpeechService();
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final List<Map<String, String>> _recentChats = [];
 
@@ -154,31 +153,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: TextField(
-                controller: _searchController,
-                style: GoogleFonts.poppins(color: Colors.white, fontSize: 18),
-                decoration: InputDecoration(
-                  hintText: 'Ask me anything...',
-                  border: InputBorder.none,
-                  hintStyle: GoogleFonts.poppins(color: Colors.grey),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: TextField(
+                  controller: _searchController,
+                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 18),
+                  decoration: InputDecoration(
+                    hintText: 'Ask me anything...',
+                    border: InputBorder.none,
+                    hintStyle: GoogleFonts.poppins(color: Colors.grey),
+                  ),
                 ),
               ),
             ),
-            // _buildMicButton(currentPlan),
-            IconButton(
-              icon: SvgPicture.asset(
-                Strings.mic,
-                colorFilter: const ColorFilter.mode(
-                  Colors.blueGrey,
-                  BlendMode.srcIn,
-                ),
-                width: 30,
-                height: 30,
-              ),
-              onPressed: () {
-                CustomSnackBar.showSnackBar(context, Strings.chill);
-              },
-            ),
+            MicButton(_searchController),
             const SizedBox(width: 10),
             IconButton(
               icon: SvgPicture.asset(
@@ -200,33 +188,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  // Widget _buildMicButton(String currentPlan) {
-  //   return IconButton(
-  //     icon: SvgPicture.asset(
-  //       Strings.mic,
-  //       colorFilter: const ColorFilter.mode(
-  //         Colors.blueGrey,
-  //         BlendMode.srcIn,
-  //       ),
-  //       width: 30,
-  //       height: 30,
-  //     ),
-  //     onPressed: () async {
-  //       if (currentPlan == 'premium' || currentPlan == 'platinum') {
-  //         if (_speechService.isListening) {
-  //           _speechService.stop();
-  //         } else {
-  //           await _speechService.listen(context, (recognizedWords) {
-  //             _searchController.text = recognizedWords;
-  //           });
-  //         }
-  //       } else {
-  //         Utilities.promptUpgrade(context);
-  //       }
-  //     },
-  //   );
-  // }
-
   Widget _buildRecentChats(double iconSize) {
     return FutureBuilder<List<Map<String, String>>>(
       future: ref
@@ -246,7 +207,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             shrinkWrap: true,
             initialItemCount: _recentChats.length,
             itemBuilder: (context, index, animation) {
-              if (index >= _recentChats.length) return const SizedBox(); // Prevent index error
+              // Prevent index error
+              if (index >= _recentChats.length) return const SizedBox();
               final chat = _recentChats[index];
               return _buildAnimatedChatItem(chat, animation);
             },

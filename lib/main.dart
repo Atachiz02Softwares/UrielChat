@@ -30,7 +30,7 @@ class UrielChat extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Utilities.initializeRemoteConfig(ref); // Initialize Remote Configs
+    Utilities.initializeRemoteConfig(ref);
 
     return MaterialApp(
       title: Strings.appName,
@@ -39,8 +39,6 @@ class UrielChat extends ConsumerWidget {
       routes: {
         '/auth': (context) => const AuthScreen(),
         '/main': (context) => const MainScreen(),
-        '/home': (context) => const HomeScreen(),
-        '/settings': (context) => const SettingScreen(),
         '/ai_settings': (context) => const AISettingScreen(),
         '/paystack': (context) => const PayStack(),
       },
