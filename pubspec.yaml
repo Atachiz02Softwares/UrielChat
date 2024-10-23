@@ -3,7 +3,7 @@ description: "A Generative AI chat app..."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 0.1.1-Beta+2
+version: 0.1.1-Beta+3
 
 environment:
   sdk: ^3.5.3
