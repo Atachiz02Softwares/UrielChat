@@ -24,7 +24,7 @@ class Auth {
       final User? user = authResult.user;
 
       if (user != null) {
-        await _firestore.collection('users').doc(user.uid).set({
+        await _firestore.collection(Strings.users).doc(user.uid).set({
           'name': name,
           'email': email,
           'photoURL': user.photoURL,
@@ -70,7 +70,7 @@ class Auth {
       final User? user = userCredential.user;
 
       if (user != null) {
-        final userRef = _firestore.collection('users').doc(user.uid);
+        final userRef = _firestore.collection(Strings.users).doc(user.uid);
         final snapshot = await userRef.get();
 
         if (!snapshot.exists) {

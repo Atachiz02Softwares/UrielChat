@@ -120,7 +120,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   Future<void> _sendMessage() async {
-    await Utilities.sendMessage(
+    await Utilities.sendChatMessage(
       chatId: _chatId,
       controller: _controller,
       ref: ref,

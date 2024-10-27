@@ -53,6 +53,12 @@ class UrielChat extends ConsumerWidget {
               searchQuery: searchQuery,
             ),
           );
+        } else if (settings.name == '/image') {
+          final args = settings.arguments as Map<String, String>;
+          final chatId = args['chatId']!;
+          return MaterialPageRoute(
+            builder: (context) => ImageGenerator(chatId: chatId),
+          );
         }
         return null;
       },

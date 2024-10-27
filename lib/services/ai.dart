@@ -16,7 +16,7 @@ class AI {
     }
 
     final userDoc =
-        FirebaseFirestore.instance.collection('users').doc(user.uid);
+        FirebaseFirestore.instance.collection(Strings.users).doc(user.uid);
     final userSnapshot = await userDoc.get();
 
     if (!userSnapshot.exists) {

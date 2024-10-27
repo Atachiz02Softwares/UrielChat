@@ -13,6 +13,7 @@ export 'ui/custom_progress_bar.dart';
 export 'ui/custom_snackbar.dart';
 export 'ui/custom_text.dart';
 export 'ui/feedback_bottomsheet.dart';
+export 'ui/glass_button.dart';
 export 'ui/glass_container.dart';
 export 'ui/info_bottomsheet.dart';
 export 'ui/plan_card.dart';

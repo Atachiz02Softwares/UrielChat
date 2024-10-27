@@ -17,7 +17,7 @@ Future<bool> isDeviceRooted() async {
 }
 
 Future<bool> _isAndroidRooted(AndroidDeviceInfo androidInfo) async {
-  if (!androidInfo.isPhysicalDevice) return true;
+  // if (!androidInfo.isPhysicalDevice) return true;
 
   final rootIndicators = [
     '/system/app/Superuser.apk',

@@ -7,7 +7,7 @@ class CRUD {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> initializeUser(User user) async {
-    final snapshot = await _firestore.collection('users').doc(user.uid).get();
+    final snapshot = await _firestore.collection(Strings.users).doc(user.uid).get();
     if (snapshot.exists) {
       final userData = snapshot.data() as Map<String, dynamic>;
       await user.updateProfile(
@@ -16,7 +16,7 @@ class CRUD {
       );
     } else {
       // If the user document does not exist, create it with default values
-      await _firestore.collection('users').doc(user.uid).set({
+      await _firestore.collection(Strings.users).doc(user.uid).set({
         'name': user.displayName,
         'photoURL': user.photoURL,
       });
@@ -24,9 +24,9 @@ class CRUD {
   }
 
   Future<void> initializeChat(String userId) async {
-    final doc = await _firestore.collection('chats').doc(userId).get();
+    final doc = await _firestore.collection(Strings.chats).doc(userId).get();
     if (!doc.exists) {
-      await _firestore.collection('chats').doc(userId).set({});
+      await _firestore.collection(Strings.chats).doc(userId).set({});
     }
   }
 
@@ -48,7 +48,7 @@ class CRUD {
   }
 
   Future<String> fetchCurrentPlan(String userId) async {
-    final userDoc = _firestore.collection('users').doc(userId);
+    final userDoc = _firestore.collection(Strings.users).doc(userId);
     final userSnapshot = await userDoc.get();
     if (userSnapshot.exists) {
       final userData = userSnapshot.data() as Map<String, dynamic>;
@@ -68,7 +68,7 @@ class CRUD {
     if (_cachedUserData == null ||
         _lastFetchTime == null ||
         now.difference(_lastFetchTime!).inMinutes > 5) {
-      final userDoc = _firestore.collection('users').doc(user.uid);
+      final userDoc = _firestore.collection(Strings.users).doc(user.uid);
       final userSnapshot = await userDoc.get();
 
       if (!userSnapshot.exists) return;
@@ -88,7 +88,7 @@ class CRUD {
 
     // Check if the latest transaction is older than a month
     if (now.difference(latestTimestamp).inDays > 30) {
-      await _firestore.collection('users').doc(user.uid).update({
+      await _firestore.collection(Strings.users).doc(user.uid).update({
         'tier': 'free',
         'dailyLimit': Strings.free,
       });

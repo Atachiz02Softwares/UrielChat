@@ -19,6 +19,8 @@ class RemoteConfigService {
 
   String get paidAPIKey => _remoteConfig.getString('paidAPIKey');
 
+  String get stabilityAPIKey => _remoteConfig.getString('stabilityAPIKey');
+
   int get free => _remoteConfig.getInt('free');
 
   int get regular => _remoteConfig.getInt('regular');

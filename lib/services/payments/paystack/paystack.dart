@@ -99,7 +99,8 @@ class _PayStackState extends ConsumerState<PayStack> {
     final user = ref.read(userProvider);
 
     final request = PaystackTransactionRequest(
-      reference: 'uriel_${plan}_${amount}_${DateTime.now().microsecondsSinceEpoch}',
+      reference:
+          'uriel_${plan}_${amount}_${DateTime.now().microsecondsSinceEpoch}',
       secretKey: secretKey,
       email: user?.email ?? '',
       amount: amount * 100,
@@ -117,7 +118,8 @@ class _PayStackState extends ConsumerState<PayStack> {
     );
 
     setState(() => initializingPayment = true);
-    final initializedTransaction = await PaymentService.initializeTransaction(request);
+    final initializedTransaction =
+        await PaymentService.initializeTransaction(request);
 
     if (!mounted) return;
     setState(() => initializingPayment = false);
@@ -148,8 +150,9 @@ class _PayStackState extends ConsumerState<PayStack> {
       final status = response.data.status;
       switch (status) {
         case PaystackTransactionStatus.success:
-          final userDoc =
-              FirebaseFirestore.instance.collection('users').doc(user?.uid);
+          final userDoc = FirebaseFirestore.instance
+              .collection(Strings.users)
+              .doc(user?.uid);
           final tier = amount == Strings.regularMoney
               ? 'regular'
               : amount == Strings.premiumMoney

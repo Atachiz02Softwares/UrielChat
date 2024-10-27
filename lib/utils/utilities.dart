@@ -19,6 +19,7 @@ class Utilities {
     Strings.paidModel = remoteConfigService.paidModel;
     Strings.freeAPIKey = remoteConfigService.freeAPIKey;
     Strings.paidAPIKey = remoteConfigService.paidAPIKey;
+    Strings.stabilityAPIKey = remoteConfigService.stabilityAPIKey;
     Strings.payStackPublicKey = remoteConfigService.payStackPublicKey;
     Strings.payStackSecretKey = remoteConfigService.payStackSecretKey;
     Strings.free = remoteConfigService.free;
@@ -31,19 +32,18 @@ class Utilities {
     Strings.mediaPlans = remoteConfigService.mediaPlans;
   }
 
-  static Future<void> sendMessage({
+  static Future<void> sendChatMessage({
     required String chatId,
     required TextEditingController controller,
     required WidgetRef ref,
     required Function(bool) setLoading,
+    String? imageUrl,
   }) async {
-    if (controller.text.isEmpty) return;
-
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
     final userDoc =
-        FirebaseFirestore.instance.collection('users').doc(user.uid);
+    FirebaseFirestore.instance.collection(Strings.users).doc(user.uid);
     final userSnapshot = await userDoc.get();
 
     if (!userSnapshot.exists) return;
@@ -76,14 +76,11 @@ class Utilities {
       content: prompt,
       timestamp: DateTime.now(),
     );
-    await ref.read(chatProvider(chatId).notifier).addMessage(message);
+    await ref
+        .read(chatProvider(chatId).notifier)
+        .addMessage(message, imageUrl == null ? Strings.userChats : Strings.userImageChats);
 
     setLoading(true);
-
-    final chatHistory = ref
-        .read(chatProvider(chatId))
-        .map((message) => '${message.sender}: ${message.content}')
-        .join('\n');
 
     try {
       CRUD().resetSubIfExpired(now); // Reset user subscription if expired
@@ -93,22 +90,42 @@ class Utilities {
         'lastChatTime': Timestamp.now()
       });
 
-      final response = await AI.generateResponse(prompt, chatHistory, ref);
-      final aiMessage = ChatMessage(
-        sender: 'AI',
-        content: response,
-        timestamp: DateTime.now(),
-      );
-      await ref.read(chatProvider(chatId).notifier).addMessage(aiMessage);
+      if (imageUrl == null) {
+        final chatHistory = ref
+            .read(chatProvider(chatId))
+            .map((message) => '${message.sender}: ${message.content}')
+            .join('\n');
+
+        final response = await AI.generateResponse(prompt, chatHistory, ref);
+        final aiMessage = ChatMessage(
+          sender: 'AI',
+          content: response,
+          timestamp: DateTime.now(),
+        );
+        await ref
+            .read(chatProvider(chatId).notifier)
+            .addMessage(aiMessage, Strings.userChats);
+      } else {
+        final aiMessage = ChatMessage(
+          sender: 'AI',
+          content: imageUrl,
+          timestamp: DateTime.now(),
+        );
+        await ref
+            .read(chatProvider(chatId).notifier)
+            .addMessage(aiMessage, Strings.userImageChats);
+      }
     } catch (e) {
       if (kDebugMode) Logger().e('AI Error: $e');
       final errorMessage = ChatMessage(
         sender: 'system',
         content:
-            'There was an error processing your request. Please try again later.',
+        'There was an error processing your request. Please try again later.',
         timestamp: DateTime.now(),
       );
-      await ref.read(chatProvider(chatId).notifier).addMessage(errorMessage);
+      await ref
+          .read(chatProvider(chatId).notifier)
+          .addMessage(errorMessage, imageUrl == null ? Strings.userChats : Strings.userImageChats);
     } finally {
       setLoading(false);
       controller.clear();

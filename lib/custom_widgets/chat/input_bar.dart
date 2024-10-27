@@ -33,20 +33,6 @@ class _InputBarState extends ConsumerState<InputBar> {
         child: Row(
           children: [
             MicButton(widget.controller),
-            IconButton(
-              icon: SvgPicture.asset(
-                Strings.camera,
-                colorFilter: const ColorFilter.mode(
-                  Colors.blueGrey,
-                  BlendMode.srcIn,
-                ),
-                width: iconSize,
-                height: iconSize,
-              ),
-              onPressed: () {
-                CustomSnackBar.showSnackBar(context, Strings.chill);
-              },
-            ),
             const SizedBox(width: 12),
             Expanded(
               child: AnimatedSwitcher(

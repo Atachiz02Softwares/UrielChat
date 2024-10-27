@@ -2,6 +2,7 @@ export 'ai_setting_screen.dart';
 export 'auth_screen.dart';
 export 'chat_screen.dart';
 export 'home_screen.dart';
+export 'image_generator.dart';
 export 'main_screen.dart';
 export 'onboarding/auth_wrapper.dart';
 export 'onboarding/onboarding_page.dart';

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:uriel_chat/custom_widgets/custom.dart';
 
-import '../../providers/plan_provider.dart';
 import '../../utils/strings.dart';
 
 class ChatAppBar extends ConsumerWidget implements PreferredSizeWidget {
@@ -11,6 +10,7 @@ class ChatAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final VoidCallback onNewChat;
   final VoidCallback onDeleteChat;
   final double iconSize;
+  final Widget? leading;
 
   const ChatAppBar({
     super.key,
@@ -18,11 +18,13 @@ class ChatAppBar extends ConsumerWidget implements PreferredSizeWidget {
     required this.onNewChat,
     required this.onDeleteChat,
     required this.iconSize,
+    this.leading,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AppBar(
+      leading: leading,
       iconTheme: const IconThemeData(color: Colors.white, size: 30),
       backgroundColor: Colors.black,
       title: CustomText(

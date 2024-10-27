@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/chat_message.dart';
 import '../services/chat_service.dart';
+import '../utils/strings.dart';
 import 'typing_animation_provider.dart';
 
 final chatServiceProvider = Provider<ChatService>((ref) {
@@ -32,8 +33,8 @@ class ChatProvider extends StateNotifier<List<ChatMessage>> {
     });
   }
 
-  Future<void> addMessage(ChatMessage message) async {
-    await _chatService.saveMessage(_chatId, message);
+  Future<void> addMessage(ChatMessage message, String collection) async {
+    await _chatService.saveMessage(_chatId, collection, message);
     if (message.sender == 'AI') {
       _ref.read(typingAnimationProvider.notifier).resetAnimation(_chatId);
     }

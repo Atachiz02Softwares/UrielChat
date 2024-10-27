@@ -82,6 +82,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   const SizedBox(height: 30),
                   _buildSearchBar(currentPlan),
                   const SizedBox(height: 20),
+                  _buildFeatureButtons(currentPlan),
+                  const SizedBox(height: 20),
                   const CustomText(
                     text: 'Recent Chats',
                     style: TextStyle(
@@ -167,23 +169,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               ),
             ),
             MicButton(_searchController),
-            const SizedBox(width: 10),
-            IconButton(
-              icon: SvgPicture.asset(
-                Strings.camera,
-                colorFilter: const ColorFilter.mode(
-                  Colors.blueGrey,
-                  BlendMode.srcIn,
-                ),
-                width: 30,
-                height: 30,
-              ),
-              onPressed: () {
-                CustomSnackBar.showSnackBar(context, Strings.chill);
-              },
-            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildFeatureButtons(String currentPlan) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: const BouncingScrollPhysics(),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          GlassButton(
+            icon: Strings.image,
+            label: 'Image Generation',
+            color: Colors.green,
+            onPressed: () {
+              if (currentPlan == 'platinum') {
+                Navigator.pushNamed(context, '/image',
+                    arguments: <String, String>{'chatId': generateChatId()});
+              } else {
+                Utilities.promptUpgrade(context);
+              }
+            },
+          ),
+          const SizedBox(width: 20),
+          GlassButton(
+            icon: Strings.speak,
+            label: 'Audio Chat',
+            color: Colors.purple,
+            onPressed: () {
+              CustomSnackBar.showSnackBar(context, Strings.chill);
+            },
+          ),
+        ],
       ),
     );
   }

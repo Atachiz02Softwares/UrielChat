@@ -7,9 +7,14 @@ class Strings {
 
   static const String appName = 'Uriel Chat';
 
+  static const String users = 'users',
+      chats = 'chats',
+      userChats = 'userChats',
+      userImageChats = 'userImageChats';
+
   static String payStackSecretKey = '', payStackPublicKey = '';
 
-  static String freeAPIKey = '', paidAPIKey = '';
+  static String freeAPIKey = '', paidAPIKey = '', stabilityAPIKey = '';
 
   static String freeModel = '', paidModel = '';
 
@@ -54,7 +59,7 @@ class Strings {
   static const String signout = 'assets/icons/signout.svg';
   static const String mic = 'assets/icons/mic.svg';
   static const String send = 'assets/icons/send.svg';
-  static const String camera = 'assets/icons/camera.svg';
+  static const String image = 'assets/icons/image.svg';
   static const String copy = 'assets/icons/copy.svg';
   static const String sweep = 'assets/icons/sweep.svg';
   static const String search = 'assets/icons/search.svg';
@@ -64,6 +69,8 @@ class Strings {
   static const String error = 'assets/icons/error.svg';
   static const String dollar = 'assets/icons/dollar.svg';
   static const String shield = 'assets/icons/shield.svg';
+  static const String speak = 'assets/icons/speak.svg';
+  static const String download = 'assets/icons/download.svg';
 
   static const String one = 'assets/images/one.jpeg';
   static const String two = 'assets/images/two.jpeg';
@@ -207,7 +214,7 @@ Google's Gemini Generative AI model to enhance your messaging experience.
 ## **App Info**
 
 - **App Name:** Uriel Chat
-- **Version:** 0.1.1-Beta
+- **Version:** 0.1.2-Beta
 - **Developer:** Atachiz02 Softwares
 """;
 

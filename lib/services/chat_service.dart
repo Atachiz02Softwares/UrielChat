@@ -2,18 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/chat_message.dart';
+import '../utils/strings.dart';
 
 class ChatService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> saveMessage(String chatId, ChatMessage message) async {
+  Future<void> saveMessage(String chatId, String collection, ChatMessage message) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
     final chatRef = _firestore
-        .collection('chats')
+        .collection(Strings.chats)
         .doc(user.uid)
-        .collection('userChats')
+        .collection(collection)
         .doc(chatId);
 
     await chatRef.set({
@@ -31,9 +32,9 @@ class ChatService {
     if (user == null) return Stream.value([]);
 
     final chatRef = _firestore
-        .collection('chats')
+        .collection(Strings.chats)
         .doc(user.uid)
-        .collection('userChats')
+        .collection(Strings.userChats)
         .doc(chatId);
 
     return chatRef.snapshots().map((snapshot) {
@@ -49,9 +50,9 @@ class ChatService {
 
   Future<List<Map<String, String>>> getRecentChats(String userId) async {
     final querySnapshot = await _firestore
-        .collection('chats')
+        .collection(Strings.chats)
         .doc(userId)
-        .collection('userChats')
+        .collection(Strings.userChats)
         .orderBy('timestamp', descending: true)
         .get();
 
@@ -71,9 +72,9 @@ class ChatService {
   Future<void> deleteChat(String chatId) async {
     final user = FirebaseAuth.instance.currentUser;
     await _firestore
-        .collection('chats')
+        .collection(Strings.chats)
         .doc(user!.uid)
-        .collection('userChats')
+        .collection(Strings.userChats)
         .doc(chatId)
         .delete();
   }
