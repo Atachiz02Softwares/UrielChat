@@ -8,13 +8,13 @@ import '../custom.dart';
 
 class InputBar extends ConsumerStatefulWidget {
   final TextEditingController controller;
-  final bool isLoading;
+  final bool waiting;
   final VoidCallback onSendMessage;
 
   const InputBar({
     super.key,
     required this.controller,
-    required this.isLoading,
+    required this.waiting,
     required this.onSendMessage,
   });
 
@@ -54,7 +54,7 @@ class _InputBarState extends ConsumerState<InputBar> {
                 ),
               ),
             ),
-            widget.isLoading
+            widget.waiting
                 ? const TypingIndicator()
                 : IconButton(
                     icon: SvgPicture.asset(

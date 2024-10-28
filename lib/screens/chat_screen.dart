@@ -87,7 +87,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 ),
                 InputBar(
                   controller: _controller,
-                  isLoading: _isLoading,
+                  waiting: _isLoading,
                   onSendMessage:
                       widget.isImageGenerator ? _generateImage : _sendMessage,
                 ),

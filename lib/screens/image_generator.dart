@@ -9,7 +9,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
-import 'package:intl/intl.dart';
 import 'package:stability_image_generation/stability_image_generation.dart';
 import 'package:uriel_chat/providers/providers.dart';
 
@@ -196,7 +195,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                 ),
                 InputBar(
                   controller: _messageController,
-                  isLoading: isGenerating,
+                  waiting: isGenerating,
                   onSendMessage: () {
                     final query = _messageController.text;
                     if (query.isNotEmpty && !isGenerating) {
