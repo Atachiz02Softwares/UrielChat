@@ -83,13 +83,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 Expanded(
                   child: messages.isEmpty
                       ? const ChatHeader()
-                      : ChatBody(messages: messageMaps, chatId: _chatId),
+                      : ChatBody(
+                          messages: messageMaps,
+                          chatId: _chatId,
+                          isImageGenerator: widget.isImageGenerator,
+                        ),
                 ),
                 InputBar(
                   controller: _controller,
-                  waiting: _isLoading,
-                  onSendMessage:
-                      widget.isImageGenerator ? _generateImage : _sendMessage,
+                  waiting: widget.isImageGenerator ? isGenerating : _isLoading,
+                  onSendMessage: widget.isImageGenerator ? _generateImage : _sendMessage,
                 ),
               ],
             ),
