@@ -260,7 +260,8 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
 
     await Utilities.sendChatMessage(
       chatId: widget.chatId,
-      controller: _messageController,
+      // controller: _messageController,
+      prompt: _messageController.text,
       ref: ref,
       setLoading: (bool isGenerating) {
         setState(() {

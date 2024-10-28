@@ -150,8 +150,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       arguments: <String, dynamic>{
                         'chatId': generateChatId(),
                         'searchQuery': searchQuery,
-                        'isImageGenerator': false,
+                        'fromRecent': true,
                       });
+                  _searchController.clear();
                 }
               },
             ),
@@ -190,12 +191,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             color: Colors.green,
             onPressed: () {
               if (currentPlan == 'platinum') {
-                Navigator.pushNamed(context, '/chat',
-                    arguments: <String, dynamic>{
-                      'chatId': generateChatId(),
-                      'searchQuery': '',
-                      'isImageGenerator': true,
-                    });
+                Navigator.pushNamed(context, '/image',
+                    arguments: <String, dynamic>{'chatId': generateChatId()});
               } else {
                 Utilities.promptUpgrade(context);
               }
@@ -290,7 +287,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Widget _buildAnimatedChatItem(
-      Map<String, String> chat, Animation<double> animation) {
+    Map<String, String> chat,
+    Animation<double> animation,
+  ) {
     return SlideTransition(
       position: Tween<Offset>(
         begin: const Offset(0, 1),

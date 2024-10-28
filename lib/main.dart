@@ -47,14 +47,18 @@ class UrielChat extends ConsumerWidget {
           final args = settings.arguments as Map<String, dynamic>;
           final chatId = args['chatId']!;
           final searchQuery = args['searchQuery']!;
-          final bool isImageGenerator = args['isImageGenerator'] == true;
+          final fromRecent = args['fromRecent']!;
           return MaterialPageRoute(
             builder: (context) => ChatScreen(
               chatId: chatId,
               searchQuery: searchQuery,
-              isImageGenerator: isImageGenerator,
+              fromRecent: fromRecent,
             ),
           );
+        } else if (settings.name == '/image') {
+          final args = settings.arguments as Map<String, dynamic>;
+          final chatId = args['chatId']!;
+          return MaterialPageRoute(builder: (context) => ImageGenerator(chatId: chatId));
         }
         return null;
       },

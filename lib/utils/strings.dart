@@ -1,10 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 class Strings {
   Strings._();
-
-  final currentUser = FirebaseAuth.instance.currentUser;
 
   static const String appName = 'Uriel Chat';
 

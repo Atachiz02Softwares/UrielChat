@@ -1,9 +1,14 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
+import '../providers/chat_provider.dart';
 import '../utils/strings.dart';
 
 class CRUD {
+  final user = FirebaseAuth.instance.currentUser;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> initializeUser(User user) async {
@@ -45,6 +50,13 @@ class CRUD {
     await _firestore.collection('feedback').doc(userId).set({
       'feedbacks': FieldValue.arrayUnion([feedbackData]),
     }, SetOptions(merge: true));
+  }
+
+  Future<String> uploadImageToStorage(Uint8List image, String chatId) async {
+    final storageRef = FirebaseStorage.instance.ref();
+    final imageRef = storageRef.child('images/${user!.uid}/$chatId/${generateChatId()}.png');
+    await imageRef.putData(image);
+    return await imageRef.getDownloadURL();
   }
 
   Future<String> fetchCurrentPlan(String userId) async {

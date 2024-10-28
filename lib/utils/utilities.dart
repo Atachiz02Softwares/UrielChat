@@ -34,7 +34,8 @@ class Utilities {
 
   static Future<void> sendChatMessage({
     required String chatId,
-    required TextEditingController controller,
+    // required TextEditingController controller,
+    required String prompt,
     required WidgetRef ref,
     required Function(bool) setLoading,
     String? imageUrl,
@@ -69,7 +70,7 @@ class Utilities {
     }
 
     // If not reached, proceed to send message and increment daily count
-    String prompt = controller.text;
+    // String prompt = controller.text;
 
     final message = ChatMessage(
       sender: Strings.user,
@@ -125,7 +126,7 @@ class Utilities {
           imageUrl == null ? Strings.userChats : Strings.userImageChats);
     } finally {
       setLoading(false);
-      controller.clear();
+      // controller.clear();
     }
   }
 
