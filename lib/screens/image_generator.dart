@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
 import 'package:stability_image_generation/stability_image_generation.dart';
-import 'package:uriel_chat/providers/chat_provider.dart';
 import 'package:uriel_chat/providers/providers.dart';
 
 import '../custom_widgets/custom.dart';
@@ -19,9 +18,9 @@ import '../utils/strings.dart';
 import '../utils/utilities.dart';
 
 class ImageGenerator extends ConsumerStatefulWidget {
-  final String chatId;
+  String chatId;
 
-  const ImageGenerator({super.key, required this.chatId});
+  ImageGenerator({super.key, required this.chatId});
 
   @override
   ConsumerState<ImageGenerator> createState() => _ImageGeneratorState();
@@ -54,16 +53,8 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
           },
         ),
         title: 'Image Generator',
-        onNewChat: () {
-          setState(() {
-            messages.clear();
-          });
-        },
-        onDeleteChat: () {
-          setState(() {
-            messages.clear();
-          });
-        },
+        onNewChat: newChat,
+        onDeleteChat: deleteChat,
         iconSize: iconSize,
       ),
       body: Stack(
@@ -329,5 +320,35 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
   String formatDateTime(String time) {
     final dateTime = DateTime.parse(time);
     return DateFormat('hh:mm a').format(dateTime);
+  }
+
+  Future<void> deleteChat() async {
+    final user = ref.read(userProvider);
+    if (user != null) {
+      final chatId = ref.read(chatProvider(widget.chatId).notifier).chatId;
+      await ref
+          .read(chatProvider(chatId).notifier)
+          .deleteChat(Strings.userImageChats);
+      await newChat();
+    }
+  }
+
+  Future<void> newChat() async {
+    setState(() {
+      _messageController.clear();
+      isGenerating = false;
+      widget.chatId = generateChatId();
+    });
+
+    ref.read(currentChatIdProvider.notifier).state = widget.chatId;
+
+    final user = ref.read(userProvider);
+    if (user != null) {
+      ref.read(chatProvider(widget.chatId).notifier).clearMessages();
+      ref.read(chatProvider(widget.chatId).notifier).chatId = widget.chatId;
+      await ref
+          .read(chatProvider(widget.chatId).notifier)
+          .loadChat(user.uid, Strings.userImageChats);
+    }
   }
 }

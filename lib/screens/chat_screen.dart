@@ -18,7 +18,7 @@ class ChatScreen extends ConsumerStatefulWidget {
 }
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
-  String _appBarTitle = Strings.newChat, _chatId = generateChatId();
+  String _chatId = generateChatId();
   final TextEditingController _controller = TextEditingController();
   bool _isLoading = false;
 
@@ -55,7 +55,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
     return Scaffold(
       appBar: ChatAppBar(
-        title: _appBarTitle,
+        title: Strings.newChat,
         onNewChat: newChat,
         onDeleteChat: deleteChat,
         iconSize: iconSize,
@@ -88,7 +88,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Future<void> _loadChat() async {
     final user = ref.read(userProvider);
     if (user != null) {
-      await ref.read(chatProvider(_chatId).notifier).loadChat(user.uid);
+      await ref.read(chatProvider(_chatId).notifier).loadChat(user.uid, Strings.userChats);
     }
   }
 
@@ -96,7 +96,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final user = ref.read(userProvider);
     if (user != null) {
       final chatId = ref.read(chatProvider(_chatId).notifier).chatId;
-      await ref.read(chatProvider(chatId).notifier).deleteChat();
+      await ref.read(chatProvider(chatId).notifier).deleteChat(Strings.userChats);
       await newChat();
     }
   }
@@ -105,7 +105,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     setState(() {
       _controller.clear();
       _isLoading = false;
-      _appBarTitle = Strings.newChat;
       _chatId = generateChatId();
     });
 
@@ -115,7 +114,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     if (user != null) {
       ref.read(chatProvider(_chatId).notifier).clearMessages();
       ref.read(chatProvider(_chatId).notifier).chatId = _chatId;
-      await ref.read(chatProvider(_chatId).notifier).loadChat(user.uid);
+      await ref.read(chatProvider(_chatId).notifier).loadChat(user.uid, Strings.userChats);
     }
   }
 

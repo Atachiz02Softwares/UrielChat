@@ -7,7 +7,8 @@ import '../utils/strings.dart';
 class ChatService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> saveMessage(String chatId, String collection, ChatMessage message) async {
+  Future<void> saveMessage(
+      String chatId, String collection, ChatMessage message) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
@@ -27,14 +28,14 @@ class ChatService {
     });
   }
 
-  Stream<List<ChatMessage>> getMessages(String chatId) {
+  Stream<List<ChatMessage>> getMessages(String chatId, String collection) {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return Stream.value([]);
 
     final chatRef = _firestore
         .collection(Strings.chats)
         .doc(user.uid)
-        .collection(Strings.userChats)
+        .collection(collection)
         .doc(chatId);
 
     return chatRef.snapshots().map((snapshot) {
@@ -68,13 +69,12 @@ class ChatService {
     }).toList();
   }
 
-  // deleteChat method
-  Future<void> deleteChat(String chatId) async {
+  Future<void> deleteChat(String chatId, String collection) async {
     final user = FirebaseAuth.instance.currentUser;
     await _firestore
         .collection(Strings.chats)
         .doc(user!.uid)
-        .collection(Strings.userChats)
+        .collection(collection)
         .doc(chatId)
         .delete();
   }

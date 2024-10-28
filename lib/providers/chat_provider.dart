@@ -28,7 +28,7 @@ class ChatProvider extends StateNotifier<List<ChatMessage>> {
   }
 
   void _init() {
-    _chatService.getMessages(_chatId).listen((messages) {
+    _chatService.getMessages(_chatId, Strings.userChats).listen((messages) {
       state = messages;
     });
   }
@@ -44,12 +44,12 @@ class ChatProvider extends StateNotifier<List<ChatMessage>> {
     state = [];
   }
 
-  Future<void> deleteChat() async {
-    await _chatService.deleteChat(_chatId);
+  Future<void> deleteChat(String collection) async {
+    await _chatService.deleteChat(_chatId, collection);
   }
 
-  Future<void> loadChat(String userId) async {
-    final messages = await _chatService.getMessages(_chatId).first;
+  Future<void> loadChat(String userId, String collection) async {
+    final messages = await _chatService.getMessages(_chatId, collection).first;
     state = messages;
   }
 
