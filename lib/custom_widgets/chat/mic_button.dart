@@ -25,7 +25,7 @@ class MicButton extends ConsumerWidget {
         return IconButton(
           icon: AvatarGlow(
             animate: isListening,
-            glowColor: Colors.blueGrey.shade900,
+            glowColor: isListening ? Colors.blueGrey : Colors.transparent,
             duration: Duration(seconds: 1),
             repeat: isListening,
             curve: Curves.easeInOut,

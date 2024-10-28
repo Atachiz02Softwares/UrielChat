@@ -251,10 +251,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         children: [
           SvgPicture.asset(
             isEmpty ? Strings.empty : Strings.error,
-            colorFilter: const ColorFilter.mode(
-              Colors.blueGrey,
-              BlendMode.srcIn,
-            ),
             width: iconSize,
             height: iconSize,
           ),
