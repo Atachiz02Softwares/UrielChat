@@ -276,7 +276,6 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
       "timestamp": DateTime.now().toIso8601String(),
     };
 
-
     setState(() {
       messages.add(message);
     });
@@ -343,6 +342,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
     setState(() {
       isGenerating = false;
       _messageController.clear();
+      messages.clear();
     });
 
     ref.read(currentChatIdProvider.notifier).state = _newChatId;
