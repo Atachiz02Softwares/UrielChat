@@ -63,7 +63,8 @@ class Strings {
   static const String copy = 'assets/icons/copy.svg';
   static const String sweep = 'assets/icons/sweep.svg';
   static const String search = 'assets/icons/search.svg';
-  static const String history = 'assets/icons/history.svg';
+  static const String empty = 'assets/icons/empty.svg';
+  static const String error = 'assets/icons/error.svg';
   static const String filter = 'assets/icons/filter.svg';
   static const String newChatIcon = 'assets/icons/new_chat.svg';
   static const String dollar = 'assets/icons/dollar.svg';

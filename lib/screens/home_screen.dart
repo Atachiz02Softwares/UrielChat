@@ -49,7 +49,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         Future.delayed(Duration(milliseconds: 150 * i)).then((_) {
           if (mounted) {
             _listKey.currentState?.insertItem(_recentChats.length,
-                duration: Duration(milliseconds: 150));
+                duration: Duration(milliseconds: 150),
+            );
           }
         });
       }
@@ -65,9 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final iconSize = MediaQuery.of(context).size.width * 0.2;
-    final userName =
-        (ref.watch(userProvider)?.displayName?.split(' ')[0] ?? Strings.user)
-            .capitalize();
+    final userName = (ref.watch(userProvider)?.displayName?.split(' ')[0] ?? Strings.user).capitalize();
     final currentPlan = ref.watch(planProvider);
     final recentChatsAsyncValue = ref.watch(recentChatsProvider);
 
@@ -103,12 +102,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   ),
                   const SizedBox(height: 10),
                   recentChatsAsyncValue.when(
-                    data: (recentChats) =>
-                        _buildRecentChats(iconSize, recentChats),
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                    error: (error, stack) =>
-                        Center(child: Text('Error: $error')),
+                    data: (recentChats) => _buildRecentChats(iconSize, recentChats),
+                    loading: () => const Center(child: CustomProgressBar()),
+                    error: (error, stack) => Center(child: _buildRecentChatState(iconSize, false)),
                   ),
                 ],
               ),
@@ -228,9 +224,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Widget _buildRecentChats(
-      double iconSize, List<Map<String, String>> recentChats) {
+    double iconSize,
+    List<Map<String, String>> recentChats,
+  ) {
     if (recentChats.isEmpty) {
-      return Center(child: _buildEmptyState(iconSize));
+      return Center(child: _buildRecentChatState(iconSize, true));
     } else {
       return AnimatedList(
         key: _listKey,
@@ -247,12 +245,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     }
   }
 
-  Widget _buildEmptyState(double iconSize) {
+  Widget _buildRecentChatState(double iconSize, bool isEmpty) {
     return Center(
       child: Column(
         children: [
           SvgPicture.asset(
-            Strings.history,
+            isEmpty ? Strings.empty : Strings.error,
             colorFilter: const ColorFilter.mode(
               Colors.blueGrey,
               BlendMode.srcIn,
@@ -260,9 +258,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             width: iconSize,
             height: iconSize,
           ),
-          const CustomText(
-            text: 'No recent chats yet...',
-            style: TextStyle(fontSize: 24, color: Colors.white),
+          CustomText(
+            text: isEmpty ? 'No recent chats yet...' : 'Error loading chats...',
+            style: const TextStyle(fontSize: 24, color: Colors.white),
           ),
         ],
       ),
