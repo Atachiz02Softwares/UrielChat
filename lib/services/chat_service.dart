@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../firebase/crud.dart';
 import '../models/chat_message.dart';
 import '../utils/strings.dart';
 
@@ -71,6 +72,7 @@ class ChatService {
 
   Future<void> deleteChat(String chatId, String collection) async {
     final user = FirebaseAuth.instance.currentUser;
+    await CRUD().deleteImagesFromStorage(chatId);
     await _firestore
         .collection(Strings.chats)
         .doc(user!.uid)

@@ -10,6 +10,7 @@ import '../utils/strings.dart';
 class CRUD {
   final user = FirebaseAuth.instance.currentUser;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final Reference _storageRef = FirebaseStorage.instance.ref();
 
   Future<void> initializeUser(User user) async {
     final snapshot = await _firestore.collection(Strings.users).doc(user.uid).get();
@@ -53,10 +54,16 @@ class CRUD {
   }
 
   Future<String> uploadImageToStorage(Uint8List image, String chatId) async {
-    final storageRef = FirebaseStorage.instance.ref();
-    final imageRef = storageRef.child('images/${user!.uid}/$chatId/${generateChatId()}.png');
+    final imageRef = _storageRef.child('images/${user!.uid}/$chatId/${generateChatId()}.png');
     await imageRef.putData(image);
     return await imageRef.getDownloadURL();
+  }
+
+  Future<void> deleteImagesFromStorage(String chatId) async {
+    final imagesRef = _storageRef.child('images/${user!.uid}/$chatId');
+
+    final listResult = await imagesRef.listAll();
+    await Future.wait(listResult.items.map((item) => item.delete()));
   }
 
   Future<String> fetchCurrentPlan(String userId) async {
