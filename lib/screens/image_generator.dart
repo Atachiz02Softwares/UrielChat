@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
+import 'package:stability_image_generation/stability_image_generation.dart';
 
 import '../custom_widgets/custom.dart';
 import '../firebase/crud.dart';
@@ -30,8 +31,9 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
   final String _newChatId = generateChatId();
   bool isGenerating = false;
 
-  // final StabilityAI _ai = StabilityAI();
-  // final String apiKey = Strings.stabilityAPIKey;
+  final StabilityAI _ai = StabilityAI();
+  final String apiKey = Strings.stabilityAPIKey;
+  final ImageAIStyle imageAIStyle = ImageAIStyle.noStyle;
   // final ImageAIStyle imageAIStyle = ImageAIStyle.render3D;
 
   List<ChatMessage> messages = [];
@@ -185,7 +187,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                       children: [
                                         ClipRRect(
                                           borderRadius:
-                                              BorderRadius.circular(10),
+                                              BorderRadius.circular(15),
                                           child: Image.network(
                                             message.content,
                                             width: imageSize,
@@ -263,12 +265,18 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
     });
 
     try {
-      img.Image baseImage = img.Image(width: 2, height: 2);
-      baseImage.setPixel(0, 0, img.ColorInt32.rgba(255, 0, 0, 255));
-      baseImage.setPixel(1, 0, img.ColorInt32.rgba(0, 255, 0, 255));
-      baseImage.setPixel(0, 1, img.ColorInt32.rgba(0, 0, 255, 255));
-      baseImage.setPixel(1, 1, img.ColorInt32.rgba(255, 255, 0, 255));
-      Uint8List image = Uint8List.fromList(img.encodePng(baseImage));
+      // img.Image baseImage = img.Image(width: 2, height: 2);
+      // baseImage.setPixel(0, 0, img.ColorInt32.rgba(255, 0, 0, 255));
+      // baseImage.setPixel(1, 0, img.ColorInt32.rgba(0, 255, 0, 255));
+      // baseImage.setPixel(0, 1, img.ColorInt32.rgba(0, 0, 255, 255));
+      // baseImage.setPixel(1, 1, img.ColorInt32.rgba(255, 255, 0, 255));
+      // Uint8List image = Uint8List.fromList(img.encodePng(baseImage));
+
+      Uint8List image = await _ai.generateImage(
+        apiKey: apiKey,
+        imageAIStyle: imageAIStyle,
+        prompt: prompt,
+      );
 
       String imageUrl = await CRUD().uploadImageToStorage(image, widget.chatId);
 

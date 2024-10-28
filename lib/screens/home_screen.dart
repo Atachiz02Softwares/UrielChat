@@ -69,6 +69,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         (ref.watch(userProvider)?.displayName?.split(' ')[0] ?? Strings.user)
             .capitalize();
     final currentPlan = ref.watch(planProvider);
+    final recentChatsAsyncValue = ref.watch(recentChatsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -101,7 +102,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     ),
                   ),
                   const SizedBox(height: 10),
-                  _buildRecentChats(iconSize),
+                  recentChatsAsyncValue.when(
+                    data: (recentChats) =>
+                        _buildRecentChats(iconSize, recentChats),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (error, stack) =>
+                        Center(child: Text('Error: $error')),
+                  ),
                 ],
               ),
             ),
@@ -219,19 +227,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  Widget _buildRecentChats(double iconSize) {
-    if (_recentChats.isEmpty) {
+  Widget _buildRecentChats(
+      double iconSize, List<Map<String, String>> recentChats) {
+    if (recentChats.isEmpty) {
       return Center(child: _buildEmptyState(iconSize));
     } else {
       return AnimatedList(
         key: _listKey,
         physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
-        initialItemCount: _recentChats.length,
+        initialItemCount: recentChats.length,
         itemBuilder: (context, index, animation) {
           // Prevent index error
-          if (index >= _recentChats.length) return const SizedBox();
-          final chat = _recentChats[index];
+          if (index >= recentChats.length) return const SizedBox();
+          final chat = recentChats[index];
           return _buildAnimatedChatItem(chat, animation);
         },
       );

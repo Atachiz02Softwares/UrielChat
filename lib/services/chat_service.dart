@@ -9,7 +9,10 @@ class ChatService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> saveMessage(
-      String chatId, String collection, ChatMessage message) async {
+    String chatId,
+    String collection,
+    ChatMessage message,
+  ) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
@@ -50,13 +53,11 @@ class ChatService {
     });
   }
 
-  Future<List<Map<String, String>>> getRecentChats(String userId, String collection) async {
-    final querySnapshot = await _firestore
-        .collection(Strings.chats)
-        .doc(userId)
-        .collection(collection)
-        .orderBy('timestamp', descending: true)
-        .get();
+  Future<List<Map<String, String>>> getRecentChats(
+    String userId,
+    String collection,
+  ) async {
+    final querySnapshot = await _getRecentChatsQuery(userId, collection).get();
 
     return querySnapshot.docs.map((doc) {
       final messages = doc['messages'] as List<dynamic>? ?? [];
@@ -71,6 +72,28 @@ class ChatService {
     }).toList();
   }
 
+  Stream<List<Map<String, String>>> getRecentChatsStream(
+    String userId,
+    String collection,
+  ) {
+    return _getRecentChatsQuery(userId, collection)
+        .snapshots()
+        .map((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        final messages = doc['messages'] as List<dynamic>? ?? [];
+        final firstMessage = messages.isNotEmpty
+            ? ChatMessage.fromMap(messages.first).content
+            : 'No messages yet';
+        return {
+          'chatId': doc.id,
+          'firstMessage': firstMessage,
+          'isImageChat':
+              collection == Strings.userImageChats ? 'true' : 'false',
+        };
+      }).toList();
+    });
+  }
+
   Future<void> deleteChat(String chatId, String collection) async {
     final user = FirebaseAuth.instance.currentUser;
     await CRUD().deleteImagesFromStorage(chatId);
@@ -80,5 +103,13 @@ class ChatService {
         .collection(collection)
         .doc(chatId)
         .delete();
+  }
+
+  Query _getRecentChatsQuery(String userId, String collection) {
+    return _firestore
+        .collection(Strings.chats)
+        .doc(userId)
+        .collection(collection)
+        .orderBy('timestamp', descending: true);
   }
 }
