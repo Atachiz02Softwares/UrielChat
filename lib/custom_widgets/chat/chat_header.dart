@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../providers/user_provider.dart';
+import '../../utils/strings.dart';
 import '../custom.dart';
 
 class ChatHeader extends ConsumerWidget {
@@ -11,7 +12,7 @@ class ChatHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.read(userProvider);
-    final name = user?.displayName?.split(' ')[0] ?? 'User';
+    final name = (user?.displayName?.split(' ')[0] ?? Strings.user).capitalize();
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),

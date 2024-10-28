@@ -1,13 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 class Strings {
   Strings._();
 
-  final user = FirebaseAuth.instance.currentUser;
+  final currentUser = FirebaseAuth.instance.currentUser;
 
   static const String appName = 'Uriel Chat';
 
-  static const String users = 'users',
+  static final String users = 'users',
+      ai = 'AI',
+      user = 'user',
       chats = 'chats',
       userChats = 'userChats',
       userImageChats = 'userImageChats';
@@ -106,6 +109,11 @@ class Strings {
       return 'Password must be at least 6 characters';
     }
     return null;
+  }
+
+  static String formatDateTime(String time) {
+    final dateTime = DateTime.parse(time);
+    return DateFormat('hh:mm a').format(dateTime);
   }
 
   static const String rootedDeviceMessage = """
@@ -257,4 +265,11 @@ You have reached your daily chat limit. Upgrade to continue chatting.
 
 **Note:** Upgrading to a higher tier will reset your daily message count immediately.
 """;
+}
+
+extension StringExtension on String {
+  String capitalize() {
+    if (isEmpty) return this;
+    return this[0].toUpperCase() + substring(1);
+  }
 }

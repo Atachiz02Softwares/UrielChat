@@ -35,7 +35,7 @@ class ChatProvider extends StateNotifier<List<ChatMessage>> {
 
   Future<void> addMessage(ChatMessage message, String collection) async {
     await _chatService.saveMessage(_chatId, collection, message);
-    if (message.sender == 'AI') {
+    if (message.sender == Strings.ai) {
       _ref.read(typingAnimationProvider.notifier).resetAnimation(_chatId);
     }
   }

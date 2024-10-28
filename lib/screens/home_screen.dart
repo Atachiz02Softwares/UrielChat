@@ -59,7 +59,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     final iconSize = MediaQuery.of(context).size.width * 0.2;
     final userName =
-        ref.watch(userProvider)?.displayName?.split(' ')[0] ?? 'User';
+        (ref.watch(userProvider)?.displayName?.split(' ')[0] ?? Strings.user)
+            .capitalize();
     final currentPlan = ref.watch(planProvider);
 
     return Scaffold(
@@ -146,9 +147,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 final searchQuery = _searchController.text;
                 if (searchQuery.isNotEmpty) {
                   Navigator.pushNamed(context, '/chat',
-                      arguments: <String, String>{
+                      arguments: <String, dynamic>{
                         'chatId': generateChatId(),
                         'searchQuery': searchQuery,
+                        'isImageGenerator': false,
                       });
                 }
               },
@@ -188,8 +190,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             color: Colors.green,
             onPressed: () {
               if (currentPlan == 'platinum') {
-                Navigator.pushNamed(context, '/image',
-                    arguments: <String, String>{'chatId': generateChatId()});
+                Navigator.pushNamed(context, '/chat',
+                    arguments: <String, dynamic>{
+                      'chatId': generateChatId(),
+                      'searchQuery': '',
+                      'isImageGenerator': true,
+                    });
               } else {
                 Utilities.promptUpgrade(context);
               }

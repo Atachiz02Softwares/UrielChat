@@ -64,13 +64,7 @@ class _PayStackState extends ConsumerState<PayStack> {
                         price: Strings.premiumMoney,
                         buttonText: 'Upgrade to Premium',
                         buttonColor: Colors.green.shade900,
-                        // onPressed: () => makePayment(Strings.premiumMoney, 'premium'),
-                        onPressed: () {
-                          CustomSnackBar.showSnackBar(
-                            context,
-                            'Chill, Premium plan is not available yet...',
-                          );
-                        },
+                        onPressed: () => makePayment(Strings.premiumMoney, 'premium'),
                       ),
                       const SizedBox(height: 20),
                       PlanCard(
@@ -78,13 +72,7 @@ class _PayStackState extends ConsumerState<PayStack> {
                         price: Strings.platinumMoney,
                         buttonText: 'Upgrade to Platinum',
                         buttonColor: Colors.purple.shade800,
-                        // onPressed: () => makePayment(Strings.platinumMoney, 'platinum'),
-                        onPressed: () {
-                          CustomSnackBar.showSnackBar(
-                            context,
-                            'Chill, Platinum plan is not available yet...',
-                          );
-                        },
+                        onPressed: () => makePayment(Strings.platinumMoney, 'platinum'),
                       ),
                     ],
                   ),
@@ -99,8 +87,7 @@ class _PayStackState extends ConsumerState<PayStack> {
     final user = ref.read(userProvider);
 
     final request = PaystackTransactionRequest(
-      reference:
-          'uriel_${plan}_${amount}_${DateTime.now().microsecondsSinceEpoch}',
+      reference: 'uriel_${plan}_${amount}_${DateTime.now().microsecondsSinceEpoch}',
       secretKey: secretKey,
       email: user?.email ?? '',
       amount: amount * 100,

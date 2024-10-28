@@ -61,7 +61,7 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
       itemCount: widget.messages.length,
       itemBuilder: (context, index) {
         final message = widget.messages[index];
-        final isUser = message['sender'] == 'user';
+        final isUser = message['sender'] == Strings.user;
         final text = message['content'] ?? 'Unknown';
         final time = message['timestamp'] ?? '';
 
@@ -76,11 +76,6 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
         );
       },
     );
-  }
-
-  String formatDateTime(String time) {
-    final dateTime = DateTime.parse(time);
-    return DateFormat('hh:mm a').format(dateTime);
   }
 
   Widget _buildChatBubble(
@@ -134,7 +129,7 @@ class _ChatBodyState extends ConsumerState<ChatBody> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CustomText(
-                    text: formatDateTime(time),
+                    text: Strings.formatDateTime(time),
                     style: const TextStyle(color: Colors.grey, fontSize: 12),
                   ),
                   IconButton(

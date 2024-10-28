@@ -47,7 +47,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     ProfilePicture(),
                     const SizedBox(height: 20),
                     CustomText(
-                      text: user.displayName ?? 'User',
+                      text: user.displayName ?? Strings.user,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -71,8 +71,8 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   color: Colors.blueGrey,
                   size: 30,
                 ),
-                title: const CustomText(
-                  text: 'AI Settings',
+                title: CustomText(
+                  text: '${Strings.ai} Settings',
                   style: TextStyle(
                     color: Colors.blueGrey,
                     fontSize: 18,

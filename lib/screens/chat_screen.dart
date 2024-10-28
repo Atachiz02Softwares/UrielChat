@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image/image.dart' as img;
 
 import '../custom_widgets/custom.dart';
-import '../models/models.dart';
+import '../models/chat_message.dart';
 import '../providers/providers.dart';
 import '../utils/strings.dart';
 import '../utils/utilities.dart';
@@ -10,8 +14,14 @@ import '../utils/utilities.dart';
 class ChatScreen extends ConsumerStatefulWidget {
   final String chatId;
   final String? searchQuery;
+  final bool isImageGenerator;
 
-  const ChatScreen({super.key, required this.chatId, this.searchQuery});
+  const ChatScreen({
+    super.key,
+    required this.chatId,
+    this.searchQuery,
+    required this.isImageGenerator,
+  });
 
   @override
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
@@ -21,6 +31,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   String _chatId = generateChatId();
   final TextEditingController _controller = TextEditingController();
   bool _isLoading = false;
+  bool isGenerating = false;
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+  final List<Map<String, dynamic>> messages = [];
 
   @override
   void initState() {
@@ -55,7 +68,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
     return Scaffold(
       appBar: ChatAppBar(
-        title: Strings.newChat,
+        title: widget.isImageGenerator ? 'Image Generation' : Strings.newChat,
         onNewChat: newChat,
         onDeleteChat: deleteChat,
         iconSize: iconSize,
@@ -75,7 +88,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 InputBar(
                   controller: _controller,
                   isLoading: _isLoading,
-                  onSendMessage: _sendMessage,
+                  onSendMessage:
+                      widget.isImageGenerator ? _generateImage : _sendMessage,
                 ),
               ],
             ),
@@ -88,7 +102,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Future<void> _loadChat() async {
     final user = ref.read(userProvider);
     if (user != null) {
-      await ref.read(chatProvider(_chatId).notifier).loadChat(user.uid, Strings.userChats);
+      await ref.read(chatProvider(_chatId).notifier).loadChat(
+            user.uid,
+            widget.isImageGenerator
+                ? Strings.userImageChats
+                : Strings.userChats,
+          );
     }
   }
 
@@ -96,7 +115,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final user = ref.read(userProvider);
     if (user != null) {
       final chatId = ref.read(chatProvider(_chatId).notifier).chatId;
-      await ref.read(chatProvider(chatId).notifier).deleteChat(Strings.userChats);
+      await ref.read(chatProvider(chatId).notifier).deleteChat(
+            widget.isImageGenerator
+                ? Strings.userImageChats
+                : Strings.userChats,
+          );
       await newChat();
     }
   }
@@ -114,7 +137,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     if (user != null) {
       ref.read(chatProvider(_chatId).notifier).clearMessages();
       ref.read(chatProvider(_chatId).notifier).chatId = _chatId;
-      await ref.read(chatProvider(_chatId).notifier).loadChat(user.uid, Strings.userChats);
+      await ref.read(chatProvider(_chatId).notifier).loadChat(
+            user.uid,
+            widget.isImageGenerator
+                ? Strings.userImageChats
+                : Strings.userChats,
+          );
     }
   }
 
@@ -130,5 +158,68 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         });
       },
     );
+  }
+
+  Future<void> _generateImage() async {
+    setState(() {
+      isGenerating = true;
+      messages.add({
+        "sender": Strings.user,
+        "content": _controller.text,
+        "timestamp": DateTime.now().toIso8601String(),
+      });
+    });
+
+    try {
+      img.Image baseImage = img.Image(width: 2, height: 2);
+      baseImage.setPixel(0, 0, img.ColorInt32.rgba(255, 0, 0, 255));
+      baseImage.setPixel(1, 0, img.ColorInt32.rgba(0, 255, 0, 255));
+      baseImage.setPixel(0, 1, img.ColorInt32.rgba(0, 0, 255, 255));
+      baseImage.setPixel(1, 1, img.ColorInt32.rgba(255, 255, 0, 255));
+      Uint8List image = Uint8List.fromList(img.encodePng(baseImage));
+
+      String imageUrl = await _uploadImageToStorage(image);
+      await _sendMessageWithImage(imageUrl);
+    } catch (error) {
+      setState(() {
+        isGenerating = false;
+      });
+      if (mounted) {
+        CustomSnackBar.showSnackBar(context, 'Error generating image: $error');
+      }
+      debugPrint('Error generating image: $error');
+    }
+  }
+
+  Future<void> _sendMessageWithImage(String imageUrl) async {
+    final message = {
+      "sender": "AI",
+      "content": imageUrl,
+      "timestamp": DateTime.now().toIso8601String(),
+    };
+
+    setState(() {
+      messages.add(message);
+    });
+
+    await Utilities.sendChatMessage(
+      chatId: widget.chatId,
+      controller: _controller,
+      ref: ref,
+      setLoading: (bool isGenerating) {
+        setState(() {
+          this.isGenerating = isGenerating;
+        });
+      },
+      imageUrl: imageUrl,
+    );
+  }
+
+  Future<String> _uploadImageToStorage(Uint8List image) async {
+    final storageRef = FirebaseStorage.instance.ref();
+    final imageRef = storageRef
+        .child('images/$userId/${widget.chatId}/${generateChatId()}.png');
+    await imageRef.putData(image);
+    return await imageRef.getDownloadURL();
   }
 }

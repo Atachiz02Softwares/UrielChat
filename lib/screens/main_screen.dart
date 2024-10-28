@@ -17,7 +17,11 @@ class _MainScreenState extends State<MainScreen> {
 
   static final List<Widget> _pages = <Widget>[
     const HomeScreen(),
-    ChatScreen(chatId: generateChatId(), searchQuery: ''),
+    ChatScreen(
+      chatId: generateChatId(),
+      searchQuery: '',
+      isImageGenerator: false,
+    ),
     const SettingScreen(),
   ];
 

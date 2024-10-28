@@ -43,7 +43,7 @@ class Utilities {
     if (user == null) return;
 
     final userDoc =
-    FirebaseFirestore.instance.collection(Strings.users).doc(user.uid);
+        FirebaseFirestore.instance.collection(Strings.users).doc(user.uid);
     final userSnapshot = await userDoc.get();
 
     if (!userSnapshot.exists) return;
@@ -51,7 +51,7 @@ class Utilities {
     final userData = userSnapshot.data();
     String tier = userData?['tier'] ?? 'free';
     int dailyCount = userData?['dailyCount'] ?? 0;
-    int dailyLimit = userData?['dailyLimit'] ?? (tier == 'free' ? 30 : 50);
+    int dailyLimit = userData?['dailyLimit'] ?? (tier == 'free' ? Strings.free : Strings.regular);
     Timestamp lastChatTime = userData?['lastChatTime'] ?? Timestamp.now();
 
     DateTime now = DateTime.now();
@@ -72,13 +72,12 @@ class Utilities {
     String prompt = controller.text;
 
     final message = ChatMessage(
-      sender: 'user',
+      sender: Strings.user,
       content: prompt,
       timestamp: DateTime.now(),
     );
-    await ref
-        .read(chatProvider(chatId).notifier)
-        .addMessage(message, imageUrl == null ? Strings.userChats : Strings.userImageChats);
+    await ref.read(chatProvider(chatId).notifier).addMessage(
+        message, imageUrl == null ? Strings.userChats : Strings.userImageChats);
 
     setLoading(true);
 
@@ -98,7 +97,7 @@ class Utilities {
 
         final response = await AI.generateResponse(prompt, chatHistory, ref);
         final aiMessage = ChatMessage(
-          sender: 'AI',
+          sender: Strings.ai,
           content: response,
           timestamp: DateTime.now(),
         );
@@ -107,7 +106,7 @@ class Utilities {
             .addMessage(aiMessage, Strings.userChats);
       } else {
         final aiMessage = ChatMessage(
-          sender: 'AI',
+          sender: Strings.ai,
           content: imageUrl,
           timestamp: DateTime.now(),
         );
@@ -116,16 +115,14 @@ class Utilities {
             .addMessage(aiMessage, Strings.userImageChats);
       }
     } catch (e) {
-      if (kDebugMode) Logger().e('AI Error: $e');
+      if (kDebugMode) Logger().e('${Strings.ai} Error: $e');
       final errorMessage = ChatMessage(
         sender: 'system',
-        content:
-        'There was an error processing your request. Please try again later.',
+        content: 'There was an error processing your request. Please try again later.',
         timestamp: DateTime.now(),
       );
-      await ref
-          .read(chatProvider(chatId).notifier)
-          .addMessage(errorMessage, imageUrl == null ? Strings.userChats : Strings.userImageChats);
+      await ref.read(chatProvider(chatId).notifier).addMessage(errorMessage,
+          imageUrl == null ? Strings.userChats : Strings.userImageChats);
     } finally {
       setLoading(false);
       controller.clear();

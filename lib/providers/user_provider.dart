@@ -34,7 +34,7 @@ class UserNotifier extends StateNotifier<User?> {
 
   User? get currentUser => state;
 
-  String get userName => state?.displayName ?? 'User';
+  String get userName => (state?.displayName ?? Strings.user).capitalize();
 
   String get userEmail => state?.email ?? 'user@email.com';
 

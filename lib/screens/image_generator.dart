@@ -74,7 +74,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                           itemBuilder: (context, index) {
                             final message = messages[index];
                             final timestamp = message["timestamp"];
-                            if (message["type"] == "user") {
+                            if (message["sender"] == Strings.user) {
                               // Display user message bubble
                               return Align(
                                 alignment: Alignment.centerRight,
@@ -101,7 +101,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             CustomText(
-                                              text: formatDateTime(timestamp),
+                                              text: Strings.formatDateTime(timestamp),
                                               style: const TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: 12),
@@ -162,7 +162,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             CustomText(
-                                              text: formatDateTime(timestamp),
+                                              text: Strings.formatDateTime(timestamp),
                                               style: const TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: 12),
@@ -217,7 +217,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
       isGenerating = true;
       // Add the user's message to the messages list
       messages.add({
-        "type": "user",
+        "sender": Strings.user,
         "content": query,
         "timestamp": DateTime.now().toIso8601String(),
       });
@@ -250,7 +250,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
 
   Future<void> _sendMessage(String imageUrl) async {
     final message = {
-      "type": "ai",
+      "sender": "AI",
       "content": imageUrl,
       "timestamp": DateTime.now().toIso8601String(),
     };
@@ -315,11 +315,6 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
         CustomSnackBar.showSnackBar(context, 'Error saving image: $error');
       }
     }
-  }
-
-  String formatDateTime(String time) {
-    final dateTime = DateTime.parse(time);
-    return DateFormat('hh:mm a').format(dateTime);
   }
 
   Future<void> deleteChat() async {
