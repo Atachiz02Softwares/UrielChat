@@ -40,7 +40,8 @@ class _InputBarState extends ConsumerState<InputBar> {
                 child: TextField(
                   controller: widget.controller,
                   minLines: 1,
-                  // maxLines: 2,
+                  maxLines: 3,
+                  cursorColor: Colors.blueGrey,
                   decoration: InputDecoration(
                     hintText: 'Ask me anything...',
                     hintStyle: GoogleFonts.poppins(
