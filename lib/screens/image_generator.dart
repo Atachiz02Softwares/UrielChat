@@ -1,8 +1,6 @@
 import 'dart:io' show Platform, File;
 
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,13 +11,14 @@ import 'package:stability_image_generation/stability_image_generation.dart';
 import 'package:uriel_chat/providers/providers.dart';
 
 import '../custom_widgets/custom.dart';
+import '../firebase/crud.dart';
 import '../utils/strings.dart';
 import '../utils/utilities.dart';
 
 class ImageGenerator extends ConsumerStatefulWidget {
-  String chatId;
+  final String chatId;
 
-  ImageGenerator({super.key, required this.chatId});
+  const ImageGenerator({super.key, required this.chatId});
 
   @override
   ConsumerState<ImageGenerator> createState() => _ImageGeneratorState();
@@ -27,7 +26,8 @@ class ImageGenerator extends ConsumerStatefulWidget {
 
 class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
   final TextEditingController _messageController = TextEditingController();
-  final userId = FirebaseAuth.instance.currentUser?.uid;
+  final ScrollController _scrollController = ScrollController();
+  final String _newChatId = generateChatId();
 
   // final StabilityAI _ai = StabilityAI();
   final String apiKey = Strings.stabilityAPIKey;
@@ -35,6 +35,28 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
   bool isGenerating = false;
 
   List<Map<String, dynamic>> messages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+  }
+
+  @override
+  void didUpdateWidget(ImageGenerator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +89,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                   child: messages.isEmpty
                       ? const ChatHeader()
                       : ListView.builder(
+                          controller: _scrollController,
                           physics: const BouncingScrollPhysics(),
                           padding: const EdgeInsets.all(10),
                           itemCount: messages.length,
@@ -100,7 +123,8 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             CustomText(
-                                              text: Strings.formatDateTime(timestamp),
+                                              text: Strings.formatDateTime(
+                                                  timestamp),
                                               style: const TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: 12),
@@ -161,7 +185,8 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             CustomText(
-                                              text: Strings.formatDateTime(timestamp),
+                                              text: Strings.formatDateTime(
+                                                  timestamp),
                                               style: const TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: 12),
@@ -197,9 +222,10 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                   controller: _messageController,
                   waiting: isGenerating,
                   onSendMessage: () {
-                    final query = _messageController.text;
-                    if (query.isNotEmpty && !isGenerating) {
-                      _generateImage(query);
+                    final prompt = _messageController.text;
+                    _messageController.clear();
+                    if (prompt.isNotEmpty && !isGenerating) {
+                      _generateImage(prompt);
                     }
                   },
                 ),
@@ -211,19 +237,17 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
     );
   }
 
-  Future<void> _generateImage(String query) async {
+  Future<void> _generateImage(String prompt) async {
     setState(() {
       isGenerating = true;
-      // Add the user's message to the messages list
       messages.add({
         "sender": Strings.user,
-        "content": query,
+        "content": prompt,
         "timestamp": DateTime.now().toIso8601String(),
       });
     });
 
     try {
-      // Generate the image
       img.Image baseImage = img.Image(width: 2, height: 2);
       baseImage.setPixel(0, 0, img.ColorInt32.rgba(255, 0, 0, 255));
       baseImage.setPixel(1, 0, img.ColorInt32.rgba(0, 255, 0, 255));
@@ -231,11 +255,9 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
       baseImage.setPixel(1, 1, img.ColorInt32.rgba(255, 255, 0, 255));
       Uint8List image = Uint8List.fromList(img.encodePng(baseImage));
 
-      // Upload the image to Firebase Storage
-      String imageUrl = await _uploadImageToStorage(image);
+      String imageUrl = await CRUD().uploadImageToStorage(image, widget.chatId);
 
-      // Call the _sendMessage method with the image URL
-      await _sendMessage(imageUrl);
+      await _sendMessage(imageUrl, prompt);
     } catch (error) {
       setState(() {
         isGenerating = false;
@@ -247,12 +269,13 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
     }
   }
 
-  Future<void> _sendMessage(String imageUrl) async {
+  Future<void> _sendMessage(String imageUrl, String prompt) async {
     final message = {
-      "sender": "AI",
+      "sender": Strings.ai,
       "content": imageUrl,
       "timestamp": DateTime.now().toIso8601String(),
     };
+
 
     setState(() {
       messages.add(message);
@@ -260,8 +283,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
 
     await Utilities.sendChatMessage(
       chatId: widget.chatId,
-      // controller: _messageController,
-      prompt: _messageController.text,
+      prompt: prompt,
       ref: ref,
       setLoading: (bool isGenerating) {
         setState(() {
@@ -272,23 +294,13 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
     );
   }
 
-  Future<String> _uploadImageToStorage(Uint8List image) async {
-    final storageRef = FirebaseStorage.instance.ref();
-    final imageRef = storageRef
-        .child('images/$userId/${widget.chatId}/${generateChatId()}.png');
-    await imageRef.putData(image);
-    return await imageRef.getDownloadURL();
-  }
-
   Future<void> _saveImage(String imageUrl) async {
     try {
-      // Download the image data
       final response = await http.get(Uri.parse(imageUrl));
       if (response.statusCode == 200) {
         final image = response.bodyBytes;
 
         if (image.isNotEmpty) {
-          // Open file save dialog
           String? outputFile = await FilePicker.platform.saveFile(
             dialogTitle: 'Save Image',
             fileName: 'uriel${generateChatId()}.png',
@@ -297,7 +309,6 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
           if (outputFile != null) {
             final file = File(outputFile);
 
-            // Write image data to file
             await file.writeAsBytes(image);
             debugPrint('Image saved at: $outputFile');
             if (mounted) {
@@ -330,17 +341,16 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
 
   Future<void> newChat() async {
     setState(() {
-      _messageController.clear();
       isGenerating = false;
-      widget.chatId = generateChatId();
+      _messageController.clear();
     });
 
-    ref.read(currentChatIdProvider.notifier).state = widget.chatId;
+    ref.read(currentChatIdProvider.notifier).state = _newChatId;
 
     final user = ref.read(userProvider);
     if (user != null) {
       ref.read(chatProvider(widget.chatId).notifier).clearMessages();
-      ref.read(chatProvider(widget.chatId).notifier).chatId = widget.chatId;
+      ref.read(chatProvider(widget.chatId).notifier).chatId = _newChatId;
       await ref
           .read(chatProvider(widget.chatId).notifier)
           .loadChat(user.uid, Strings.userImageChats);

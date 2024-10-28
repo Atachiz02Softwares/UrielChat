@@ -46,7 +46,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     await _loadChat();
 
     if (widget.searchQuery != null && widget.searchQuery!.isNotEmpty) {
-      //   _controller.text = widget.searchQuery!;
       await _sendMessage(widget.searchQuery!);
     }
   }
@@ -90,7 +89,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 InputBar(
                   controller: _controller,
                   waiting: _isLoading,
-                  onSendMessage: () => _sendMessage(_controller.text),
+                  onSendMessage: () {
+                    final prompt = _controller.text;
+                    _controller.clear();
+                    _sendMessage(prompt);
+                  },
                 ),
               ],
             ),
@@ -144,7 +147,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Future<void> _sendMessage(String prompt) async {
     await Utilities.sendChatMessage(
       chatId: _chatId,
-      // controller: _controller,
       prompt: prompt,
       ref: ref,
       setLoading: (bool isLoading) {
