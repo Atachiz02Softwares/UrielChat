@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
-import 'package:stability_image_generation/stability_image_generation.dart';
 
 import '../custom_widgets/custom.dart';
 import '../firebase/crud.dart';
@@ -29,11 +28,11 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final String _newChatId = generateChatId();
+  bool isGenerating = false;
 
   // final StabilityAI _ai = StabilityAI();
-  final String apiKey = Strings.stabilityAPIKey;
-  final ImageAIStyle imageAIStyle = ImageAIStyle.render3D;
-  bool isGenerating = false;
+  // final String apiKey = Strings.stabilityAPIKey;
+  // final ImageAIStyle imageAIStyle = ImageAIStyle.render3D;
 
   List<ChatMessage> messages = [];
 
@@ -124,7 +123,8 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                           children: [
                                             CustomText(
                                               text: Strings.formatDateTime(
-                                                  message.timestamp.toIso8601String()),
+                                                  message.timestamp
+                                                      .toIso8601String()),
                                               style: const TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: 12),
@@ -186,7 +186,8 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                           children: [
                                             CustomText(
                                               text: Strings.formatDateTime(
-                                                  message.timestamp.toIso8601String()),
+                                                  message.timestamp
+                                                      .toIso8601String()),
                                               style: const TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: 12),
@@ -245,6 +246,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
         content: prompt,
         timestamp: DateTime.now(),
       ));
+      _scrollToBottom(); // Scroll to bottom after adding a new message
     });
 
     try {
@@ -278,6 +280,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
 
     setState(() {
       messages.add(message);
+      _scrollToBottom(); // Scroll to bottom after adding a new message
     });
 
     await Utilities.sendChatMessage(
