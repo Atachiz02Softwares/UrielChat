@@ -8,10 +8,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 import 'package:stability_image_generation/stability_image_generation.dart';
-import 'package:uriel_chat/providers/providers.dart';
 
 import '../custom_widgets/custom.dart';
 import '../firebase/crud.dart';
+import '../models/chat_message.dart';
+import '../providers/providers.dart';
 import '../utils/strings.dart';
 import '../utils/utilities.dart';
 
@@ -34,7 +35,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
   final ImageAIStyle imageAIStyle = ImageAIStyle.render3D;
   bool isGenerating = false;
 
-  List<Map<String, dynamic>> messages = [];
+  List<ChatMessage> messages = [];
 
   @override
   void initState() {
@@ -95,8 +96,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                           itemCount: messages.length,
                           itemBuilder: (context, index) {
                             final message = messages[index];
-                            final timestamp = message["timestamp"];
-                            if (message["sender"] == Strings.user) {
+                            if (message.sender == Strings.user) {
                               // Display user message bubble
                               return Align(
                                 alignment: Alignment.centerRight,
@@ -112,7 +112,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                           CrossAxisAlignment.end,
                                       children: [
                                         CustomText(
-                                          text: message["content"],
+                                          text: message.content,
                                           style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 16),
@@ -124,7 +124,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                           children: [
                                             CustomText(
                                               text: Strings.formatDateTime(
-                                                  timestamp),
+                                                  message.timestamp.toIso8601String()),
                                               style: const TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: 12),
@@ -143,7 +143,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                               ),
                                               onPressed: () {
                                                 Clipboard.setData(ClipboardData(
-                                                    text: message["content"]));
+                                                    text: message.content));
                                                 CustomSnackBar.showSnackBar(
                                                     context,
                                                     'Copied to clipboard');
@@ -174,7 +174,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           child: Image.network(
-                                            message["content"],
+                                            message.content,
                                             width: imageSize,
                                             height: imageSize,
                                             fit: BoxFit.cover,
@@ -186,7 +186,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                           children: [
                                             CustomText(
                                               text: Strings.formatDateTime(
-                                                  timestamp),
+                                                  message.timestamp.toIso8601String()),
                                               style: const TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: 12),
@@ -204,7 +204,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                                 height: 16,
                                               ),
                                               onPressed: () {
-                                                _saveImage(message["content"]);
+                                                _saveImage(message.content);
                                               },
                                             ),
                                           ],
@@ -240,11 +240,11 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
   Future<void> _generateImage(String prompt) async {
     setState(() {
       isGenerating = true;
-      messages.add({
-        "sender": Strings.user,
-        "content": prompt,
-        "timestamp": DateTime.now().toIso8601String(),
-      });
+      messages.add(ChatMessage(
+        sender: Strings.user,
+        content: prompt,
+        timestamp: DateTime.now(),
+      ));
     });
 
     try {
@@ -270,11 +270,11 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
   }
 
   Future<void> _sendMessage(String imageUrl, String prompt) async {
-    final message = {
-      "sender": Strings.ai,
-      "content": imageUrl,
-      "timestamp": DateTime.now().toIso8601String(),
-    };
+    final message = ChatMessage(
+      sender: Strings.ai,
+      content: imageUrl,
+      timestamp: DateTime.now(),
+    );
 
     setState(() {
       messages.add(message);
