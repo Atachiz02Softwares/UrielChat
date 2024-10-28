@@ -66,7 +66,6 @@ class Strings {
   static const String history = 'assets/icons/history.svg';
   static const String filter = 'assets/icons/filter.svg';
   static const String newChatIcon = 'assets/icons/new_chat.svg';
-  static const String error = 'assets/icons/error.svg';
   static const String dollar = 'assets/icons/dollar.svg';
   static const String shield = 'assets/icons/shield.svg';
   static const String speak = 'assets/icons/speak.svg';

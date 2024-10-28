@@ -4,8 +4,14 @@ import '../custom.dart';
 
 class RecentChat extends StatelessWidget {
   final String chatId, firstMessage;
+  final bool isImageChat;
 
-  const RecentChat({super.key, required this.chatId, required this.firstMessage});
+  const RecentChat({
+    super.key,
+    required this.chatId,
+    required this.firstMessage,
+    this.isImageChat = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +19,15 @@ class RecentChat extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, '/chat', arguments: <String, dynamic>{
-            'chatId': chatId,
-            'searchQuery': '',
-            'fromRecent': true,
-          });
+          Navigator.pushNamed(
+            context,
+            isImageChat ? '/image' : '/chat',
+            arguments: <String, dynamic>{
+              'chatId': chatId,
+              'searchQuery': '',
+              'fromRecent': true,
+            },
+          );
         },
         child: GlassContainer(
           width: double.infinity,

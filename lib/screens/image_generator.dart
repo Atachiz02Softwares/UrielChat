@@ -39,7 +39,20 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadMessages();
+      _scrollToBottom();
+    });
+  }
+
+  Future<void> _loadMessages() async {
+    final chatService = ref.read(chatServiceProvider);
+    final messages = await chatService
+        .getMessages(widget.chatId, Strings.userImageChats)
+        .first;
+    setState(() {
+      this.messages = messages;
+    });
   }
 
   @override

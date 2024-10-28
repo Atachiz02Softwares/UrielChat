@@ -50,11 +50,11 @@ class ChatService {
     });
   }
 
-  Future<List<Map<String, String>>> getRecentChats(String userId) async {
+  Future<List<Map<String, String>>> getRecentChats(String userId, String collection) async {
     final querySnapshot = await _firestore
         .collection(Strings.chats)
         .doc(userId)
-        .collection(Strings.userChats)
+        .collection(collection)
         .orderBy('timestamp', descending: true)
         .get();
 
@@ -66,6 +66,7 @@ class ChatService {
       return {
         'chatId': doc.id,
         'firstMessage': firstMessage,
+        'isImageChat': collection == Strings.userImageChats ? 'true' : 'false',
       };
     }).toList();
   }

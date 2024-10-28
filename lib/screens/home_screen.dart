@@ -27,22 +27,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
     // Fetch the chats and insert into the AnimatedList
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadChats();
+      if (_recentChats.isEmpty) {
+        _loadChats();
+      }
     });
   }
 
   Future<void> _loadChats() async {
     final chatService = ref.read(chatServiceProvider);
     final user = ref.read(userProvider);
-    final chats = await chatService.getRecentChats(user?.uid ?? '');
+    final textChats =
+        await chatService.getRecentChats(user?.uid ?? '', Strings.userChats);
+    final imageChats = await chatService.getRecentChats(
+        user?.uid ?? '', Strings.userImageChats);
 
-    if (chats.isNotEmpty && mounted) {
-      for (var i = 0; i < chats.length; i++) {
-        Future.delayed(Duration(milliseconds: 150 * i), () {
+    final allChats = [...textChats, ...imageChats];
+    _recentChats.addAll(allChats);
+
+    if (allChats.isNotEmpty && mounted) {
+      for (var i = 0; i < allChats.length; i++) {
+        Future.delayed(Duration(milliseconds: 150 * i)).then((_) {
           if (mounted) {
             _listKey.currentState?.insertItem(_recentChats.length,
-                duration: Duration(milliseconds: 150 * i));
-            _recentChats.add(chats[i]);
+                duration: Duration(milliseconds: 150));
           }
         });
       }
@@ -213,55 +220,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Widget _buildRecentChats(double iconSize) {
-    return FutureBuilder<List<Map<String, String>>>(
-      future: ref
-          .read(chatServiceProvider)
-          .getRecentChats(ref.watch(userProvider)?.uid ?? ''),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CustomProgressBar());
-        } else if (snapshot.hasError) {
-          return _buildErrorState(iconSize);
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return _buildEmptyState(iconSize);
-        } else {
-          return AnimatedList(
-            key: _listKey,
-            physics: const BouncingScrollPhysics(),
-            shrinkWrap: true,
-            initialItemCount: _recentChats.length,
-            itemBuilder: (context, index, animation) {
-              // Prevent index error
-              if (index >= _recentChats.length) return const SizedBox();
-              final chat = _recentChats[index];
-              return _buildAnimatedChatItem(chat, animation);
-            },
-          );
-        }
-      },
-    );
-  }
-
-  Widget _buildErrorState(double iconSize) {
-    return Center(
-      child: Column(
-        children: [
-          SvgPicture.asset(
-            Strings.error,
-            colorFilter: const ColorFilter.mode(
-              Colors.blueGrey,
-              BlendMode.srcIn,
-            ),
-            width: iconSize,
-            height: iconSize,
-          ),
-          const CustomText(
-            text: 'Error loading chats...',
-            style: TextStyle(fontSize: 24, color: Colors.white),
-          ),
-        ],
-      ),
-    );
+    if (_recentChats.isEmpty) {
+      return Center(child: _buildEmptyState(iconSize));
+    } else {
+      return AnimatedList(
+        key: _listKey,
+        physics: const BouncingScrollPhysics(),
+        shrinkWrap: true,
+        initialItemCount: _recentChats.length,
+        itemBuilder: (context, index, animation) {
+          // Prevent index error
+          if (index >= _recentChats.length) return const SizedBox();
+          final chat = _recentChats[index];
+          return _buildAnimatedChatItem(chat, animation);
+        },
+      );
+    }
   }
 
   Widget _buildEmptyState(double iconSize) {
@@ -311,6 +285,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           child: RecentChat(
             chatId: chat['chatId']!,
             firstMessage: chat['firstMessage']!,
+            isImageChat: chat['isImageChat'] == 'true',
           ),
         ),
       ),
