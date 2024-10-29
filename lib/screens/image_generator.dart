@@ -30,6 +30,8 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final String _newChatId = generateChatId();
+  Map<String, bool> isDownloadingMap = {};
+  Map<String, double> downloadProgressMap = {};
   bool isGenerating = false, isDownloading = false;
   double downloadProgress = 0.0;
 
@@ -79,7 +81,8 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
     final double imageSize = Platform.isAndroid || Platform.isIOS
             ? MediaQuery.of(context).size.width / 1.5
             : MediaQuery.of(context).size.height / 2,
-        iconSize = MediaQuery.of(context).size.width * 0.07;
+        iconSize = MediaQuery.of(context).size.width * 0.07,
+        icSize = MediaQuery.of(context).size.width * 0.05;
 
     return Scaffold(
       appBar: ChatAppBar(
@@ -149,13 +152,9 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                               tooltip: 'Copy Text',
                                               icon: SvgPicture.asset(
                                                 Strings.copy,
-                                                colorFilter:
-                                                    const ColorFilter.mode(
-                                                  Colors.grey,
-                                                  BlendMode.srcIn,
-                                                ),
-                                                width: 16,
-                                                height: 16,
+                                                colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                                                width: icSize,
+                                                height: icSize,
                                               ),
                                               onPressed: () {
                                                 Clipboard.setData(ClipboardData(
@@ -183,12 +182,9 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(16),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment:CrossAxisAlignment.start,
                                       children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
+                                        ClipRRect(borderRadius: BorderRadius.circular(15),
                                           child: Image.network(
                                             message.content,
                                             width: imageSize,
@@ -201,50 +197,34 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             CustomText(
-                                              text: Strings.formatDateTime(
-                                                  message.timestamp
-                                                      .toIso8601String()),
+                                              text: Strings.formatDateTime(message.timestamp.toIso8601String()),
                                               style: const TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: 12),
                                             ),
                                             IconButton(
                                               tooltip: 'Save Image',
-                                              icon: isDownloading
-                                                  ? CustomProgressBar(
-                                                      value: downloadProgress,
-                                                      strokeWidth: 2.5,
-                                                    )
+                                              icon: isDownloadingMap[message.content] == true
+                                                  ? CustomProgressBar(value: downloadProgressMap[message.content] ?? 0.0, size: icSize)
                                                   : SvgPicture.asset(
-                                                      Strings.download,
-                                                      colorFilter:
-                                                          const ColorFilter
-                                                              .mode(
-                                                        Colors.grey,
-                                                        BlendMode.srcIn,
-                                                      ),
-                                                      width: 16,
-                                                      height: 16,
-                                                    ),
-                                              onPressed: isDownloading
+                                                Strings.download,
+                                                colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                                                width: icSize,
+                                                height: icSize,
+                                              ),
+                                              onPressed: isDownloadingMap[message.content] == true
                                                   ? null
                                                   : () async {
-                                                      var status =
-                                                          await Permission
-                                                              .storage.status;
-                                                      if (!status.isGranted) {
-                                                        var result =
-                                                            await Permission
-                                                                .storage
-                                                                .request();
-                                                        if (!result.isGranted &&
-                                                            context.mounted) {
-                                                          openAppSettings();
-                                                        }
-                                                      }
-                                                      _saveImage(
-                                                          message.content);
-                                                    },
+                                                final status = await Utilities.requestPermission(Permission.storage);
+                                                if (status) await _saveImage(message.content);
+                                                else if (context.mounted){
+                                                  CustomSnackBar.showSnackBar(
+                                                      context,
+                                                      'Storage permission denied...',
+                                                      isError: true,
+                                                  );
+                                                }
+                                              },
                                             ),
                                           ],
                                         ),
@@ -288,6 +268,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
     });
 
     try {
+      /// Sample image generation using the image package for debugging
       // img.Image baseImage = img.Image(width: 2, height: 2);
       // baseImage.setPixel(0, 0, img.ColorInt32.rgba(255, 0, 0, 255));
       // baseImage.setPixel(1, 0, img.ColorInt32.rgba(0, 255, 0, 255));
@@ -324,7 +305,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
 
     setState(() {
       messages.add(message);
-      _scrollToBottom(); // Scroll to bottom after adding a new message
+      _scrollToBottom();
     });
 
     await Utilities.sendChatMessage(
@@ -342,7 +323,8 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
 
   Future<void> _saveImage(String imageUrl) async {
     setState(() {
-      isDownloading = true;
+      isDownloadingMap[imageUrl] = true;
+      downloadProgressMap[imageUrl] = 0.0;
     });
 
     try {
@@ -352,7 +334,7 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
         options: Options(responseType: ResponseType.bytes),
         onReceiveProgress: (received, total) {
           setState(() {
-            downloadProgress = (received / total);
+            downloadProgressMap[imageUrl] = (received / total);
           });
         },
       );
@@ -366,8 +348,8 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
         );
 
         setState(() {
-          isDownloading = false;
-          downloadProgress = 0.0;
+          isDownloadingMap[imageUrl] = false;
+          downloadProgressMap[imageUrl] = 0.0;
         });
 
         if (result['isSuccess'] && mounted) {
@@ -391,8 +373,8 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
       }
     } catch (error) {
       setState(() {
-        isDownloading = false;
-        downloadProgress = 0.0;
+        isDownloadingMap[imageUrl] = false;
+        downloadProgressMap[imageUrl] = 0.0;
       });
       if (mounted) {
         CustomSnackBar.showSnackBar(

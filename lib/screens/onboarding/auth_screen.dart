@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../custom_widgets/custom.dart';
-import '../firebase/auth.dart';
-import '../providers/providers.dart';
-import '../utils/utils.dart';
+import '../../custom_widgets/custom.dart';
+import '../../firebase/auth.dart';
+import '../../providers/providers.dart';
+import '../../utils/utils.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
@@ -292,8 +292,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                                     .read(authProvider.notifier)
                                     .setUser(userCredential?.user);
                                 if (context.mounted) {
-                                  Navigator.pushReplacementNamed(
-                                      context, '/main');
+                                  Navigator.of(context).pushNamedAndRemoveUntil('/main', (route) => false);
                                 }
                               }).catchError((e) {
                                 if (context.mounted) {

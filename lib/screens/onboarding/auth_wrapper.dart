@@ -10,11 +10,6 @@ class AuthWrapper extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider);
-
-    if (user != null) {
-      return const MainScreen();
-    } else {
-      return const OnboardingScreen();
-    }
+    return user != null ? const MainScreen() : const OnboardingScreen();
   }
 }

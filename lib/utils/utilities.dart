@@ -185,4 +185,12 @@ class Utilities {
     }
     return 'free';
   }
+
+  static Future<bool> requestPermission(Permission permission) async {
+    final status = await permission.status;
+    if (status.isGranted) return true;
+    if (status.isPermanentlyDenied) return false;
+    final result = await permission.request();
+    return result.isGranted;
+  }
 }
