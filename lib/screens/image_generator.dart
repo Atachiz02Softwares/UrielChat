@@ -1,12 +1,13 @@
-import 'dart:io' show Platform, File;
+import 'dart:io' show Platform;
 
-import 'package:file_picker/file_picker.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:http/http.dart' as http;
-import 'package:image/image.dart' as img;
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:stability_image_generation/stability_image_generation.dart';
 
 import '../custom_widgets/custom.dart';
@@ -29,12 +30,12 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final String _newChatId = generateChatId();
-  bool isGenerating = false;
+  bool isGenerating = false, isDownloading = false;
+  double downloadProgress = 0.0;
 
   final StabilityAI _ai = StabilityAI();
   final String apiKey = Strings.stabilityAPIKey;
   final ImageAIStyle imageAIStyle = ImageAIStyle.noStyle;
-  // final ImageAIStyle imageAIStyle = ImageAIStyle.render3D;
 
   List<ChatMessage> messages = [];
 
@@ -209,19 +210,41 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                                             ),
                                             IconButton(
                                               tooltip: 'Save Image',
-                                              icon: SvgPicture.asset(
-                                                Strings.download,
-                                                colorFilter:
-                                                    const ColorFilter.mode(
-                                                  Colors.grey,
-                                                  BlendMode.srcIn,
-                                                ),
-                                                width: 16,
-                                                height: 16,
-                                              ),
-                                              onPressed: () {
-                                                _saveImage(message.content);
-                                              },
+                                              icon: isDownloading
+                                                  ? CustomProgressBar(
+                                                      value: downloadProgress,
+                                                      strokeWidth: 2.5,
+                                                    )
+                                                  : SvgPicture.asset(
+                                                      Strings.download,
+                                                      colorFilter:
+                                                          const ColorFilter
+                                                              .mode(
+                                                        Colors.grey,
+                                                        BlendMode.srcIn,
+                                                      ),
+                                                      width: 16,
+                                                      height: 16,
+                                                    ),
+                                              onPressed: isDownloading
+                                                  ? null
+                                                  : () async {
+                                                      var status =
+                                                          await Permission
+                                                              .storage.status;
+                                                      if (!status.isGranted) {
+                                                        var result =
+                                                            await Permission
+                                                                .storage
+                                                                .request();
+                                                        if (!result.isGranted &&
+                                                            context.mounted) {
+                                                          openAppSettings();
+                                                        }
+                                                      }
+                                                      _saveImage(
+                                                          message.content);
+                                                    },
                                             ),
                                           ],
                                         ),
@@ -318,35 +341,65 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
   }
 
   Future<void> _saveImage(String imageUrl) async {
+    setState(() {
+      isDownloading = true;
+    });
+
     try {
-      final response = await http.get(Uri.parse(imageUrl));
+      final Dio dio = Dio();
+      final Response response = await dio.get(
+        imageUrl,
+        options: Options(responseType: ResponseType.bytes),
+        onReceiveProgress: (received, total) {
+          setState(() {
+            downloadProgress = (received / total);
+          });
+        },
+      );
+
       if (response.statusCode == 200) {
-        final image = response.bodyBytes;
+        final Uint8List imageData = Uint8List.fromList(response.data);
+        final result = await ImageGallerySaverPlus.saveImage(
+          imageData,
+          quality: 100,
+          name: 'uriel${generateChatId()}',
+        );
 
-        if (image.isNotEmpty) {
-          String? outputFile = await FilePicker.platform.saveFile(
-            dialogTitle: 'Save Image',
-            fileName: 'uriel${generateChatId()}.png',
+        setState(() {
+          isDownloading = false;
+          downloadProgress = 0.0;
+        });
+
+        if (result['isSuccess'] && mounted) {
+          CustomSnackBar.showSnackBar(
+            context,
+            'Image saved to gallery at ${result['filePath']}',
           );
-
-          if (outputFile != null) {
-            final file = File(outputFile);
-
-            await file.writeAsBytes(image);
-            debugPrint('Image saved at: $outputFile');
-            if (mounted) {
-              CustomSnackBar.showSnackBar(context, 'Image saved successfully.');
-            }
-          }
-        } else {
-          throw Exception('Downloaded image is empty');
+        } else if (mounted) {
+          CustomSnackBar.showSnackBar(
+            context,
+            'Failed to save image to gallery.',
+            isError: true,
+          );
         }
-      } else {
-        throw Exception('Failed to download image');
+      } else if (mounted) {
+        CustomSnackBar.showSnackBar(
+          context,
+          'Image download failed.',
+          isError: true,
+        );
       }
     } catch (error) {
+      setState(() {
+        isDownloading = false;
+        downloadProgress = 0.0;
+      });
       if (mounted) {
-        CustomSnackBar.showSnackBar(context, 'Error saving image: $error');
+        CustomSnackBar.showSnackBar(
+          context,
+          'Error saving image: $error',
+          isError: true,
+        );
       }
     }
   }

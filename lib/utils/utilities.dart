@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../custom_widgets/custom.dart';
 import '../firebase/crud.dart';
@@ -52,7 +53,8 @@ class Utilities {
     final userData = userSnapshot.data();
     String tier = userData?['tier'] ?? 'free';
     int dailyCount = userData?['dailyCount'] ?? 0;
-    int dailyLimit = userData?['dailyLimit'] ?? (tier == 'free' ? Strings.free : Strings.regular);
+    int dailyLimit = userData?['dailyLimit'] ??
+        (tier == 'free' ? Strings.free : Strings.regular);
     Timestamp lastChatTime = userData?['lastChatTime'] ?? Timestamp.now();
 
     DateTime now = DateTime.now();
@@ -119,7 +121,8 @@ class Utilities {
       if (kDebugMode) Logger().e('${Strings.ai} Error: $e');
       final errorMessage = ChatMessage(
         sender: 'system',
-        content: 'There was an error processing your request. Please try again later.',
+        content:
+            'There was an error processing your request. Please try again later.',
         timestamp: DateTime.now(),
       );
       await ref.read(chatProvider(chatId).notifier).addMessage(errorMessage,
