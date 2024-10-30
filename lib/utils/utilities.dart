@@ -35,13 +35,12 @@ class Utilities {
 
   static Future<void> sendChatMessage({
     required String chatId,
-    // required TextEditingController controller,
     required String prompt,
     required WidgetRef ref,
     required Function(bool) setLoading,
     String? imageUrl,
   }) async {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = ref.read(userProvider);
     if (user == null) return;
 
     final userDoc =
@@ -131,6 +130,51 @@ class Utilities {
       setLoading(false);
       // controller.clear();
     }
+  }
+
+  static Future<bool> checkDailyImageLimit(WidgetRef ref) async {
+    final user = ref.read(userProvider);
+    if (user == null) return false;
+
+    final userDoc = FirebaseFirestore.instance.collection(Strings.users).doc(user.uid);
+    final userSnapshot = await userDoc.get();
+
+    if (!userSnapshot.exists) return false;
+
+    final userData = userSnapshot.data();
+    int dailyImageCount = userData?['dailyImageCount'] ?? 0;
+    Timestamp lastImageTime = userData?['lastImageGenTime'] ?? Timestamp.now();
+
+    DateTime now = DateTime.now();
+    DateTime lastResetDate = lastImageTime.toDate();
+
+    if (now.difference(lastResetDate).inHours >= 24) {
+      await userDoc.update({'dailyImageCount': 0});
+      dailyImageCount = 0;
+    }
+
+    if (dailyImageCount >= 5) return false;
+
+    await userDoc.update({
+      'dailyImageCount': FieldValue.increment(1),
+      'lastImageGenTime': Timestamp.now()
+    });
+
+    return true;
+  }
+
+  static void showRateLimitBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      showDragHandle: true,
+      backgroundColor: Colors.black,
+      context: context,
+      builder: (context) {
+        return InfoBottomSheet(
+          title: '**Rate Limit Reached**',
+          content: 'You have reached the daily limit of 5 image generations. Please check back after 24 hours.',
+        );
+      },
+    );
   }
 
   static void showFeedbackBottomSheet(BuildContext context) {

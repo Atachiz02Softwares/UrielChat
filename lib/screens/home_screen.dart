@@ -75,6 +75,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
     return Scaffold(
       appBar: AppBar(
+        title: CustomText(
+          text: 'Hi, $userName!',
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+          ),
+        ),
         backgroundColor: Colors.black,
         elevation: 0,
         actions: [CurrentPlan()],
@@ -105,11 +112,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   ),
                   const SizedBox(height: 10),
                   recentChatsAsyncValue.when(
-                    data: (recentChats) =>
-                        _buildRecentChats(iconSize, recentChats),
+                    data: (recentChats) => _buildRecentChats(iconSize, recentChats),
                     loading: () => const Center(child: CustomProgressBar()),
-                    error: (error, stack) =>
-                        Center(child: _buildRecentChatState(iconSize, false)),
+                    error: (error, stack) => Center(child: _buildRecentChatState(iconSize, false)),
                   ),
                 ],
               ),
@@ -126,13 +131,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const ProfilePicture(),
-          const SizedBox(width: 20),
           CustomText(
-            text: 'Welcome to Uriel Chat, $userName',
+            text: 'Welcome to Uriel Chat',
             style: const TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
-              color: Colors.grey,
+              color: Colors.white,
             ),
             align: TextAlign.center,
           ),

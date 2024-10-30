@@ -262,7 +262,7 @@ You have reached your daily chat limit. Upgrade to continue chatting.
 - **Features:**
   - All Premium Tier features
   - Access to exclusive content
-  - Image chat support
+  - Image chat support (5 images per day)
 
 **Note:** Upgrading to a higher tier will reset your daily message count immediately.
 """;
