@@ -1,6 +1,5 @@
 import 'dart:io' show Platform;
 
-import 'package:image/image.dart' as img;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -116,7 +115,6 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
                           itemBuilder: (context, index) {
                             final message = messages[index];
                             if (message.sender == Strings.user) {
-                              // Display user message bubble
                               return Align(
                                 alignment: Alignment.centerRight,
                                 child: GlassContainer(
@@ -276,18 +274,18 @@ class _ImageGeneratorState extends ConsumerState<ImageGenerator> {
 
     try {
       /// Sample image generation using the image package for debugging
-      img.Image baseImage = img.Image(width: 2, height: 2);
-      baseImage.setPixel(0, 0, img.ColorInt32.rgba(255, 0, 0, 255));
-      baseImage.setPixel(1, 0, img.ColorInt32.rgba(0, 255, 0, 255));
-      baseImage.setPixel(0, 1, img.ColorInt32.rgba(0, 0, 255, 255));
-      baseImage.setPixel(1, 1, img.ColorInt32.rgba(255, 255, 0, 255));
-      Uint8List image = Uint8List.fromList(img.encodePng(baseImage));
+      // img.Image baseImage = img.Image(width: 2, height: 2);
+      // baseImage.setPixel(0, 0, img.ColorInt32.rgba(255, 0, 0, 255));
+      // baseImage.setPixel(1, 0, img.ColorInt32.rgba(0, 255, 0, 255));
+      // baseImage.setPixel(0, 1, img.ColorInt32.rgba(0, 0, 255, 255));
+      // baseImage.setPixel(1, 1, img.ColorInt32.rgba(255, 255, 0, 255));
+      // Uint8List image = Uint8List.fromList(img.encodePng(baseImage));
 
-      // Uint8List image = await _ai.generateImage(
-      //   apiKey: apiKey,
-      //   imageAIStyle: imageAIStyle,
-      //   prompt: prompt,
-      // );
+      Uint8List image = await _ai.generateImage(
+        apiKey: apiKey,
+        imageAIStyle: imageAIStyle,
+        prompt: prompt,
+      );
 
       String imageUrl = await CRUD().uploadImageToStorage(image, widget.chatId);
 
