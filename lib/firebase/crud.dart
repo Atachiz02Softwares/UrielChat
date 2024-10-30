@@ -13,7 +13,8 @@ class CRUD {
   final Reference _storageRef = FirebaseStorage.instance.ref();
 
   Future<void> initializeUser(User user) async {
-    final snapshot = await _firestore.collection(Strings.users).doc(user.uid).get();
+    final snapshot =
+        await _firestore.collection(Strings.users).doc(user.uid).get();
     if (snapshot.exists) {
       final userData = snapshot.data() as Map<String, dynamic>;
       await user.updateProfile(
@@ -54,7 +55,8 @@ class CRUD {
   }
 
   Future<String> uploadImageToStorage(Uint8List image, String chatId) async {
-    final imageRef = _storageRef.child('images/${user!.uid}/$chatId/${generateChatId()}.png');
+    final imageRef = _storageRef
+        .child('images/${user!.uid}/$chatId/${generateChatId()}.png');
     await imageRef.putData(image);
     return await imageRef.getDownloadURL();
   }
@@ -71,9 +73,9 @@ class CRUD {
     final userSnapshot = await userDoc.get();
     if (userSnapshot.exists) {
       final userData = userSnapshot.data() as Map<String, dynamic>;
-      return userData['tier'] ?? 'free';
+      return userData['tier'] ?? Strings.f;
     }
-    return 'free';
+    return Strings.f;
   }
 
   Map<String, dynamic>? _cachedUserData;
@@ -108,7 +110,7 @@ class CRUD {
     // Check if the latest transaction is older than a month
     if (now.difference(latestTimestamp).inDays > 30) {
       await _firestore.collection(Strings.users).doc(user.uid).update({
-        'tier': 'free',
+        'tier': Strings.f,
         'dailyLimit': Strings.free,
       });
     }

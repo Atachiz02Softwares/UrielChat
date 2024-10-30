@@ -56,7 +56,7 @@ class _PayStackState extends ConsumerState<PayStack> {
                         buttonText: 'Upgrade to Regular',
                         buttonColor: Colors.blue.shade900,
                         onPressed: () =>
-                            makePayment(Strings.regularMoney, 'regular'),
+                            makePayment(Strings.regularMoney, Strings.r),
                       ),
                       const SizedBox(height: 20),
                       PlanCard(
@@ -64,7 +64,8 @@ class _PayStackState extends ConsumerState<PayStack> {
                         price: Strings.premiumMoney,
                         buttonText: 'Upgrade to Premium',
                         buttonColor: Colors.green.shade900,
-                        onPressed: () => makePayment(Strings.premiumMoney, 'premium'),
+                        onPressed: () =>
+                            makePayment(Strings.premiumMoney, Strings.p),
                       ),
                       const SizedBox(height: 20),
                       PlanCard(
@@ -72,7 +73,8 @@ class _PayStackState extends ConsumerState<PayStack> {
                         price: Strings.platinumMoney,
                         buttonText: 'Upgrade to Platinum',
                         buttonColor: Colors.purple.shade800,
-                        onPressed: () => makePayment(Strings.platinumMoney, 'platinum'),
+                        onPressed: () =>
+                            makePayment(Strings.platinumMoney, Strings.pl),
                       ),
                     ],
                   ),
@@ -87,7 +89,8 @@ class _PayStackState extends ConsumerState<PayStack> {
     final user = ref.read(userProvider);
 
     final request = PaystackTransactionRequest(
-      reference: 'uriel_${plan}_${amount}_${DateTime.now().microsecondsSinceEpoch}',
+      reference:
+          'uriel_${plan}_${amount}_${DateTime.now().microsecondsSinceEpoch}',
       secretKey: secretKey,
       email: user?.email ?? '',
       amount: amount * 100,
@@ -141,10 +144,10 @@ class _PayStackState extends ConsumerState<PayStack> {
               .collection(Strings.users)
               .doc(user?.uid);
           final tier = amount == Strings.regularMoney
-              ? 'regular'
+              ? Strings.r
               : amount == Strings.premiumMoney
-                  ? 'premium'
-                  : 'platinum';
+                  ? Strings.p
+                  : Strings.pl;
           final dailyLimit = amount == Strings.regularMoney
               ? Strings.regular
               : amount == Strings.premiumMoney

@@ -51,10 +51,10 @@ class Utilities {
     if (!userSnapshot.exists) return;
 
     final userData = userSnapshot.data();
-    String tier = userData?['tier'] ?? 'free';
+    String tier = userData?['tier'] ?? Strings.f;
     int dailyCount = userData?['dailyCount'] ?? 0;
     int dailyLimit = userData?['dailyLimit'] ??
-        (tier == 'free' ? Strings.free : Strings.regular);
+        (tier == Strings.f ? Strings.free : Strings.regular);
     Timestamp lastChatTime = userData?['lastChatTime'] ?? Timestamp.now();
 
     DateTime now = DateTime.now();
@@ -183,7 +183,7 @@ class Utilities {
     if (user != null) {
       return await CRUD().fetchCurrentPlan(user.uid);
     }
-    return 'free';
+    return Strings.f;
   }
 
   static Future<bool> requestPermission(Permission permission) async {

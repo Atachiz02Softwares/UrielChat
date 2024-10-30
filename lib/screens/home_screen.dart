@@ -48,8 +48,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       for (var i = 0; i < allChats.length; i++) {
         Future.delayed(Duration(milliseconds: 150 * i)).then((_) {
           if (mounted) {
-            _listKey.currentState?.insertItem(_recentChats.length,
-                duration: Duration(milliseconds: 150),
+            _listKey.currentState?.insertItem(
+              _recentChats.length,
+              duration: Duration(milliseconds: 150),
             );
           }
         });
@@ -66,7 +67,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final iconSize = MediaQuery.of(context).size.width * 0.2;
-    final userName = (ref.watch(userProvider)?.displayName?.split(' ')[0] ?? Strings.user).capitalize();
+    final userName =
+        (ref.watch(userProvider)?.displayName?.split(' ')[0] ?? Strings.user)
+            .capitalize();
     final currentPlan = ref.watch(planProvider);
     final recentChatsAsyncValue = ref.watch(recentChatsProvider);
 
@@ -102,9 +105,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   ),
                   const SizedBox(height: 10),
                   recentChatsAsyncValue.when(
-                    data: (recentChats) => _buildRecentChats(iconSize, recentChats),
+                    data: (recentChats) =>
+                        _buildRecentChats(iconSize, recentChats),
                     loading: () => const Center(child: CustomProgressBar()),
-                    error: (error, stack) => Center(child: _buildRecentChatState(iconSize, false)),
+                    error: (error, stack) =>
+                        Center(child: _buildRecentChatState(iconSize, false)),
                   ),
                 ],
               ),
@@ -201,7 +206,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             label: 'Image Generation',
             color: Colors.green,
             onPressed: () {
-              if (currentPlan == 'platinum') {
+              if (currentPlan == Strings.pl) {
                 Navigator.pushNamed(context, '/image',
                     arguments: <String, dynamic>{'chatId': generateChatId()});
               } else {

@@ -40,7 +40,7 @@ class MicButton extends ConsumerWidget {
             ),
           ),
           onPressed: () async {
-            if (currentPlan == 'premium' || currentPlan == 'platinum') {
+            if (currentPlan == Strings.p || currentPlan == Strings.pl) {
               if (isListening) {
                 speechService.stop();
               } else {

@@ -24,13 +24,13 @@ class AI {
     }
 
     final userData = userSnapshot.data();
-    String tier = userData?['tier'] ?? 'free';
+    String tier = userData?['tier'] ?? Strings.f;
 
     String model;
     String apiKey;
 
-    model = tier == 'free' ? Strings.freeModel : Strings.paidModel;
-    apiKey = tier == 'free' ? Strings.freeAPIKey : Strings.paidAPIKey;
+    model = tier == Strings.f ? Strings.freeModel : Strings.paidModel;
+    apiKey = tier == Strings.f ? Strings.freeAPIKey : Strings.paidAPIKey;
 
     return GenerativeModel(
       model: model,

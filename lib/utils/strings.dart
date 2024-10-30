@@ -6,6 +6,10 @@ class Strings {
   static const String appName = 'Uriel Chat';
 
   static final String users = 'users',
+      f = 'free',
+      r = 'regular',
+      p = 'premium',
+      pl = 'platinum',
       ai = 'AI',
       user = 'user',
       chats = 'chats',
