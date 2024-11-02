@@ -60,15 +60,13 @@ The app is powered by Google's Gemini AI and developed by Atachiz02 Softwares.
 The app uses the following dependencies:
 
 - `flutter`: The Flutter framework.
-- `cupertino_icons`: Icons for iOS style.
 - `smooth_page_indicator`: Smooth page indicators.
 - `flutter_svg`: SVG rendering.
-- `flutter_dotenv`: Load environment variables from a `.env` file.
-- `flutter_gradient_colors`: Gradient colors for Flutter.
 - `google_generative_ai`: Google Generative AI API.
 - `google_fonts`: Google Fonts for Flutter.
 - `flutter_markdown`: Render Markdown in Flutter.
 - `intl`: Internationalization and localization.
+- etc...
 
 ## License
 
