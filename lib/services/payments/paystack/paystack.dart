@@ -138,76 +138,42 @@ class _PayStackState extends ConsumerState<PayStack> {
 
     if (response.status) {
       final status = response.data.status;
-      switch (status) {
-        case PaystackTransactionStatus.success:
-          final userDoc = FirebaseFirestore.instance
-              .collection(Strings.users)
-              .doc(user?.uid);
-          final tier = amount == Strings.regularMoney
-              ? Strings.r
-              : amount == Strings.premiumMoney
-                  ? Strings.p
-                  : Strings.pl;
-          final dailyLimit = amount == Strings.regularMoney
-              ? Strings.regular
-              : amount == Strings.premiumMoney
-                  ? Strings.premium
-                  : Strings.platinum;
+      if (status == PaystackTransactionStatus.success && mounted) {
+        final userDoc = FirebaseFirestore.instance.collection(Strings.users).doc(user?.uid);
+        final tier = amount == Strings.regularMoney
+            ? Strings.r
+            : amount == Strings.premiumMoney
+                ? Strings.p
+                : Strings.pl;
+        final dailyLimit = amount == Strings.regularMoney
+            ? Strings.regular
+            : amount == Strings.premiumMoney
+                ? Strings.premium
+                : Strings.platinum;
 
-          await userDoc.update({
-            'tier': tier,
-            'dailyLimit': dailyLimit,
-            'transactions': FieldValue.arrayUnion([
-              {
-                ...response.toMap(),
-                'timestamp': Timestamp.now(),
-              }
-            ]),
-          });
+        await userDoc.update({
+          'tier': tier,
+          'dailyLimit': dailyLimit,
+          'transactions': FieldValue.arrayUnion([
+            {
+              ...response.toMap(),
+              'timestamp': Timestamp.now(),
+            }
+          ]),
+        });
 
-          if (mounted) {
-            CustomSnackBar.showSnackBar(
-              context,
-              'Payment successful! Your plan has been upgraded to ${tier.toUpperCase()}.',
-            );
-          }
-          break;
-        case PaystackTransactionStatus.failed:
-          if (mounted) {
-            CustomSnackBar.showSnackBar(
-              context,
-              'Payment failed! Please try again...',
-              isError: true,
-            );
-          }
-          break;
-        case PaystackTransactionStatus.abandoned:
-          if (mounted) {
-            CustomSnackBar.showSnackBar(
-              context,
-              'Payment abandoned! Please try again...',
-              isError: true,
-            );
-          }
-          break;
-        case PaystackTransactionStatus.reversed:
-          if (mounted) {
-            CustomSnackBar.showSnackBar(
-              context,
-              'Payment reversed! Please try again...',
-              isError: true,
-            );
-          }
-          break;
-        default:
-          if (mounted) {
-            CustomSnackBar.showSnackBar(
-              context,
-              'Payment unsuccessful! Please try again...',
-              isError: true,
-            );
-          }
-          break;
+        if (mounted) {
+          CustomSnackBar.showSnackBar(
+            context,
+            'Payment successful! Your plan has been upgraded to ${tier.toUpperCase()}.',
+          );
+        }
+      } else if (mounted) {
+        CustomSnackBar.showSnackBar(
+          context,
+          'Payment ${status.name}! Please try again...',
+          isError: true,
+        );
       }
     } else if (mounted) {
       CustomSnackBar.showSnackBar(
